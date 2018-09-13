@@ -20,6 +20,7 @@
 #import "SDKHeader.h"
 #import "TransitionView.h"
 #import "SmallButton.h"
+#import "TXXiaoShiPinDemo-Swift.h"
 
 typedef  NS_ENUM(NSInteger,VideoType)
 {
@@ -303,10 +304,15 @@ typedef  NS_ENUM(NSInteger,VideoType)
     if (_videoType == VideoType_Video) {
         if (_leftTime == 0 && _rightTime == _duration) {
             //视频如果没发生剪裁，这里不用走编辑逻辑，减少画面质量损失
-            TCVideoEditViewController *vc = [[TCVideoEditViewController alloc] init];
-            vc.videoAsset = _videoAsset;
-            vc.isFromCut = YES;
-            [self.navigationController pushViewController:vc animated:YES];
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+            
+            UIViewController *documentViewController = [storyboard instantiateInitialViewController];
+            [self.navigationController pushViewController:documentViewController animated:YES];
+                        
+//            TCVideoEditViewController2 *vc = [[TCVideoEditViewController2 alloc] init];
+//            vc.videoAsset = _videoAsset;
+//            vc.isFromCut = YES;
+//            [self.navigationController pushViewController:vc animated:YES];
             //销毁掉编辑器，减少内存占用
             _ugcEdit = nil;
         }else{

@@ -304,6 +304,13 @@
 		D64734DF1F2734BA00A02463 /* MJRefresh.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D64734DE1F2734B900A02463 /* MJRefresh.bundle */; };
 		EF47CE2D1D4B03FC0028B598 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EF47CE2C1D4B03FC0028B598 /* main.m */; };
 		EF47CE381D4B03FC0028B598 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF47CE371D4B03FC0028B598 /* Assets.xcassets */; };
+		F08756EA21495B36006CF4B6 /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E021495B34006CF4B6 /* EditorViewController.swift */; };
+		F08756EC21495B36006CF4B6 /* SegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E221495B34006CF4B6 /* SegmentView.swift */; };
+		F08756ED21495B36006CF4B6 /* APLCustomVideoCompositor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E421495B35006CF4B6 /* APLCustomVideoCompositor.swift */; };
+		F08756EE21495B36006CF4B6 /* APLCustomVideoCompositionInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E521495B35006CF4B6 /* APLCustomVideoCompositionInstruction.swift */; };
+		F08756EF21495B36006CF4B6 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E621495B35006CF4B6 /* TimelineView.swift */; };
+		F08756F021495B36006CF4B6 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E721495B36006CF4B6 /* PlayerView.swift */; };
+		F08756F221495CFF006CF4B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F08756F121495CFE006CF4B6 /* Main.storyboard */; };
 		FE1A138C1D88FE5A00D94B62 /* UserProtocol.html in Resources */ = {isa = PBXBuildFile; fileRef = FE1A138B1D88FE5A00D94B62 /* UserProtocol.html */; };
 /* End PBXBuildFile section */
 
@@ -921,6 +928,14 @@
 		EF47CE2C1D4B03FC0028B598 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		EF47CE371D4B03FC0028B598 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EF47CE3C1D4B03FC0028B598 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F08756DD21495B31006CF4B6 /* TXXiaoShiPinDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TXXiaoShiPinDemo-Bridging-Header.h"; sourceTree = "<group>"; };
+		F08756E021495B34006CF4B6 /* EditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
+		F08756E221495B34006CF4B6 /* SegmentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentView.swift; sourceTree = "<group>"; };
+		F08756E421495B35006CF4B6 /* APLCustomVideoCompositor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APLCustomVideoCompositor.swift; sourceTree = "<group>"; };
+		F08756E521495B35006CF4B6 /* APLCustomVideoCompositionInstruction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APLCustomVideoCompositionInstruction.swift; sourceTree = "<group>"; };
+		F08756E621495B35006CF4B6 /* TimelineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
+		F08756E721495B36006CF4B6 /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
+		F08756F121495CFE006CF4B6 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		FE1A138B1D88FE5A00D94B62 /* UserProtocol.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = UserProtocol.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1217,7 +1232,14 @@
 				CE93B72D201F4D0800CD89B7 /* TCVideoLoadingController.h */,
 				CE93B72E201F4D0900CD89B7 /* TCVideoLoadingController.m */,
 				CE93B72F201F4D0900CD89B7 /* TCVideoLoadingController.xib */,
+				F08756E321495B35006CF4B6 /* Custom Compositors */,
+				F08756E021495B34006CF4B6 /* EditorViewController.swift */,
+				F08756E721495B36006CF4B6 /* PlayerView.swift */,
+				F08756E221495B34006CF4B6 /* SegmentView.swift */,
+				F08756E621495B35006CF4B6 /* TimelineView.swift */,
+				F08756F121495CFE006CF4B6 /* Main.storyboard */,
 				CE29EBCE1FE8BE140038C200 /* VideoJoin */,
+				F08756DD21495B31006CF4B6 /* TXXiaoShiPinDemo-Bridging-Header.h */,
 			);
 			name = UGCEditor;
 			sourceTree = "<group>";
@@ -1809,6 +1831,15 @@
 			path = Resource;
 			sourceTree = "<group>";
 		};
+		F08756E321495B35006CF4B6 /* Custom Compositors */ = {
+			isa = PBXGroup;
+			children = (
+				F08756E421495B35006CF4B6 /* APLCustomVideoCompositor.swift */,
+				F08756E521495B35006CF4B6 /* APLCustomVideoCompositionInstruction.swift */,
+			);
+			path = "Custom Compositors";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1850,9 +1881,10 @@
 					};
 					EF47CE271D4B03FC0028B598 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = QE8PS7F45A;
+						DevelopmentTeam = 5K87F3JL7S;
 						DevelopmentTeamName = "Xing Feng";
-						ProvisioningStyle = Manual;
+						LastSwiftMigration = 0940;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 0;
@@ -2109,6 +2141,7 @@
 				CE93B5C7201B044900CD89B7 /* e1 in Resources */,
 				CE89A5D12010A0820005B88B /* fenlie0.png in Resources */,
 				CE93B5F3201B1C7300CD89B7 /* jump_4.png in Resources */,
+				F08756F221495CFF006CF4B6 /* Main.storyboard in Resources */,
 				CE89A5B12010A0820005B88B /* linghun23.png in Resources */,
 				CEA3F4A9207DB39A00BDE537 /* TXUgcSDK.licence in Resources */,
 				CE89A5C52010A0820005B88B /* donggan1.png in Resources */,
@@ -2348,6 +2381,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F08756EA21495B36006CF4B6 /* EditorViewController.swift in Sources */,
 				CE870ED020B4122B0012EF30 /* TransitionView.m in Sources */,
 				91BFE82B1EB866E0008EB95C /* TCUserInfoViewController.m in Sources */,
 				CE0BE03C1FFB27F900DEBA5C /* NSString+Common.m in Sources */,
@@ -2355,6 +2389,7 @@
 				CE29EBA81FE8BCA10038C200 /* TCBGMCutView.m in Sources */,
 				CE0BE0351FFB27F900DEBA5C /* NSObject+CommonBlock.m in Sources */,
 				91BFE82A1EB866E0008EB95C /* TCUserInfoCell.m in Sources */,
+				F08756EE21495B36006CF4B6 /* APLCustomVideoCompositionInstruction.swift in Sources */,
 				CE1C230E2080D3990002FF8C /* TXUGCPublishUtil.m in Sources */,
 				CE29EBC61FE8BDFB0038C200 /* VideoTextFiled.m in Sources */,
 				CE0BE0371FFB27F900DEBA5C /* TCLog.m in Sources */,
@@ -2363,6 +2398,7 @@
 				91BFE7B91EB86379008EB95C /* TCUserAgreementController.m in Sources */,
 				91BFE79F1EB86288008EB95C /* AppDelegate.m in Sources */,
 				CE1C230F2080D3990002FF8C /* TVCReport.m in Sources */,
+				F08756EC21495B36006CF4B6 /* SegmentView.swift in Sources */,
 				CE29EBCB1FE8BDFB0038C200 /* EffectSelectView.m in Sources */,
 				CE29EBCD1FE8BDFB0038C200 /* BottomTabBar.m in Sources */,
 				CE0BE0401FFB27F900DEBA5C /* UIView+Additions.m in Sources */,
@@ -2377,6 +2413,7 @@
 				91BFE7C41EB863AF008EB95C /* TCLiveListModel.m in Sources */,
 				91B45A501E8CE2010058E8F6 /* UIImage+MCImage.m in Sources */,
 				CE1ABF3E2024403E00A2219E /* TCPlayViewCell.m in Sources */,
+				F08756ED21495B36006CF4B6 /* APLCustomVideoCompositor.swift in Sources */,
 				CE29EBDD1FE8BE140038C200 /* TCVideoJoinCell.m in Sources */,
 				CE29EBCC1FE8BDFB0038C200 /* VideoPreview.m in Sources */,
 				CE29EBC71FE8BDFB0038C200 /* VideoCutView.m in Sources */,
@@ -2387,6 +2424,7 @@
 				CE29EBA91FE8BCA10038C200 /* TCBGMCell.m in Sources */,
 				91BFE8361EB86BE0008EB95C /* UIPlaceHolderTextView.m in Sources */,
 				CE1C23142080D3990002FF8C /* TVCClientInner.m in Sources */,
+				F08756EF21495B36006CF4B6 /* TimelineView.swift in Sources */,
 				91BFE8061EB8657E008EB95C /* TCVideoPublishController.m in Sources */,
 				CE1C230C2080D3990002FF8C /* TVCUtils.m in Sources */,
 				CE29EBD81FE8BE140038C200 /* TCVideoJoinViewController.m in Sources */,
@@ -2414,6 +2452,7 @@
 				A0AEBC3420CFB36D00F41117 /* SmallButton.m in Sources */,
 				CE29EBA71FE8BCA10038C200 /* TCBGMHelper.m in Sources */,
 				91BFE8291EB866E0008EB95C /* TCEditUserInfoViewController.m in Sources */,
+				F08756F021495B36006CF4B6 /* PlayerView.swift in Sources */,
 				CE0BE0361FFB27F900DEBA5C /* TCUploadHelper.m in Sources */,
 				91B45A531E8CE2010058E8F6 /* MCCameraDynamicView.m in Sources */,
 				91BFE7AE1EB862DF008EB95C /* TCLoginViewController.m in Sources */,
@@ -2535,7 +2574,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CFLAGS = "";
 				SDKROOT = iphoneos;
@@ -2549,10 +2588,11 @@
 			baseConfigurationReference = 55A430FCA48428CAC6D5DB0B /* Pods-TXXiaoShiPinDemo.dailybuild.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Tencent Technology (Shanghai) Co., Ltd (FN2V63AD2J)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = HKB8WPFBR9;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5K87F3JL7S;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2582,7 +2622,7 @@
 					"\"${PODS_ROOT}/Headers/Public/SDWebImage\"",
 				);
 				INFOPLIST_FILE = TXXiaoShiPinDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2598,8 +2638,10 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.fx.xiaoshipin.db;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3514d2b9-fc54-4566-a0b8-f3072168c98e";
-				PROVISIONING_PROFILE_SPECIFIER = "com.tencent.fx.xiaoshipin.db InHouse";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "TXXiaoShiPinDemo/TXXiaoShiPinDemo-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/TXXiaoShiPinDemo/Framework/QCloudUploadSDK/Headers";
 			};
@@ -2671,7 +2713,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "";
@@ -2722,7 +2764,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CFLAGS = "";
 				SDKROOT = iphoneos;
@@ -2736,11 +2778,12 @@
 			baseConfigurationReference = DDFDA7DAA7F5E707E462E938 /* Pods-TXXiaoShiPinDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Xing Feng (LZV8CEEKYB)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = QE8PS7F45A;
+				DEVELOPMENT_TEAM = 5K87F3JL7S;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2770,7 +2813,7 @@
 					"\"${PODS_ROOT}/Headers/Public/SDWebImage\"",
 				);
 				INFOPLIST_FILE = TXXiaoShiPinDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2786,8 +2829,11 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.fx.xiaoshipin.db;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "f10d71ab-e606-4cd6-8349-d0b3deb7a4f4";
-				PROVISIONING_PROFILE_SPECIFIER = "Wildcard Dev";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "TXXiaoShiPinDemo/TXXiaoShiPinDemo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/TXXiaoShiPinDemo/Framework/QCloudUploadSDK/Headers";
 			};
@@ -2798,10 +2844,11 @@
 			baseConfigurationReference = 0EA953CF458C729179DB3D6B /* Pods-TXXiaoShiPinDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Shenzhen Good e-house Technology Co., Ltd.";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = FN2V63AD2J;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5K87F3JL7S;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2831,7 +2878,7 @@
 					"\"${PODS_ROOT}/Headers/Public/SDWebImage\"",
 				);
 				INFOPLIST_FILE = TXXiaoShiPinDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2847,8 +2894,10 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.fx.xiaoshipin.db;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "bb953b94-2814-4b31-8f59-90bfe2939a80";
-				PROVISIONING_PROFILE_SPECIFIER = "com.tencent.liteav.ugc AppStore";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "TXXiaoShiPinDemo/TXXiaoShiPinDemo-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/TXXiaoShiPinDemo/Framework/QCloudUploadSDK/Headers";
 			};
