@@ -12,7 +12,7 @@
 
 @property (strong,nonatomic) NSString *videoPath;
 
-@property (strong,nonatomic) AVAsset  *videoAsset;
+//@property (strong,nonatomic) AVAsset  *videoAsset;
 
 //从剪切过来
 @property (assign,nonatomic) BOOL     isFromCut;

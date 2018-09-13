@@ -12,11 +12,114 @@ import UIKit
 import MobileCoreServices
 //import NVActivityIndicatorView
 
+
+enum ActionType
+ {
+ case ActionType_Save
+ case ActionType_Publish
+ case ActionType_Save_Publish
+ }
+ 
+enum TimeType
+ {
+ case TimeType_Clear
+ case TimeType_Back
+ case TimeType_Repeat
+ case TimeType_Speed
+ }
+ 
+ enum EffectSelectType
+ {
+ case EffectSelectType_Effect
+ case EffectSelectType_Time
+ case EffectSelectType_Filter
+ case EffectSelectType_Paster
+ case EffectSelectType_Text
+ }
+ 
+enum TCLVFilterType: Int {
+ case FilterType_None = 0
+ case FilterType_white   //美白滤镜
+ case FilterType_langman   //浪漫滤镜
+ case FilterType_qingxin   //清新滤镜
+ case FilterType_weimei   //唯美滤镜
+ case FilterType_fennen   //粉嫩滤镜
+ case FilterType_huaijiu   //怀旧滤镜
+ case FilterType_landiao   //蓝调滤镜
+ case FilterType_qingliang   //清凉滤镜
+ case FilterType_rixi   //日系滤镜
+ }
+ 
+
 private var MainViewControllerKVOContext = 0
 
-class TCVideoEditViewController2: UIViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate
+class EditorViewController: UIViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate,
+    TXVideoGenerateListener,VideoPreviewDelegate, BottomTabBarDelegate, VideoCutViewDelegate,EffectSelectViewDelegate, PasterAddViewDelegate, VideoPasterViewDelegate ,VideoTextFieldDelegate ,TXVideoPublishListener,TCBGMControllerListener,VideoRecordMusicViewDelegate, UIActionSheetDelegate, UITabBarDelegate , UIPickerViewDelegate ,UIAlertViewDelegate
 //    ,NVActivityIndicatorViewable
 {
+    
+    var _bgmListVC: TCBGMListViewController
+    var _ugcEdit: TXVideoEditer        //sdk编辑器
+    var _videoPreview: VideoPreview  //视频预览
+    
+    //特效View
+    var _effectView: UIView
+    
+    //cover view
+    var _coverImageView: UIImageView
+    
+    //背景音
+    var _musicView: TCVideoRecordMusicView
+    
+    //特效确定btn
+    var _effectConfirmBtn: UIButton
+    
+    var _generateCannelBtn: UIButton
+    
+    //生成时的进度浮层
+    var _generationView: UIView
+    var _generateProgressView: UIProgressView
+    var _generationTitleLabel: UILabel
+    var _timeLabel: UILabel
+    var _deleteBtn: UIButton
+    var _playBtn: UIButton
+    
+    //pulish
+    var _videoPublish: TXUGCPublish
+    
+    var _bottomBar: BottomTabBar          //底部栏
+    var _videoCutView: VideoCutView       //裁剪
+    var _pasterAddView: PasterAddView      //贴图
+    var _effectSelectView: EffectSelectView   //动效选择
+    var _effectSelectType: EffectSelectType
+    
+    var _actionType: ActionType
+    var _timeType: TimeType
+    
+    var _pasterEffectArray: [EffectInfo]
+    var _textEffectArray: [EffectInfo]
+    var _videoPasterInfoList: [VideoPasterInfo]
+    var _videoTextInfoList: [VideoTextInfo]
+    var _cutPathList: [Any]
+    
+    //裁剪时间
+    var _duration: CGFloat
+    var _playTime: CGFloat
+    var _BGMDuration: CGFloat
+    var _BGMVolume: CGFloat
+    var _videoVolume: CGFloat
+    var _effectSelectIndex: NSInteger
+    var _effectType: NSInteger
+    
+    var _BGMPath: NSObject
+    var _videoOutputPath: NSString
+    var _isReverse: Bool
+    var _isSeek: Bool
+    var _isPlay: Bool
+    var _navigationBarHidden: Bool
+    var _imageLoadingQueue: DispatchQueue
+    var _effectList: [EffectInfo]
+    
     
     // MARK: Properties
     
@@ -220,7 +323,7 @@ class TCVideoEditViewController2: UIViewController, UICollectionViewDelegateFlow
             timelineView.contentInset = UIEdgeInsets(top: 0, left: timelineView.frame.width/2, bottom: 0, right: timelineView.frame.width/2)
             timelineView.addSubview(emptyView)
             //            timelineView.pinchGestureRecognizer?.addTarget(self, action: #selector(TCVideoEditViewController2.pinch))
-            timelineView.panGestureRecognizer.addTarget(self, action: #selector(TCVideoEditViewController2.pan))
+            timelineView.panGestureRecognizer.addTarget(self, action: #selector(EditorViewController.pan))
         }
     }
     
@@ -232,7 +335,7 @@ class TCVideoEditViewController2: UIViewController, UICollectionViewDelegateFlow
             backgroundTimelineView.contentInset = UIEdgeInsets(top: 0, left: backgroundTimelineView.frame.width/2, bottom: 0, right: backgroundTimelineView.frame.width/2)
             backgroundTimelineView.addSubview(emptyView)
             //            timelineView.pinchGestureRecognizer?.addTarget(self, action: #selector(TCVideoEditViewController2.pinch))
-            backgroundTimelineView.panGestureRecognizer.addTarget(self, action: #selector(TCVideoEditViewController2.pan))
+            backgroundTimelineView.panGestureRecognizer.addTarget(self, action: #selector(EditorViewController.pan))
         }
     }
     
@@ -357,7 +460,7 @@ class TCVideoEditViewController2: UIViewController, UICollectionViewDelegateFlow
          main UI thread) whilst I/O happens to populate the properties. It's
          prudent to defer our work until the properties we need have been loaded.
          */
-        newAsset.loadValuesAsynchronously(forKeys: TCVideoEditViewController2.assetKeysRequiredToPlay) {
+        newAsset.loadValuesAsynchronously(forKeys: EditorViewController.assetKeysRequiredToPlay) {
             /*
              The asset invokes its completion handler on an arbitrary queue.
              To avoid multiple threads using our internal state at the same time
@@ -370,7 +473,7 @@ class TCVideoEditViewController2: UIViewController, UICollectionViewDelegateFlow
                  Test whether the values of each of the keys we need have been
                  successfully loaded.
                  */
-                for key in TCVideoEditViewController2.assetKeysRequiredToPlay {
+                for key in EditorViewController.assetKeysRequiredToPlay {
                     var error: NSError?
                     
                     if newAsset.statusOfValue(forKey: key, error: &error) == .failed {
@@ -982,151 +1085,9 @@ class TCVideoEditViewController2: UIViewController, UICollectionViewDelegateFlow
     
 }
 
+
 /*
-//
-//  VideoEditViewController.m
-//  TCLVBIMDemo
-//
-//  Created by xiang zhang on 2017/4/10.
-//  Copyright © 2017年 tencent. All rights reserved.
-//
 
-#import "TCVideoEditViewController.h"
-#import "TCBGMListViewController.h"
-#import <TXLiteAVSDK_UGC_IJK/TXVideoEditer.h>
-#import <MediaPlayer/MPMediaPickerController.h>
-#import "VideoPreview.h"
-#import "VideoRangeSlider.h"
-#import "VideoRangeConst.h"
-#import "TCVideoRecordMusicView.h"
-#import "UIView+Additions.h"
-#import "ColorMacro.h"
-#import "MBProgressHUD.h"
-#import "BottomTabBar.h"
-#import "VideoCutView.h"
-#import "PasterAddView.h"
-#import "EffectSelectView.h"
-#import "VideoPasterView.h"
-#import "VideoTextFiled.h"
-#import "TCBGMHelper.h"
-#import "TXUGCPublish.h"
-#import "TCUserInfoModel.h"
-#import "VideoInfo.h"
-#import "TCLoginModel.h"
-#import "TCLiveListModel.h"
-#import "TCUserAgreementController.h"
-#import "UIActionSheet+BlocksKit.h"
-#import "UIAlertView+BlocksKit.h"
-#import <AFNetworking.h>
-#import <AssetsLibrary/AssetsLibrary.h>
-#import "TXCVEFColorPalette.h"
-
-typedef  NS_ENUM(NSInteger,ActionType)
-{
-    ActionType_Save,
-    ActionType_Publish,
-    ActionType_Save_Publish,
-};
-
-typedef  NS_ENUM(NSInteger,TimeType)
-{
-    TimeType_Clear,
-    TimeType_Back,
-    TimeType_Repeat,
-    TimeType_Speed,
-};
-
-typedef NS_ENUM(NSInteger,EffectSelectType)
-{
-    EffectSelectType_Effect,
-    EffectSelectType_Time,
-    EffectSelectType_Filter,
-    EffectSelectType_Paster,
-    EffectSelectType_Text,
-};
-
-typedef NS_ENUM(NSInteger,TCLVFilterType) {
-    FilterType_None         = 0,
-    FilterType_white        ,   //美白滤镜
-    FilterType_langman         ,   //浪漫滤镜
-    FilterType_qingxin         ,   //清新滤镜
-    FilterType_weimei         ,   //唯美滤镜
-    FilterType_fennen         ,   //粉嫩滤镜
-    FilterType_huaijiu         ,   //怀旧滤镜
-    FilterType_landiao         ,   //蓝调滤镜
-    FilterType_qingliang     ,   //清凉滤镜
-    FilterType_rixi         ,   //日系滤镜
-};
-
-
-@interface TCVideoEditViewController ()<TXVideoGenerateListener,VideoPreviewDelegate, BottomTabBarDelegate, VideoCutViewDelegate,EffectSelectViewDelegate, PasterAddViewDelegate, VideoPasterViewDelegate ,VideoTextFieldDelegate ,TXVideoPublishListener,TCBGMControllerListener,VideoRecordMusicViewDelegate,UIActionSheetDelegate, UITabBarDelegate , UIPickerViewDelegate ,UIPickerViewDelegate ,UIAlertViewDelegate>
-
-@end
-
-@implementation TCVideoEditViewController
-{
-    TCBGMListViewController *_bgmListVC;
-    TXVideoEditer*   _ugcEdit;        //sdk编辑器
-    VideoPreview*    _videoPreview;   //视频预览
-    
-    //特效View
-    UIView*             _effectView;
-    
-    //cover view
-    UIImageView*        _coverImageView;
-    
-    //背景音
-    TCVideoRecordMusicView *_musicView;
-    
-    //特效确定btn
-    UIButton *          _effectConfirmBtn;
-    
-    UIButton *          _generateCannelBtn;
-    
-    //生成时的进度浮层
-    UIView*             _generationView;
-    UIProgressView*     _generateProgressView;
-    UILabel*            _generationTitleLabel;
-    UILabel*            _timeLabel;
-    UIButton*           _deleteBtn;
-    UIButton*           _playBtn;
-    
-    //pulish
-    TXUGCPublish*       _videoPublish;
-    
-    BottomTabBar*       _bottomBar;          //底部栏
-    VideoCutView*       _videoCutView;       //裁剪
-    PasterAddView*      _pasterAddView;      //贴图
-    EffectSelectView*   _effectSelectView;   //动效选择
-    EffectSelectType    _effectSelectType;
-    
-    ActionType          _actionType;
-    TimeType            _timeType;
-    
-    NSMutableArray <EffectInfo *> *_pasterEffectArray;
-    NSMutableArray <EffectInfo *> *_textEffectArray;
-    NSMutableArray <VideoPasterInfo *>* _videoPasterInfoList;
-    NSMutableArray <VideoTextInfo *>*   _videoTextInfoList;
-    NSMutableArray  *_cutPathList;
-    
-    //裁剪时间
-    CGFloat             _duration;
-    CGFloat             _playTime;
-    CGFloat             _BGMDuration;
-    CGFloat             _BGMVolume;
-    CGFloat             _videoVolume;
-    NSInteger           _effectSelectIndex;
-    NSInteger           _effectType;
-    
-    NSObject*     _BGMPath;
-    NSString*    _videoOutputPath;
-    BOOL          _isReverse;
-    BOOL          _isSeek;
-    BOOL          _isPlay;
-    BOOL          _navigationBarHidden;
-    dispatch_queue_t _imageLoadingQueue;
-    NSArray<EffectInfo*> *_effectList;
-}
 
 -(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -2999,5 +2960,5 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 
 @end
 
-*/
 
+*/
