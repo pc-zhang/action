@@ -57,6 +57,7 @@ class EditorViewController: UIViewController, UICollectionViewDelegateFlowLayout
     TXVideoGenerateListener,VideoPreviewDelegate, BottomTabBarDelegate, VideoCutViewDelegate,EffectSelectViewDelegate, PasterAddViewDelegate, VideoPasterViewDelegate ,VideoTextFieldDelegate ,TXVideoPublishListener,TCBGMControllerListener,VideoRecordMusicViewDelegate, UIActionSheetDelegate, UITabBarDelegate , UIPickerViewDelegate ,UIAlertViewDelegate
 //    ,NVActivityIndicatorViewable
 {
+
     
     var _bgmListVC: TCBGMListViewController
     var _ugcEdit: TXVideoEditer        //sdk编辑器
@@ -168,9 +169,9 @@ class EditorViewController: UIViewController, UICollectionViewDelegateFlowLayout
          and not those destined for a subclass that also happens to be observing
          these properties.
          */
-        addObserver(self, forKeyPath: #keyPath(TCVideoEditViewController2.player.currentItem.duration), options: [.new, .initial], context: &MainViewControllerKVOContext)
-        addObserver(self, forKeyPath: #keyPath(TCVideoEditViewController2.player.rate), options: [.new, .initial], context: &MainViewControllerKVOContext)
-        addObserver(self, forKeyPath: #keyPath(TCVideoEditViewController2.player.currentItem.status), options: [.new, .initial], context: &MainViewControllerKVOContext)
+        addObserver(self, forKeyPath: #keyPath(EditorViewController.player.currentItem.duration), options: [.new, .initial], context: &MainViewControllerKVOContext)
+        addObserver(self, forKeyPath: #keyPath(EditorViewController.player.rate), options: [.new, .initial], context: &MainViewControllerKVOContext)
+        addObserver(self, forKeyPath: #keyPath(EditorViewController.player.currentItem.status), options: [.new, .initial], context: &MainViewControllerKVOContext)
         
         // Make sure we don't have a strong reference cycle by only capturing self as weak.
         let interval = CMTimeMake(20, 600)
@@ -191,9 +192,9 @@ class EditorViewController: UIViewController, UICollectionViewDelegateFlowLayout
         
         player.pause()
         
-        removeObserver(self, forKeyPath: #keyPath(TCVideoEditViewController2.player.currentItem.duration), context: &MainViewControllerKVOContext)
-        removeObserver(self, forKeyPath: #keyPath(TCVideoEditViewController2.player.rate), context: &MainViewControllerKVOContext)
-        removeObserver(self, forKeyPath: #keyPath(TCVideoEditViewController2.player.currentItem.status), context: &MainViewControllerKVOContext)
+        removeObserver(self, forKeyPath: #keyPath(EditorViewController.player.currentItem.duration), context: &MainViewControllerKVOContext)
+        removeObserver(self, forKeyPath: #keyPath(EditorViewController.player.rate), context: &MainViewControllerKVOContext)
+        removeObserver(self, forKeyPath: #keyPath(EditorViewController.player.currentItem.status), context: &MainViewControllerKVOContext)
     }
 
     
@@ -860,7 +861,7 @@ class EditorViewController: UIViewController, UICollectionViewDelegateFlowLayout
             return
         }
         
-        if keyPath == #keyPath(TCVideoEditViewController2.player.currentItem.duration) {
+        if keyPath == #keyPath(EditorViewController.player.currentItem.duration) {
             // Update timeSlider and enable/disable controls when duration > 0.0
 
             /*
@@ -875,7 +876,7 @@ class EditorViewController: UIViewController, UICollectionViewDelegateFlowLayout
             }
 
         }
-        else if keyPath == #keyPath(TCVideoEditViewController2.player.rate) {
+        else if keyPath == #keyPath(EditorViewController.player.rate) {
             // Update `playPauseButton` image.
 
             let newRate = (change?[NSKeyValueChangeKey.newKey] as! NSNumber).doubleValue
@@ -886,7 +887,7 @@ class EditorViewController: UIViewController, UICollectionViewDelegateFlowLayout
 
             playPauseButton.setImage(buttonImage, for: UIControlState())
         }
-        else if keyPath == #keyPath(TCVideoEditViewController2.player.currentItem.status) {
+        else if keyPath == #keyPath(EditorViewController.player.currentItem.status) {
             // Display an error if status becomes `.Failed`.
 
             /*
@@ -919,8 +920,8 @@ class EditorViewController: UIViewController, UICollectionViewDelegateFlowLayout
     // Trigger KVO for anyone observing our properties affected by player and player.currentItem
     override class func keyPathsForValuesAffectingValue(forKey key: String) -> Set<String> {
         let affectedKeyPathsMappingByKey: [String: Set<String>] = [
-            "duration":     [#keyPath(TCVideoEditViewController2.player.currentItem.duration)],
-            "rate":         [#keyPath(TCVideoEditViewController2.player.rate)]
+            "duration":     [#keyPath(EditorViewController.player.currentItem.duration)],
+            "rate":         [#keyPath(EditorViewController.player.rate)]
         ]
         
         return affectedKeyPathsMappingByKey[key] ?? super.keyPathsForValuesAffectingValue(forKey: key)
