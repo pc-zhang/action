@@ -267,7 +267,7 @@
 -(void)onVideoSelectClicked
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    UIViewController *editViewController = [storyboard instantiateInitialViewController];
+    UIViewController *editViewController = [storyboard instantiateViewControllerWithIdentifier:@"TCVideoEditViewController2"];
     TCNavigationController *nav = [[TCNavigationController alloc] initWithRootViewController:editViewController];
     [self presentViewController:nav animated:YES completion:nil];
         

@@ -143,6 +143,39 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     NSArray<EffectInfo*> *_effectList;
 }
 
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        _effectType = -1;
+        _cutPathList = [NSMutableArray array];
+        _videoOutputPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"outputCut.mp4"];
+        
+        _pasterEffectArray = [NSMutableArray array];
+        [_pasterEffectArray addObject:({
+            EffectInfo * v= [EffectInfo new];
+            v.name = @"新增";
+            v.icon = [UIImage imageNamed:@"addPaster_normal"];
+            v;
+        })];
+        
+        _textEffectArray = [NSMutableArray array];
+        [_textEffectArray addObject:({
+            EffectInfo * v= [EffectInfo new];
+            v.name = @"新增";
+            v.icon = [UIImage imageNamed:@"addPaster_normal"];
+            v;
+        })];
+        
+        _videoPasterInfoList = [NSMutableArray array];
+        _videoTextInfoList = [NSMutableArray array];
+        _BGMVolume = 1.0;
+        _videoVolume = 1.0;
+        _imageLoadingQueue = dispatch_queue_create("TCVideoEditImageLoading", DISPATCH_QUEUE_CONCURRENT);
+    }
+    return self;
+}
+
 -(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

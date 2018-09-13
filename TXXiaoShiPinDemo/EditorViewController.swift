@@ -14,9 +14,17 @@ import MobileCoreServices
 
 private var MainViewControllerKVOContext = 0
 
-class TCVideoEditViewController2: UIViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate
+class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate
 //    ,NVActivityIndicatorViewable
 {
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
     
     // MARK: Properties
     
@@ -26,6 +34,7 @@ class TCVideoEditViewController2: UIViewController, UICollectionViewDelegateFlow
     // MARK: - View Controller
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         // add composition
         if composition==nil {
             composition = AVMutableComposition()
