@@ -57,6 +57,415 @@ class EditorViewController: UIViewController, UICollectionViewDelegateFlowLayout
     TXVideoGenerateListener,VideoPreviewDelegate, BottomTabBarDelegate, VideoCutViewDelegate,EffectSelectViewDelegate, PasterAddViewDelegate, VideoPasterViewDelegate ,VideoTextFieldDelegate ,TXVideoPublishListener,TCBGMControllerListener,VideoRecordMusicViewDelegate, UIActionSheetDelegate, UITabBarDelegate , UIPickerViewDelegate ,UIAlertViewDelegate
 //    ,NVActivityIndicatorViewable
 {
+    // MARK: - VideoRecordMusicViewDelegate
+
+
+    func onBtnMusicSelected() {
+        [self resetVideoProgress];
+        UINavigationController *nv = [[UINavigationController alloc] initWithRootViewController:_bgmListVC];
+        [nv.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+        nv.navigationBar.barTintColor = RGB(25, 29, 38);
+        [self presentViewController:nv animated:YES completion:nil];
+        [_bgmListVC loadBGMList];
+    }
+    
+    func onBtnMusicStoped() {
+        _BGMPath = nil;
+        [_ugcEdit setBGM:nil result:^(int result) {
+            
+            }];
+        _musicView.hidden = YES;
+        _bottomBar.hidden = NO;
+        [self resetConfirmBtn];
+        [self startPlayFromTime:0 toTime:_duration];
+    }
+    
+    func onBGMValueChange(_ percent: CGFloat) {
+        _BGMVolume = 1.0 * percent;
+        [_ugcEdit setBGMVolume:_BGMVolume];
+    }
+    
+    func onVoiceValueChange(_ percent: CGFloat) {
+        _videoVolume = 1.0 * percent;
+        [_ugcEdit setVideoVolume:_videoVolume];
+    }
+    
+    func onBGMRangeChange(_ startPercent: CGFloat, endPercent: CGFloat) {
+        [self setBGMStartTime:_BGMDuration * startPercent endTime:_BGMDuration * endPercent];
+    }
+    
+    // MARK: - BottomTabBarDelegate
+    func onMusicBtnClicked() {
+        _bottomBar.hidden = YES;
+        [self onSelectMusic];
+        [self setLeftPanFrame:0 rightPanFrame:0];
+        [self resetConfirmBtn];
+    }
+    
+    func onTimeBtnClicked() {
+        _bottomBar.hidden = YES;
+        _deleteBtn.hidden = YES;
+        [self resetConfirmBtn];
+        [self resetVideoProgress];
+        [self onShowEffectView];
+        [self removeAllTextFieldFromSuperView];
+        [self removeAllPasterViewFromSuperView];
+        [self setLeftPanFrame:0 rightPanFrame:0];
+        _effectSelectType = EffectSelectType_Time;
+        [_videoCutView setColorType:ColorType_Time];
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            NSMutableArray <EffectInfo *> *effectArray = [NSMutableArray array];
+            [effectArray addObject:({
+                EffectInfo * v= [EffectInfo new];
+                v.name = @"无";
+                v.animateIcons = [NSMutableArray array];
+                for (int i = 0; i < 20; i ++) {
+                [v.animateIcons addObject:[UIImage imageNamed:[NSString stringWithFormat:@"jump_%d",i]]];
+                }
+                v;
+                })];
+            [effectArray addObject:({
+                EffectInfo * v= [EffectInfo new];
+                v.name = @"时光倒流";
+                v.animateIcons = [NSMutableArray array];
+                v.selectIcon = [UIImage imageNamed:@"timeBack_select"];
+                for (int i = 19; i >= 0; i --) {
+                [v.animateIcons addObject:[UIImage imageNamed:[NSString stringWithFormat:@"jump_%d",i]]];
+                }
+                v;
+                })];
+            [effectArray addObject:({
+                EffectInfo * v= [EffectInfo new];
+                v.name = @"反复";
+                v.animateIcons = [NSMutableArray array];
+                v.selectIcon = [UIImage imageNamed:@"repeat_select"];
+                NSMutableArray *repeatIcons = [NSMutableArray array];
+                for (int i = 0; i < 20; i ++) {
+                UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"jump_%d",i]];
+                if (i >= 5 && i <= 15) {
+                [repeatIcons addObject:image];
+                }
+                if (i == 15) {
+                [v.animateIcons addObjectsFromArray:repeatIcons];
+                [v.animateIcons addObjectsFromArray:repeatIcons];
+                }
+                [v.animateIcons addObject:image];
+                }
+                v;
+                })];
+            [effectArray addObject:({
+                EffectInfo * v= [EffectInfo new];
+                v.name = @"慢动作";
+                v.animateIcons = [NSMutableArray array];
+                v.selectIcon = [UIImage imageNamed:@"slow_select"];
+                v.isSlow = YES;
+                for (int i = 0; i < 20; i ++) {
+                [v.animateIcons addObject:[UIImage imageNamed:[NSString stringWithFormat:@"jump_%d",i]]];
+                }
+                v;
+                })];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_effectSelectView setEffectList:effectArray];
+                });
+            });
+    }
+    
+    func onFilterBtnClicked() {
+        _bottomBar.hidden = YES;
+        _deleteBtn.hidden = YES;
+        [self resetConfirmBtn];
+        [self resetVideoProgress];
+        [self onShowEffectView];
+        [self setLeftPanFrame:0 rightPanFrame:0];
+        NSMutableArray <EffectInfo *> *effectArray = [NSMutableArray array];
+        [effectArray addObject:({
+            EffectInfo * v= [EffectInfo new];
+            v.name = @"原图";
+            v.icon = [UIImage imageNamed:@"orginal"];
+            v.selectIcon = [UIImage imageNamed:@"orginal_select"];
+            v;
+            })];
+        
+        [effectArray addObject:({
+            EffectInfo *v = [EffectInfo new];
+            v.name = @"美白";
+            v.icon = [UIImage imageNamed:@"fwhite"];
+            v.selectIcon = [UIImage imageNamed:@"orginal_select"];
+            v;
+            })];
+        
+        [effectArray addObject:({
+            EffectInfo *v = [EffectInfo new];
+            v.name = @"浪漫";
+            v.icon = [UIImage imageNamed:@"langman"];
+            v.selectIcon = [UIImage imageNamed:@"orginal_select"];
+            v;
+            })];
+        [effectArray addObject:({
+            EffectInfo *v = [EffectInfo new];
+            v.name = @"清新";
+            v.icon = [UIImage imageNamed:@"qingxin"];
+            v.selectIcon = [UIImage imageNamed:@"orginal_select"];
+            v;
+            })];
+        [effectArray addObject:({
+            EffectInfo *v = [EffectInfo new];
+            v.name = @"唯美";
+            v.icon = [UIImage imageNamed:@"weimei"];
+            v.selectIcon = [UIImage imageNamed:@"orginal_select"];
+            v;
+            })];
+        [effectArray addObject:({
+            EffectInfo *v = [EffectInfo new];
+            v.name = @"粉嫩";
+            v.icon = [UIImage imageNamed:@"fennen"];
+            v.selectIcon = [UIImage imageNamed:@"orginal_select"];
+            v;
+            })];
+        [effectArray addObject:({
+            EffectInfo *v = [EffectInfo new];
+            v.name = @"怀旧";
+            v.icon = [UIImage imageNamed:@"huaijiu"];
+            v.selectIcon = [UIImage imageNamed:@"orginal_select"];
+            v;
+            })];
+        [effectArray addObject:({
+            EffectInfo *v = [EffectInfo new];
+            v.name = @"蓝调";
+            v.icon = [UIImage imageNamed:@"landiao"];
+            v.selectIcon = [UIImage imageNamed:@"orginal_select"];
+            v;
+            })];
+        [effectArray addObject:({
+            EffectInfo *v = [EffectInfo new];
+            v.name = @"清凉";
+            v.icon = [UIImage imageNamed:@"qingliang"];
+            v.selectIcon = [UIImage imageNamed:@"orginal_select"];
+            v;
+            })];
+        [effectArray addObject:({
+            EffectInfo *v = [EffectInfo new];
+            v.name = @"日系";
+            v.icon = [UIImage imageNamed:@"rixi"];
+            v.selectIcon = [UIImage imageNamed:@"orginal_select"];
+            v;
+            })];
+        [_effectSelectView setEffectList:effectArray];
+        _effectSelectType = EffectSelectType_Filter;
+        [_videoCutView setColorType:ColorType_Filter];
+        [_videoCutView setCenterPanHidden:YES];
+        [self removeAllTextFieldFromSuperView];
+        [self removeAllPasterViewFromSuperView];
+    }
+    
+    func onEffectBtnClicked() {
+        _bottomBar.hidden = YES;
+        _deleteBtn.hidden = NO;
+        [self resetConfirmBtn];
+        [self resetVideoProgress];
+        [self onShowEffectView];
+        [self removeAllTextFieldFromSuperView];
+        [self removeAllPasterViewFromSuperView];
+        [self setLeftPanFrame:0 rightPanFrame:0];
+        _effectSelectType = EffectSelectType_Effect;
+        [_videoCutView setColorType:ColorType_Effect];
+        [_videoCutView setCenterPanHidden:YES];
+        __block NSArray <EffectInfo *> *effectArray = nil;
+        dispatch_barrier_sync(_imageLoadingQueue, ^{
+            effectArray = _effectList;
+            });
+        [_effectSelectView setEffectList:effectArray momentary:YES];
+    }
+    
+    func onTextBtnClicked() {
+        _bottomBar.hidden = YES;
+        _deleteBtn.hidden = NO;
+        [self resetConfirmBtn];
+        [self resetVideoProgress];
+        [self onShowEffectView];
+        [self removeAllPasterViewFromSuperView];
+        [self setLeftPanFrame:0 rightPanFrame:0];
+        [_effectSelectView setEffectList:_textEffectArray];
+        [_videoCutView setColorType:ColorType_Text];
+        [_videoCutView setCenterPanHidden:YES];
+        _effectSelectType = EffectSelectType_Text;
+    }
+    
+    func onPasterBtnClicked() {
+        _bottomBar.hidden = YES;
+        _deleteBtn.hidden = NO;
+        [self resetConfirmBtn];
+        [self resetVideoProgress];
+        [self onShowEffectView];
+        [self removeAllTextFieldFromSuperView];
+        [self setLeftPanFrame:0 rightPanFrame:0];
+        [_effectSelectView setEffectList:_pasterEffectArray];
+        [_videoCutView setColorType:ColorType_Paster];
+        [_videoCutView setCenterPanHidden:YES];
+        _effectSelectType = EffectSelectType_Paster;
+    }
+    
+    
+    // MARK: - EffectSelectViewDelegate
+
+    func onEffectBtnBeginSelect(_ btn: UIButton!) {
+        if (_effectSelectType != EffectSelectType_Effect) {
+            return;
+        }
+        _effectType = (TXEffectType)btn.tag;
+        UIColor *color = TXCVEFColorPaletteColorAtIndex(btn.tag);
+        [_videoCutView startColoration:color alpha:0.7];
+        
+        [_ugcEdit startEffect:(TXEffectType)_effectType startTime:_playTime];
+        if (!_isReverse) {
+            [self startPlayFromTime:_playTime toTime:_duration];
+        }else{
+            [self startPlayFromTime:0 toTime:_playTime];
+        }
+        [self setPlayBtn:YES];
+    }
+    
+    func onEffectBtnEndSelect(_ btn: UIButton!) {
+        if (_effectType != -1) {
+            [_videoCutView stopColoration];
+            [_ugcEdit stopEffect:_effectType endTime:_playTime];
+            [_ugcEdit pausePlay];
+            _effectType = -1;
+            [self setPlayBtn:NO];
+        }
+    }
+    
+    func onEffectBtnSelected(_ btn: UIButton!) {
+        _effectSelectIndex = btn.tag;
+        switch (_effectSelectType) {
+        case EffectSelectType_Time:
+        {
+            switch (_effectSelectIndex) {
+            case 0:
+                [self onVideoTimeEffectsClear];
+                break;
+            case 1:
+                [self onVideoTimeEffectsBackPlay];
+                break;
+            case 2:
+                [self onVideoTimeEffectsRepeat];
+                break;
+            case 3:
+                [self onVideoTimeEffectsSpeed];
+                break;
+            default:
+                break;
+            }
+        }
+        break;
+        case EffectSelectType_Filter:
+        {
+            [self setFilter:_effectSelectIndex];
+            if (!_isPlay) {
+                [_ugcEdit resumePlay];
+                [self setPlayBtn:YES];
+                _isPlay = YES;
+                _isSeek = NO;
+            }
+        }
+        break;
+        case EffectSelectType_Paster:
+        {
+            [_ugcEdit pausePlay];
+            [self setPlayBtn:NO];
+            [self removeAllPasterViewFromSuperView];
+            if (_effectSelectIndex == _pasterEffectArray.count - 1) {
+                _pasterAddView.hidden = NO;
+                [_pasterAddView setPasterType:PasterType_Animate];
+            }else{
+                VideoPasterInfo* pasterInfo = _videoPasterInfoList[_effectSelectIndex];
+                [_videoPreview addSubview:pasterInfo.pasterView];
+                [self setLeftPanFrame:pasterInfo.startTime rightPanFrame:pasterInfo.endTime];
+                [_ugcEdit previewAtTime:pasterInfo.endTime];
+            }
+        }
+        break;
+            
+        case EffectSelectType_Text:
+        {
+            [_ugcEdit pausePlay];
+            [self setPlayBtn:NO];
+            [self removeAllTextFieldFromSuperView];
+            if (_effectSelectIndex == _textEffectArray.count - 1) {
+                _pasterAddView.hidden = NO;
+                [_pasterAddView setPasterType:PasterType_Qipao];
+            }else{
+                VideoTextInfo* textInfo = _videoTextInfoList[_effectSelectIndex];
+                [_videoPreview addSubview:textInfo.textField];
+                [self setLeftPanFrame:textInfo.startTime rightPanFrame:textInfo.endTime];
+                [_ugcEdit previewAtTime:textInfo.endTime];
+            }
+        }
+        break;
+            
+        default:
+            break;
+        }
+    }
+    
+    // MARK: - VideoPasterViewDelegate
+    
+    func onPasterViewTap() {
+        
+    }
+    
+    func onRemove(_ pasterView: VideoPasterView!) {
+        [pasterView removeFromSuperview];
+        [self removeCurrentPasterInfo];
+    }
+    
+    // MARK: - VideoTextFieldDelegate
+    func onBubbleTap() {
+        
+    }
+    
+    func onTextInputBegin() {
+        _effectConfirmBtn.enabled = NO;
+    }
+    
+    func onTextInputDone(_ text: String!) {
+        _effectConfirmBtn.enabled = YES;
+    }
+    
+    func onRemoveTextField(_ textField: VideoTextFiled!) {
+        [textField removeFromSuperview];
+        [self removeCurrentTextInfo];
+    }
+    
+    // MARK: - TCBGMControllerListener
+    func onBGMControllerPlay(_ path: NSObject!) {
+        if (path == nil) {
+            _bottomBar.hidden = NO;
+            [self resetConfirmBtn];
+            [self startPlayFromTime:0 toTime:_duration];
+            [self setPlayBtn:YES];
+            return;
+        }else{
+            _BGMPath = path;
+        }
+        __weak __typeof(self) ws = self;
+        if([_BGMPath isKindOfClass:[NSString class]]){
+            _BGMDuration = [TXVideoInfoReader getVideoInfo:(NSString *)_BGMPath].duration;
+            [_ugcEdit setBGM:(NSString *)_BGMPath result:^(int result) {
+                if (result == 0) {
+                [ws setBGMStartTime:0 endTime:MAXFLOAT];
+                }
+                }];
+        }else{
+            _BGMDuration = [TXVideoInfoReader getVideoInfoWithAsset:(AVAsset *)_BGMPath].duration;
+            [_ugcEdit setBGMAsset:(AVAsset *)_BGMPath result:^(int result) {
+                if (result == 0) {
+                [ws setBGMStartTime:0 endTime:MAXFLOAT];
+                }
+                }];
+        }
+    }
+    
 
     
     var _bgmListVC: TCBGMListViewController
@@ -2108,326 +2517,11 @@ class EditorViewController: UIViewController, UICollectionViewDelegateFlowLayout
             }
 }
 
-#pragma mark - BottomTabBarDelegate
-- (void)onMusicBtnClicked
-{
-    _bottomBar.hidden = YES;
-    [self onSelectMusic];
-    [self setLeftPanFrame:0 rightPanFrame:0];
-    [self resetConfirmBtn];
-    }
-    
-    - (void)onEffectBtnClicked
-        {
-            _bottomBar.hidden = YES;
-            _deleteBtn.hidden = NO;
-            [self resetConfirmBtn];
-            [self resetVideoProgress];
-            [self onShowEffectView];
-            [self removeAllTextFieldFromSuperView];
-            [self removeAllPasterViewFromSuperView];
-            [self setLeftPanFrame:0 rightPanFrame:0];
-            _effectSelectType = EffectSelectType_Effect;
-            [_videoCutView setColorType:ColorType_Effect];
-            [_videoCutView setCenterPanHidden:YES];
-            __block NSArray <EffectInfo *> *effectArray = nil;
-            dispatch_barrier_sync(_imageLoadingQueue, ^{
-                effectArray = _effectList;
-                });
-            [_effectSelectView setEffectList:effectArray momentary:YES];
-}
 
--(void)onTimeBtnClicked
-    {
-        _bottomBar.hidden = YES;
-        _deleteBtn.hidden = YES;
-        [self resetConfirmBtn];
-        [self resetVideoProgress];
-        [self onShowEffectView];
-        [self removeAllTextFieldFromSuperView];
-        [self removeAllPasterViewFromSuperView];
-        [self setLeftPanFrame:0 rightPanFrame:0];
-        _effectSelectType = EffectSelectType_Time;
-        [_videoCutView setColorType:ColorType_Time];
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            NSMutableArray <EffectInfo *> *effectArray = [NSMutableArray array];
-            [effectArray addObject:({
-                EffectInfo * v= [EffectInfo new];
-                v.name = @"无";
-                v.animateIcons = [NSMutableArray array];
-                for (int i = 0; i < 20; i ++) {
-                [v.animateIcons addObject:[UIImage imageNamed:[NSString stringWithFormat:@"jump_%d",i]]];
-                }
-                v;
-                })];
-            [effectArray addObject:({
-                EffectInfo * v= [EffectInfo new];
-                v.name = @"时光倒流";
-                v.animateIcons = [NSMutableArray array];
-                v.selectIcon = [UIImage imageNamed:@"timeBack_select"];
-                for (int i = 19; i >= 0; i --) {
-                [v.animateIcons addObject:[UIImage imageNamed:[NSString stringWithFormat:@"jump_%d",i]]];
-                }
-                v;
-                })];
-            [effectArray addObject:({
-                EffectInfo * v= [EffectInfo new];
-                v.name = @"反复";
-                v.animateIcons = [NSMutableArray array];
-                v.selectIcon = [UIImage imageNamed:@"repeat_select"];
-                NSMutableArray *repeatIcons = [NSMutableArray array];
-                for (int i = 0; i < 20; i ++) {
-                UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"jump_%d",i]];
-                if (i >= 5 && i <= 15) {
-                [repeatIcons addObject:image];
-                }
-                if (i == 15) {
-                [v.animateIcons addObjectsFromArray:repeatIcons];
-                [v.animateIcons addObjectsFromArray:repeatIcons];
-                }
-                [v.animateIcons addObject:image];
-                }
-                v;
-                })];
-            [effectArray addObject:({
-                EffectInfo * v= [EffectInfo new];
-                v.name = @"慢动作";
-                v.animateIcons = [NSMutableArray array];
-                v.selectIcon = [UIImage imageNamed:@"slow_select"];
-                v.isSlow = YES;
-                for (int i = 0; i < 20; i ++) {
-                [v.animateIcons addObject:[UIImage imageNamed:[NSString stringWithFormat:@"jump_%d",i]]];
-                }
-                v;
-                })];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [_effectSelectView setEffectList:effectArray];
-                });
-            });
-    }
-    
-    - (void)onFilterBtnClicked
-        {
-            _bottomBar.hidden = YES;
-            _deleteBtn.hidden = YES;
-            [self resetConfirmBtn];
-            [self resetVideoProgress];
-            [self onShowEffectView];
-            [self setLeftPanFrame:0 rightPanFrame:0];
-            NSMutableArray <EffectInfo *> *effectArray = [NSMutableArray array];
-            [effectArray addObject:({
-                EffectInfo * v= [EffectInfo new];
-                v.name = @"原图";
-                v.icon = [UIImage imageNamed:@"orginal"];
-                v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-                v;
-                })];
-            
-            [effectArray addObject:({
-                EffectInfo *v = [EffectInfo new];
-                v.name = @"美白";
-                v.icon = [UIImage imageNamed:@"fwhite"];
-                v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-                v;
-                })];
-            
-            [effectArray addObject:({
-                EffectInfo *v = [EffectInfo new];
-                v.name = @"浪漫";
-                v.icon = [UIImage imageNamed:@"langman"];
-                v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-                v;
-                })];
-            [effectArray addObject:({
-                EffectInfo *v = [EffectInfo new];
-                v.name = @"清新";
-                v.icon = [UIImage imageNamed:@"qingxin"];
-                v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-                v;
-                })];
-            [effectArray addObject:({
-                EffectInfo *v = [EffectInfo new];
-                v.name = @"唯美";
-                v.icon = [UIImage imageNamed:@"weimei"];
-                v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-                v;
-                })];
-            [effectArray addObject:({
-                EffectInfo *v = [EffectInfo new];
-                v.name = @"粉嫩";
-                v.icon = [UIImage imageNamed:@"fennen"];
-                v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-                v;
-                })];
-            [effectArray addObject:({
-                EffectInfo *v = [EffectInfo new];
-                v.name = @"怀旧";
-                v.icon = [UIImage imageNamed:@"huaijiu"];
-                v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-                v;
-                })];
-            [effectArray addObject:({
-                EffectInfo *v = [EffectInfo new];
-                v.name = @"蓝调";
-                v.icon = [UIImage imageNamed:@"landiao"];
-                v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-                v;
-                })];
-            [effectArray addObject:({
-                EffectInfo *v = [EffectInfo new];
-                v.name = @"清凉";
-                v.icon = [UIImage imageNamed:@"qingliang"];
-                v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-                v;
-                })];
-            [effectArray addObject:({
-                EffectInfo *v = [EffectInfo new];
-                v.name = @"日系";
-                v.icon = [UIImage imageNamed:@"rixi"];
-                v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-                v;
-                })];
-            [_effectSelectView setEffectList:effectArray];
-            _effectSelectType = EffectSelectType_Filter;
-            [_videoCutView setColorType:ColorType_Filter];
-            [_videoCutView setCenterPanHidden:YES];
-            [self removeAllTextFieldFromSuperView];
-            [self removeAllPasterViewFromSuperView];
-        }
-        
-        - (void)onPasterBtnClicked
-            {
-                _bottomBar.hidden = YES;
-                _deleteBtn.hidden = NO;
-                [self resetConfirmBtn];
-                [self resetVideoProgress];
-                [self onShowEffectView];
-                [self removeAllTextFieldFromSuperView];
-                [self setLeftPanFrame:0 rightPanFrame:0];
-                [_effectSelectView setEffectList:_pasterEffectArray];
-                [_videoCutView setColorType:ColorType_Paster];
-                [_videoCutView setCenterPanHidden:YES];
-                _effectSelectType = EffectSelectType_Paster;
-            }
-            
-            - (void)onTextBtnClicked
-                {
-                    _bottomBar.hidden = YES;
-                    _deleteBtn.hidden = NO;
-                    [self resetConfirmBtn];
-                    [self resetVideoProgress];
-                    [self onShowEffectView];
-                    [self removeAllPasterViewFromSuperView];
-                    [self setLeftPanFrame:0 rightPanFrame:0];
-                    [_effectSelectView setEffectList:_textEffectArray];
-                    [_videoCutView setColorType:ColorType_Text];
-                    [_videoCutView setCenterPanHidden:YES];
-                    _effectSelectType = EffectSelectType_Text;
-}
+ 
 
 #pragma mark EffectSelectViewDelegate
--(void)onEffectBtnBeginSelect:(UIButton *)btn
-{
-    if (_effectSelectType != EffectSelectType_Effect) {
-        return;
-    }
-    _effectType = (TXEffectType)btn.tag;
-    UIColor *color = TXCVEFColorPaletteColorAtIndex(btn.tag);
-    [_videoCutView startColoration:color alpha:0.7];
-    
-    [_ugcEdit startEffect:(TXEffectType)_effectType startTime:_playTime];
-    if (!_isReverse) {
-        [self startPlayFromTime:_playTime toTime:_duration];
-    }else{
-        [self startPlayFromTime:0 toTime:_playTime];
-    }
-    [self setPlayBtn:YES];
-}
 
--(void)onEffectBtnEndSelect:(UIButton *)btn
-{
-    if (_effectType != -1) {
-        [_videoCutView stopColoration];
-        [_ugcEdit stopEffect:_effectType endTime:_playTime];
-        [_ugcEdit pausePlay];
-        _effectType = -1;
-        [self setPlayBtn:NO];
-    }
-}
-
--(void)onEffectBtnSelected:(UIButton *)btn
-{
-    _effectSelectIndex = btn.tag;
-    switch (_effectSelectType) {
-    case EffectSelectType_Time:
-    {
-        switch (_effectSelectIndex) {
-        case 0:
-            [self onVideoTimeEffectsClear];
-            break;
-        case 1:
-            [self onVideoTimeEffectsBackPlay];
-            break;
-        case 2:
-            [self onVideoTimeEffectsRepeat];
-            break;
-        case 3:
-            [self onVideoTimeEffectsSpeed];
-            break;
-        default:
-            break;
-        }
-    }
-    break;
-    case EffectSelectType_Filter:
-    {
-        [self setFilter:_effectSelectIndex];
-        if (!_isPlay) {
-            [_ugcEdit resumePlay];
-            [self setPlayBtn:YES];
-            _isPlay = YES;
-            _isSeek = NO;
-        }
-    }
-    break;
-    case EffectSelectType_Paster:
-    {
-        [_ugcEdit pausePlay];
-        [self setPlayBtn:NO];
-        [self removeAllPasterViewFromSuperView];
-        if (_effectSelectIndex == _pasterEffectArray.count - 1) {
-            _pasterAddView.hidden = NO;
-            [_pasterAddView setPasterType:PasterType_Animate];
-        }else{
-            VideoPasterInfo* pasterInfo = _videoPasterInfoList[_effectSelectIndex];
-            [_videoPreview addSubview:pasterInfo.pasterView];
-            [self setLeftPanFrame:pasterInfo.startTime rightPanFrame:pasterInfo.endTime];
-            [_ugcEdit previewAtTime:pasterInfo.endTime];
-        }
-    }
-    break;
-        
-    case EffectSelectType_Text:
-    {
-        [_ugcEdit pausePlay];
-        [self setPlayBtn:NO];
-        [self removeAllTextFieldFromSuperView];
-        if (_effectSelectIndex == _textEffectArray.count - 1) {
-            _pasterAddView.hidden = NO;
-            [_pasterAddView setPasterType:PasterType_Qipao];
-        }else{
-            VideoTextInfo* textInfo = _videoTextInfoList[_effectSelectIndex];
-            [_videoPreview addSubview:textInfo.textField];
-            [self setLeftPanFrame:textInfo.startTime rightPanFrame:textInfo.endTime];
-            [_ugcEdit previewAtTime:textInfo.endTime];
-        }
-    }
-    break;
-        
-    default:
-        break;
-    }
-    }
     
     - (void)onVideoTimeEffectsClear
         {
@@ -2622,38 +2716,8 @@ class EditorViewController: UIViewController, UICollectionViewDelegateFlowLayout
     [_ugcEdit previewAtTime:endTime];
     [_videoCutView startColoration:[UIColor redColor] alpha:0.7];
 }
-#pragma mark VideoPasterViewDelegate
-- (void)onPasterViewTap
-{
-    
-    }
-    - (void)onRemovePasterView:(VideoPasterView*)pasterView
-{
-    [pasterView removeFromSuperview];
-    [self removeCurrentPasterInfo];
-}
 
-#pragma mark VideoTextFieldDelegate
-- (void)onBubbleTap
-{
-    
-    }
-    
-    - (void)onTextInputBegin
-        {
-            _effectConfirmBtn.enabled = NO;
-        }
-        
-        - (void)onTextInputDone:(NSString*)text
-{
-    _effectConfirmBtn.enabled = YES;
-    }
-    
-    - (void)onRemoveTextField:(VideoTextFiled*)textField
-{
-    [textField removeFromSuperview];
-    [self removeCurrentTextInfo];
-}
+
 
 #pragma mark - VideoCutViewDelegate
 - (void)onVideoRangeTap:(CGFloat)tapTime
@@ -2780,33 +2844,7 @@ class EditorViewController: UIViewController, UICollectionViewDelegateFlowLayout
 
 #pragma mark TCBGMControllerListener
 -(void) onBGMControllerPlay:(NSObject*) path
-{
-    if (path == nil) {
-        _bottomBar.hidden = NO;
-        [self resetConfirmBtn];
-        [self startPlayFromTime:0 toTime:_duration];
-        [self setPlayBtn:YES];
-        return;
-    }else{
-        _BGMPath = path;
-    }
-    __weak __typeof(self) ws = self;
-    if([_BGMPath isKindOfClass:[NSString class]]){
-        _BGMDuration = [TXVideoInfoReader getVideoInfo:(NSString *)_BGMPath].duration;
-        [_ugcEdit setBGM:(NSString *)_BGMPath result:^(int result) {
-            if (result == 0) {
-            [ws setBGMStartTime:0 endTime:MAXFLOAT];
-            }
-            }];
-    }else{
-        _BGMDuration = [TXVideoInfoReader getVideoInfoWithAsset:(AVAsset *)_BGMPath].duration;
-        [_ugcEdit setBGMAsset:(AVAsset *)_BGMPath result:^(int result) {
-            if (result == 0) {
-            [ws setBGMStartTime:0 endTime:MAXFLOAT];
-            }
-            }];
-    }
-    }
+
     
     - (void)setBGMStartTime:(CGFloat)startTime endTime:(CGFloat)endTime
 {
@@ -2826,42 +2864,7 @@ class EditorViewController: UIViewController, UICollectionViewDelegateFlowLayout
         });
 }
 
-#pragma mark VideoRecordMusicViewDelegate
--(void)onBtnMusicSelected
-{
-    [self resetVideoProgress];
-    UINavigationController *nv = [[UINavigationController alloc] initWithRootViewController:_bgmListVC];
-    [nv.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
-    nv.navigationBar.barTintColor = RGB(25, 29, 38);
-    [self presentViewController:nv animated:YES completion:nil];
-    [_bgmListVC loadBGMList];
-}
--(void)onBtnMusicStoped
-    {
-        _BGMPath = nil;
-        [_ugcEdit setBGM:nil result:^(int result) {
-            
-            }];
-        _musicView.hidden = YES;
-        _bottomBar.hidden = NO;
-        [self resetConfirmBtn];
-        [self startPlayFromTime:0 toTime:_duration];
-}
 
--(void)onBGMValueChange:(CGFloat)percent
-{
-    _BGMVolume = 1.0 * percent;
-    [_ugcEdit setBGMVolume:_BGMVolume];
-}
--(void)onVoiceValueChange:(CGFloat)percent
-{
-    _videoVolume = 1.0 * percent;
-    [_ugcEdit setVideoVolume:_videoVolume];
-}
--(void)onBGMRangeChange:(CGFloat)startPercent endPercent:(CGFloat)endPercent
-{
-    [self setBGMStartTime:_BGMDuration * startPercent endTime:_BGMDuration * endPercent];
-}
 
 #pragma mark UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
