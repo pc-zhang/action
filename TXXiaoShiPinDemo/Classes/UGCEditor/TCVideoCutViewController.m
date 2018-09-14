@@ -305,9 +305,12 @@ typedef  NS_ENUM(NSInteger,VideoType)
         if (_leftTime == 0 && _rightTime == _duration) {
             //视频如果没发生剪裁，这里不用走编辑逻辑，减少画面质量损失
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+            TCVideoEditViewController2 *editViewController = (TCVideoEditViewController2*)[storyboard instantiateViewControllerWithIdentifier:@"TCVideoEditViewController2"];
+            editViewController.videoAsset = _videoAsset;
+            editViewController.isFromCut = YES;
+            [self.navigationController pushViewController:editViewController animated:YES];
             
-            UIViewController *documentViewController = [storyboard instantiateInitialViewController];
-            [self.navigationController pushViewController:documentViewController animated:YES];
+
                         
 //            TCVideoEditViewController2 *vc = [[TCVideoEditViewController2 alloc] init];
 //            vc.videoAsset = _videoAsset;

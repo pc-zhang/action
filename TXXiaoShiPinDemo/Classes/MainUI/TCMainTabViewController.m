@@ -266,20 +266,15 @@
 
 -(void)onVideoSelectClicked
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    UIViewController *editViewController = [storyboard instantiateViewControllerWithIdentifier:@"TCVideoEditViewController2"];
-    TCNavigationController *nav = [[TCNavigationController alloc] initWithRootViewController:editViewController];
-    [self presentViewController:nav animated:YES completion:nil];
-        
-//    _mediaType = QBImagePickerMediaTypeVideo;
-//    QBImagePickerController *imagePickerController = [QBImagePickerController new];
-//    imagePickerController.delegate = self;
-//    imagePickerController.mediaType = _mediaType;
-//    imagePickerController.allowsMultipleSelection = YES;
-//    imagePickerController.showsNumberOfSelectedAssets = YES;
-////    imagePickerController.maximumNumberOfSelection = 5;
-//    [self presentViewController:imagePickerController animated:YES completion:NULL];
-//    _botttomView.hidden = YES;
+    _mediaType = QBImagePickerMediaTypeVideo;
+    QBImagePickerController *imagePickerController = [QBImagePickerController new];
+    imagePickerController.delegate = self;
+    imagePickerController.mediaType = _mediaType;
+    imagePickerController.allowsMultipleSelection = YES;
+    imagePickerController.showsNumberOfSelectedAssets = YES;
+//    imagePickerController.maximumNumberOfSelection = 5;
+    [self presentViewController:imagePickerController animated:YES completion:NULL];
+    _botttomView.hidden = YES;
 }
 
 -(void)onPictureSelectClicked
