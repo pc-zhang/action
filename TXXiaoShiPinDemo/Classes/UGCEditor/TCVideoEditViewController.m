@@ -303,7 +303,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     }
     self.view.backgroundColor = UIColor.blackColor;
     
-    _videoPreview = [[VideoPreview alloc] initWithFrame:self.view.bounds coverImage:nil];
+    _videoPreview = [[VideoPreview alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height/2) coverImage:nil];
     _videoPreview.delegate = self;
     [_videoPreview setPlayBtnHidden:YES];
     [self.view addSubview:_videoPreview];
@@ -674,10 +674,10 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     _videoPreview.hidden = YES;
     
     [UIView animateWithDuration:0.3 animations:^{
-        _coverImageView.frame = CGRectMake(0, 54 * kScaleY, self.view.width, 410 * kScaleY);
+//        _coverImageView.frame = CGRectMake(0, 54 * kScaleY, self.view.width, 410 * kScaleY);
         _effectView.frame = CGRectMake(0, self.view.height - 205 * kScaleY, _effectView.width, _effectView.height);
     } completion:^(BOOL finished) {
-        _videoPreview.frame = _coverImageView.frame;
+//        _videoPreview.frame = _coverImageView.frame;
         _videoPreview.hidden = NO;
         _coverImageView.hidden = YES;
         _bottomBar.hidden = YES;
@@ -692,10 +692,10 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     _bottomBar.hidden = NO;
     
     [UIView animateWithDuration:0.3 animations:^{
-        _coverImageView.frame = CGRectMake(0, 0, self.view.width,self.view.height);
+//        _coverImageView.frame = CGRectMake(0, 0, self.view.width,self.view.height);
         _effectView.frame = CGRectMake(0, self.view.height, _effectView.width, _effectView.height);
     } completion:^(BOOL finished) {
-        _videoPreview.frame = _coverImageView.frame;
+//        _videoPreview.frame = _coverImageView.frame;
         _videoPreview.hidden = NO;
         _coverImageView.hidden = YES;
     }];

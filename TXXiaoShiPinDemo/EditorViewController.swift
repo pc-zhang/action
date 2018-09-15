@@ -35,6 +35,14 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        backgroundTimelineView.isHidden = true
+        timelineView.isHidden = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         // add composition
         if composition==nil {
             composition = AVMutableComposition()
@@ -49,13 +57,6 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
         self.push(op:.nothing)
         
         playerView.playerLayer.player = player
-        
-        backgroundTimelineView.isHidden = true
-        timelineView.isHidden = true
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         
         // Access the document
         document?.open(completionHandler: { (success) in

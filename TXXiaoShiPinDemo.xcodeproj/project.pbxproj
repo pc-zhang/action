@@ -1234,9 +1234,6 @@
 				CE93B72F201F4D0900CD89B7 /* TCVideoLoadingController.xib */,
 				F08756E321495B35006CF4B6 /* Custom Compositors */,
 				F08756E021495B34006CF4B6 /* EditorViewController.swift */,
-				F08756E721495B36006CF4B6 /* PlayerView.swift */,
-				F08756E221495B34006CF4B6 /* SegmentView.swift */,
-				F08756E621495B35006CF4B6 /* TimelineView.swift */,
 				F08756F121495CFE006CF4B6 /* Main.storyboard */,
 				CE29EBCE1FE8BE140038C200 /* VideoJoin */,
 				F08756DD21495B31006CF4B6 /* TXXiaoShiPinDemo-Bridging-Header.h */,
@@ -1400,6 +1397,9 @@
 		CE29EBB51FE8BDFB0038C200 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F08756E721495B36006CF4B6 /* PlayerView.swift */,
+				F08756E221495B34006CF4B6 /* SegmentView.swift */,
+				F08756E621495B35006CF4B6 /* TimelineView.swift */,
 				A009172020B4366F003EBAA5 /* TXCVEFColorPalette.h */,
 				A009172120B43670003EBAA5 /* TXCVEFColorPalette.m */,
 				CE29EBB61FE8BDFB0038C200 /* VideoPreview.h */,
