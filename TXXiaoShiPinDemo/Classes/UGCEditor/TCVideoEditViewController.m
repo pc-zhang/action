@@ -374,11 +374,11 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     _videoCutView = [[VideoCutView alloc] initWithFrame:CGRectMake(0,_timeLabel.bottom + 3, _effectView.width,cutViewHeight) videoPath:_videoPath videoAssert:_videoAsset config:config];
     _videoCutView.delegate = self;
     [_videoCutView setCenterPanHidden:YES];
-    [_effectView addSubview:_videoCutView];
+    [self.view addSubview:_videoCutView];
     
     UIImageView *flagView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.width / 2 - 6, _timeLabel.bottom, 12, 48)];
     flagView.image = [UIImage imageNamed:@"videoSlider"];
-    [_effectView addSubview:flagView];
+    [self.view addSubview:flagView];
     
     _effectSelectView = [[EffectSelectView alloc] initWithFrame:CGRectMake(0, _videoCutView.bottom + 24 * kScaleY,_effectView.width,70 * kScaleY)];
     _effectSelectView.delegate = self;

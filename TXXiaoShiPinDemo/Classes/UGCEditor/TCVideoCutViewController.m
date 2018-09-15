@@ -6,6 +6,7 @@
 //  Copyright © 2017年 tencent. All rights reserved.
 //
 
+#import "TXXiaoShiPinDemo-Swift.h"
 #import "TCVideoCutViewController.h"
 #import "TCVideoEditViewController.h"
 #import <MediaPlayer/MPMediaPickerController.h>
@@ -20,7 +21,6 @@
 #import "SDKHeader.h"
 #import "TransitionView.h"
 #import "SmallButton.h"
-#import "TXXiaoShiPinDemo-Swift.h"
 
 typedef  NS_ENUM(NSInteger,VideoType)
 {

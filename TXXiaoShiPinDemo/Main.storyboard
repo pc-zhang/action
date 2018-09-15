@@ -121,7 +121,7 @@
                                     <constraint firstItem="F5A-eM-25l" firstAttribute="baseline" secondItem="3K6-sj-9eg" secondAttribute="baseline" id="gcx-K5-ERp"/>
                                 </constraints>
                             </stackView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uIs-N9-a4d" customClass="TimelineView" customModule="TXXiaoShiPinDemo" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uIs-N9-a4d">
                                 <rect key="frame" x="0.0" y="478" width="375" height="210"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tMi-Co-jgb">
@@ -307,7 +307,7 @@
                         <viewLayoutGuide key="safeArea" id="Ebh-r4-GKs"/>
                     </view>
                     <connections>
-                        <outlet property="backgroundTimelineView" destination="a4B-sO-aRR" id="6n0-mS-2Go"/>
+                        <outlet property="backgroundTimelineView" destination="a4B-sO-aRR" id="Bmv-kz-drl"/>
                         <outlet property="copyButton" destination="Psa-3f-f8J" id="VmA-6D-oT7"/>
                         <outlet property="firstTrackAddButton" destination="tMi-Co-jgb" id="mA4-We-I3y"/>
                         <outlet property="playPauseButton" destination="2ut-Iw-LNe" id="Dnn-s9-J57"/>
@@ -317,7 +317,8 @@
                         <outlet property="secondTrackAddButton" destination="8JA-QM-3MR" id="YLT-pq-UDV"/>
                         <outlet property="splitButton" destination="nJK-pN-g70" id="SBf-7G-LKI"/>
                         <outlet property="startTimeLabel" destination="e3x-oC-ppg" id="B4d-nr-3tS"/>
-                        <outlet property="timelineView" destination="hf9-HS-VQh" id="VlD-q5-eFd"/>
+                        <outlet property="timelineV" destination="uIs-N9-a4d" id="bXq-6p-yLh"/>
+                        <outlet property="timelineView" destination="hf9-HS-VQh" id="PBR-XC-Q8Z"/>
                         <outlet property="undoButton" destination="txo-ro-r4L" id="jer-yP-EXY"/>
                         <outlet property="view" destination="7Y5-0K-2yx" id="kfq-2M-EAZ"/>
                     </connections>

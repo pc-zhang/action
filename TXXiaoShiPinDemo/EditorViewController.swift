@@ -218,10 +218,10 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
     @IBOutlet weak var removeButton: UIButton!
     @IBOutlet weak var undoButton: UIButton!
     @IBOutlet weak var redoButton: UIButton!
-    @IBOutlet weak var documentNameLabel: UILabel!
     @IBOutlet weak var startTimeLabel: UILabel!
     @IBOutlet weak var playPauseButton: UIButton!
     @IBOutlet weak var playerView: PlayerView!
+    @IBOutlet weak var timelineV: UIView!
     @IBOutlet weak var timelineView: UICollectionView! {
         didSet {
             timelineView.delegate = self
