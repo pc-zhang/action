@@ -308,6 +308,7 @@
                     </view>
                     <connections>
                         <outlet property="backgroundTimelineView" destination="a4B-sO-aRR" id="Bmv-kz-drl"/>
+                        <outlet property="bottomBar" destination="D6Q-tG-niT" id="Qbp-DK-C2u"/>
                         <outlet property="copyButton" destination="Psa-3f-f8J" id="VmA-6D-oT7"/>
                         <outlet property="firstTrackAddButton" destination="tMi-Co-jgb" id="mA4-We-I3y"/>
                         <outlet property="playPauseButton" destination="2ut-Iw-LNe" id="Dnn-s9-J57"/>

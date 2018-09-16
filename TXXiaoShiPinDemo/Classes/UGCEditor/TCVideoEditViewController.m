@@ -82,7 +82,6 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 {
     TCBGMListViewController *_bgmListVC;
     TXVideoEditer*   _ugcEdit;        //sdk编辑器
-    VideoPreview*    _videoPreview;   //视频预览
     
     //特效View
     UIView*             _effectView;
@@ -110,7 +109,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     TXUGCPublish*       _videoPublish;
     
     BottomTabBar*       _bottomBar;          //底部栏
-    VideoCutView*       _videoCutView;       //裁剪
+    
     PasterAddView*      _pasterAddView;      //贴图
     EffectSelectView*   _effectSelectView;   //动效选择
     EffectSelectType    _effectSelectType;
@@ -374,11 +373,11 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     _videoCutView = [[VideoCutView alloc] initWithFrame:CGRectMake(0,_timeLabel.bottom + 3, _effectView.width,cutViewHeight) videoPath:_videoPath videoAssert:_videoAsset config:config];
     _videoCutView.delegate = self;
     [_videoCutView setCenterPanHidden:YES];
-    [self.view addSubview:_videoCutView];
+//    [self.view addSubview:_videoCutView];
     
-    UIImageView *flagView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.width / 2 - 6, _timeLabel.bottom, 12, 48)];
-    flagView.image = [UIImage imageNamed:@"videoSlider"];
-    [self.view addSubview:flagView];
+    _flagView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.width / 2 - 6, _timeLabel.bottom, 12, 48)];
+    _flagView.image = [UIImage imageNamed:@"videoSlider"];
+//    [self.view addSubview:flagView];
     
     _effectSelectView = [[EffectSelectView alloc] initWithFrame:CGRectMake(0, _videoCutView.bottom + 24 * kScaleY,_effectView.width,70 * kScaleY)];
     _effectSelectView.delegate = self;

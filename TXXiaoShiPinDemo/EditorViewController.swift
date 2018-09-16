@@ -36,6 +36,11 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        timelineV.addSubview(videoCutView)
+        timelineV.addSubview(flagView)
+        videoPreview.frame = playerView.bounds
+        playerView.addSubview(videoPreview)
+        
         backgroundTimelineView.isHidden = true
         timelineView.isHidden = true
     }
@@ -222,6 +227,8 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
     @IBOutlet weak var playPauseButton: UIButton!
     @IBOutlet weak var playerView: PlayerView!
     @IBOutlet weak var timelineV: UIView!
+    @IBOutlet weak var bottomBar: UIStackView!
+    
     @IBOutlet weak var timelineView: UICollectionView! {
         didSet {
             timelineView.delegate = self

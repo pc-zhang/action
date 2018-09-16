@@ -8,12 +8,21 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "VideoCutView.h"
+#import "VideoPreview.h"
 
 @interface TCVideoEditViewController : UIViewController
 
 @property (strong,nonatomic) NSString *videoPath;
 
 @property (strong,nonatomic) AVAsset  *videoAsset;
+
+@property (strong,nonatomic) VideoCutView*       videoCutView;       //裁剪
+
+@property (strong,nonatomic) UIImageView* flagView;
+
+@property (strong,nonatomic) VideoPreview*    videoPreview;   //视频预览
+
 
 //从剪切过来
 @property (assign,nonatomic) BOOL     isFromCut;
