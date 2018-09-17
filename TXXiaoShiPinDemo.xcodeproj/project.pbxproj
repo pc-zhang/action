@@ -114,7 +114,6 @@
 		CE29EBCA1FE8BDFB0038C200 /* PasterAddView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE29EBBF1FE8BDFB0038C200 /* PasterAddView.m */; };
 		CE29EBCB1FE8BDFB0038C200 /* EffectSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE29EBC01FE8BDFB0038C200 /* EffectSelectView.m */; };
 		CE29EBCC1FE8BDFB0038C200 /* VideoPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = CE29EBC11FE8BDFB0038C200 /* VideoPreview.m */; };
-		CE29EBCD1FE8BDFB0038C200 /* BottomTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = CE29EBC21FE8BDFB0038C200 /* BottomTabBar.m */; };
 		CE29EBD81FE8BE140038C200 /* TCVideoJoinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE29EBCF1FE8BE140038C200 /* TCVideoJoinViewController.m */; };
 		CE29EBD91FE8BE140038C200 /* TCVideoJoinViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE29EBD01FE8BE140038C200 /* TCVideoJoinViewController.xib */; };
 		CE29EBDA1FE8BE140038C200 /* TCVideoEditPrevViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE29EBD31FE8BE140038C200 /* TCVideoEditPrevViewController.xib */; };
@@ -288,7 +287,6 @@
 		CE93B731201F4D0900CD89B7 /* TCVideoLoadingController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE93B72F201F4D0900CD89B7 /* TCVideoLoadingController.xib */; };
 		CEA3F4A9207DB39A00BDE537 /* TXUgcSDK.licence in Resources */ = {isa = PBXBuildFile; fileRef = CEA3F4A8207DB39A00BDE537 /* TXUgcSDK.licence */; };
 		CEBA131B1F9F5A0B00D8FA56 /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEBA13121F9F5A0A00D8FA56 /* GPUImage.framework */; };
-		CEBE18B01FD8E63A00A22F3F /* TCVideoCutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEBE18AF1FD8E63A00A22F3F /* TCVideoCutViewController.m */; };
 		CEC6550220875DF800B0EB7C /* UMSocialSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CEC654EC20875DF800B0EB7C /* UMSocialSDKResources.bundle */; };
 		CEC6550320875DF800B0EB7C /* UShareUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEC654ED20875DF800B0EB7C /* UShareUI.framework */; };
 		CEC6550420875DF800B0EB7C /* UMSocialNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEC654EF20875DF800B0EB7C /* UMSocialNetwork.framework */; };
@@ -311,6 +309,7 @@
 		F08756EF21495B36006CF4B6 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E621495B35006CF4B6 /* TimelineView.swift */; };
 		F08756F021495B36006CF4B6 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E721495B36006CF4B6 /* PlayerView.swift */; };
 		F08756F221495CFF006CF4B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F08756F121495CFE006CF4B6 /* Main.storyboard */; };
+		F0EEF0E3214E3AB00075C376 /* BottomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0EEF0E2214E3AAF0075C376 /* BottomTabBar.swift */; };
 		FE1A138C1D88FE5A00D94B62 /* UserProtocol.html in Resources */ = {isa = PBXBuildFile; fileRef = FE1A138B1D88FE5A00D94B62 /* UserProtocol.html */; };
 /* End PBXBuildFile section */
 
@@ -702,13 +701,11 @@
 		CE29EBB91FE8BDFB0038C200 /* VideoTextFiled.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoTextFiled.m; sourceTree = "<group>"; };
 		CE29EBBA1FE8BDFB0038C200 /* VideoCutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCutView.m; sourceTree = "<group>"; };
 		CE29EBBB1FE8BDFB0038C200 /* TextAddView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextAddView.m; sourceTree = "<group>"; };
-		CE29EBBC1FE8BDFB0038C200 /* BottomTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BottomTabBar.h; sourceTree = "<group>"; };
 		CE29EBBD1FE8BDFB0038C200 /* VideoPasterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPasterView.m; sourceTree = "<group>"; };
 		CE29EBBE1FE8BDFB0038C200 /* VideoTextFiled.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoTextFiled.h; sourceTree = "<group>"; };
 		CE29EBBF1FE8BDFB0038C200 /* PasterAddView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasterAddView.m; sourceTree = "<group>"; };
 		CE29EBC01FE8BDFB0038C200 /* EffectSelectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EffectSelectView.m; sourceTree = "<group>"; };
 		CE29EBC11FE8BDFB0038C200 /* VideoPreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPreview.m; sourceTree = "<group>"; };
-		CE29EBC21FE8BDFB0038C200 /* BottomTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BottomTabBar.m; sourceTree = "<group>"; };
 		CE29EBC31FE8BDFB0038C200 /* TextAddView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextAddView.h; sourceTree = "<group>"; };
 		CE29EBC41FE8BDFB0038C200 /* VideoCutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCutView.h; sourceTree = "<group>"; };
 		CE29EBC51FE8BDFB0038C200 /* VideoPasterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPasterView.h; sourceTree = "<group>"; };
@@ -902,8 +899,6 @@
 		CEA3F4A8207DB39A00BDE537 /* TXUgcSDK.licence */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TXUgcSDK.licence; sourceTree = SOURCE_ROOT; };
 		CEBA13111F9F5A0A00D8FA56 /* Bugly.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bugly.framework; sourceTree = "<group>"; };
 		CEBA13121F9F5A0A00D8FA56 /* GPUImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GPUImage.framework; sourceTree = "<group>"; };
-		CEBE18AE1FD8E63A00A22F3F /* TCVideoCutViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TCVideoCutViewController.h; path = TXXiaoShiPinDemo/Classes/UGCEditor/TCVideoCutViewController.h; sourceTree = SOURCE_ROOT; };
-		CEBE18AF1FD8E63A00A22F3F /* TCVideoCutViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TCVideoCutViewController.m; path = TXXiaoShiPinDemo/Classes/UGCEditor/TCVideoCutViewController.m; sourceTree = SOURCE_ROOT; };
 		CEC654EC20875DF800B0EB7C /* UMSocialSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = UMSocialSDKResources.bundle; sourceTree = "<group>"; };
 		CEC654ED20875DF800B0EB7C /* UShareUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UShareUI.framework; sourceTree = "<group>"; };
 		CEC654EF20875DF800B0EB7C /* UMSocialNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UMSocialNetwork.framework; sourceTree = "<group>"; };
@@ -936,6 +931,7 @@
 		F08756E621495B35006CF4B6 /* TimelineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 		F08756E721495B36006CF4B6 /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		F08756F121495CFE006CF4B6 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		F0EEF0E2214E3AAF0075C376 /* BottomTabBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomTabBar.swift; sourceTree = "<group>"; };
 		FE1A138B1D88FE5A00D94B62 /* UserProtocol.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = UserProtocol.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1224,16 +1220,14 @@
 		91C097151EA49CA1003370AA /* UGCEditor */ = {
 			isa = PBXGroup;
 			children = (
+				F08756E021495B34006CF4B6 /* EditorViewController.swift */,
 				CE29EBB51FE8BDFB0038C200 /* Views */,
-				CEBE18AE1FD8E63A00A22F3F /* TCVideoCutViewController.h */,
-				CEBE18AF1FD8E63A00A22F3F /* TCVideoCutViewController.m */,
 				91BFE8161EB8669F008EB95C /* TCVideoEditViewController.h */,
 				91BFE8171EB8669F008EB95C /* TCVideoEditViewController.m */,
 				CE93B72D201F4D0800CD89B7 /* TCVideoLoadingController.h */,
 				CE93B72E201F4D0900CD89B7 /* TCVideoLoadingController.m */,
 				CE93B72F201F4D0900CD89B7 /* TCVideoLoadingController.xib */,
 				F08756E321495B35006CF4B6 /* Custom Compositors */,
-				F08756E021495B34006CF4B6 /* EditorViewController.swift */,
 				F08756F121495CFE006CF4B6 /* Main.storyboard */,
 				CE29EBCE1FE8BE140038C200 /* VideoJoin */,
 				F08756DD21495B31006CF4B6 /* TXXiaoShiPinDemo-Bridging-Header.h */,
@@ -1397,6 +1391,7 @@
 		CE29EBB51FE8BDFB0038C200 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F0EEF0E2214E3AAF0075C376 /* BottomTabBar.swift */,
 				F08756E721495B36006CF4B6 /* PlayerView.swift */,
 				F08756E221495B34006CF4B6 /* SegmentView.swift */,
 				F08756E621495B35006CF4B6 /* TimelineView.swift */,
@@ -1404,8 +1399,6 @@
 				A009172120B43670003EBAA5 /* TXCVEFColorPalette.m */,
 				CE29EBB61FE8BDFB0038C200 /* VideoPreview.h */,
 				CE29EBC11FE8BDFB0038C200 /* VideoPreview.m */,
-				CE29EBBC1FE8BDFB0038C200 /* BottomTabBar.h */,
-				CE29EBC21FE8BDFB0038C200 /* BottomTabBar.m */,
 				CE29EBC41FE8BDFB0038C200 /* VideoCutView.h */,
 				CE29EBBA1FE8BDFB0038C200 /* VideoCutView.m */,
 				CE870ECF20B4122A0012EF30 /* TransitionView.h */,
@@ -2397,10 +2390,10 @@
 				CE93B730201F4D0900CD89B7 /* TCVideoLoadingController.m in Sources */,
 				91BFE7B91EB86379008EB95C /* TCUserAgreementController.m in Sources */,
 				91BFE79F1EB86288008EB95C /* AppDelegate.m in Sources */,
+				F0EEF0E3214E3AB00075C376 /* BottomTabBar.swift in Sources */,
 				CE1C230F2080D3990002FF8C /* TVCReport.m in Sources */,
 				F08756EC21495B36006CF4B6 /* SegmentView.swift in Sources */,
 				CE29EBCB1FE8BDFB0038C200 /* EffectSelectView.m in Sources */,
-				CE29EBCD1FE8BDFB0038C200 /* BottomTabBar.m in Sources */,
 				CE0BE0401FFB27F900DEBA5C /* UIView+Additions.m in Sources */,
 				CE93B550201959A000CD89B7 /* BeautySettingPanel.m in Sources */,
 				CE1C23102080D3990002FF8C /* TVCCommon.m in Sources */,
@@ -2418,7 +2411,6 @@
 				CE29EBCC1FE8BDFB0038C200 /* VideoPreview.m in Sources */,
 				CE29EBC71FE8BDFB0038C200 /* VideoCutView.m in Sources */,
 				CE29EBE91FE8BF180038C200 /* RangeContent.m in Sources */,
-				CEBE18B01FD8E63A00A22F3F /* TCVideoCutViewController.m in Sources */,
 				CE0BE03B1FFB27F900DEBA5C /* UIImage+Additions.m in Sources */,
 				EF47CE2D1D4B03FC0028B598 /* main.m in Sources */,
 				CE29EBA91FE8BCA10038C200 /* TCBGMCell.m in Sources */,

@@ -74,7 +74,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 };
 
 
-@interface TCVideoEditViewController ()<TXVideoGenerateListener,VideoPreviewDelegate, BottomTabBarDelegate, VideoCutViewDelegate,EffectSelectViewDelegate, PasterAddViewDelegate, VideoPasterViewDelegate ,VideoTextFieldDelegate ,TXVideoPublishListener,TCBGMControllerListener,VideoRecordMusicViewDelegate,UIActionSheetDelegate, UITabBarDelegate , UIPickerViewDelegate ,UIPickerViewDelegate ,UIAlertViewDelegate>
+@interface TCVideoEditViewController ()<TXVideoGenerateListener,VideoPreviewDelegate, VideoCutViewDelegate,EffectSelectViewDelegate, PasterAddViewDelegate, VideoPasterViewDelegate ,VideoTextFieldDelegate ,TXVideoPublishListener,TCBGMControllerListener,VideoRecordMusicViewDelegate,UIActionSheetDelegate, UITabBarDelegate , UIPickerViewDelegate ,UIPickerViewDelegate ,UIAlertViewDelegate>
 
 @end
 
@@ -101,15 +101,10 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     UIView*             _generationView;
     UIProgressView*     _generateProgressView;
     UILabel*            _generationTitleLabel;
-    UILabel*            _timeLabel;
-    UIButton*           _deleteBtn;
-    UIButton*           _playBtn;
 
     //pulish
     TXUGCPublish*       _videoPublish;
-    
-    BottomTabBar*       _bottomBar;          //底部栏
-    
+        
     PasterAddView*      _pasterAddView;      //贴图
     EffectSelectView*   _effectSelectView;   //动效选择
     EffectSelectType    _effectSelectType;
@@ -313,9 +308,6 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     if (@available(iOS 11, *)) {
         offset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
     }
-    _bottomBar = [[BottomTabBar alloc] initWithFrame:CGRectMake(0, self.view.height - 62 * kScaleY - offset, self.view.width, 40 * kScaleY)];
-    _bottomBar.delegate = self;
-    [self.view addSubview:_bottomBar];
 
     // 特效取消按钮
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -348,21 +340,21 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     _timeLabel.text = @"00:00";
     _timeLabel.font = [UIFont systemFontOfSize:14];
     _timeLabel.textColor = [UIColor whiteColor];
-    [_effectView addSubview:_timeLabel];
+//    [_effectView addSubview:_timeLabel];
     
     _playBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_playBtn setBackgroundImage:[UIImage imageNamed:@"editPlay_normal"] forState:UIControlStateNormal];
     [_playBtn setBackgroundImage:[UIImage imageNamed:@"editPlay__press"] forState:UIControlStateHighlighted];
     _playBtn.frame = CGRectMake(self.view.width / 2 - 15, 10 * kScaleY, 30, 30);
     [_playBtn addTarget:self action:@selector(onPlayVideo) forControlEvents:UIControlEventTouchUpInside];
-    [_effectView addSubview:_playBtn];
+//    [_effectView addSubview:_playBtn];
     
     _deleteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_deleteBtn setBackgroundImage:[UIImage imageNamed:@"effectDelete_normal"] forState:UIControlStateNormal];
     [_deleteBtn setBackgroundImage:[UIImage imageNamed:@"effectDelete_press"] forState:UIControlStateHighlighted];
     _deleteBtn.frame = CGRectMake(self.view.width - 15 * kScaleX - 30, 10 * kScaleY, 30, 30);
     [_deleteBtn addTarget:self action:@selector(onDeleteEffect) forControlEvents:UIControlEventTouchUpInside];
-    [_effectView addSubview:_deleteBtn];
+//    [_effectView addSubview:_deleteBtn];
 
     CGFloat cutViewHeight = 34 * kScaleY;
     RangeContentConfig *config = [[RangeContentConfig alloc] init];
@@ -667,7 +659,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 /// 特效入口点击事件响应函数
 - (void)onShowEffectView
 {
-    [self resetVideoProgress];
+//    [self resetVideoProgress];
     _coverImageView.hidden = NO;
     _coverImageView.image = [TXVideoInfoReader getSampleImage:_playTime videoAsset:_videoAsset];
     _videoPreview.hidden = YES;
@@ -1193,222 +1185,6 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     }
 }
 
-#pragma mark - BottomTabBarDelegate
-- (void)onMusicBtnClicked
-{
-    _bottomBar.hidden = YES;
-    [self onSelectMusic];
-    [self setLeftPanFrame:0 rightPanFrame:0];
-    [self resetConfirmBtn];
-}
-
-- (void)onEffectBtnClicked
-{
-    _bottomBar.hidden = YES;
-    _deleteBtn.hidden = NO;
-    [self resetConfirmBtn];
-    [self resetVideoProgress];
-    [self onShowEffectView];
-    [self removeAllTextFieldFromSuperView];
-    [self removeAllPasterViewFromSuperView];
-    [self setLeftPanFrame:0 rightPanFrame:0];
-    _effectSelectType = EffectSelectType_Effect;
-    [_videoCutView setColorType:ColorType_Effect];
-    [_videoCutView setCenterPanHidden:YES];
-    __block NSArray <EffectInfo *> *effectArray = nil;
-    dispatch_barrier_sync(_imageLoadingQueue, ^{
-        effectArray = _effectList;
-    });
-    [_effectSelectView setEffectList:effectArray momentary:YES];
-}
-
--(void)onTimeBtnClicked
-{
-    _bottomBar.hidden = YES;
-    _deleteBtn.hidden = YES;
-    [self resetConfirmBtn];
-    [self resetVideoProgress];
-    [self onShowEffectView];
-    [self removeAllTextFieldFromSuperView];
-    [self removeAllPasterViewFromSuperView];
-    [self setLeftPanFrame:0 rightPanFrame:0];
-    _effectSelectType = EffectSelectType_Time;
-    [_videoCutView setColorType:ColorType_Time];
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSMutableArray <EffectInfo *> *effectArray = [NSMutableArray array];
-        [effectArray addObject:({
-            EffectInfo * v= [EffectInfo new];
-            v.name = @"无";
-            v.animateIcons = [NSMutableArray array];
-            for (int i = 0; i < 20; i ++) {
-                [v.animateIcons addObject:[UIImage imageNamed:[NSString stringWithFormat:@"jump_%d",i]]];
-            }
-            v;
-        })];
-        [effectArray addObject:({
-            EffectInfo * v= [EffectInfo new];
-            v.name = @"时光倒流";
-            v.animateIcons = [NSMutableArray array];
-            v.selectIcon = [UIImage imageNamed:@"timeBack_select"];
-            for (int i = 19; i >= 0; i --) {
-                [v.animateIcons addObject:[UIImage imageNamed:[NSString stringWithFormat:@"jump_%d",i]]];
-            }
-            v;
-        })];
-        [effectArray addObject:({
-            EffectInfo * v= [EffectInfo new];
-            v.name = @"反复";
-            v.animateIcons = [NSMutableArray array];
-            v.selectIcon = [UIImage imageNamed:@"repeat_select"];
-            NSMutableArray *repeatIcons = [NSMutableArray array];
-            for (int i = 0; i < 20; i ++) {
-                UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"jump_%d",i]];
-                if (i >= 5 && i <= 15) {
-                    [repeatIcons addObject:image];
-                }
-                if (i == 15) {
-                    [v.animateIcons addObjectsFromArray:repeatIcons];
-                    [v.animateIcons addObjectsFromArray:repeatIcons];
-                }
-                [v.animateIcons addObject:image];
-            }
-            v;
-        })];
-        [effectArray addObject:({
-            EffectInfo * v= [EffectInfo new];
-            v.name = @"慢动作";
-            v.animateIcons = [NSMutableArray array];
-            v.selectIcon = [UIImage imageNamed:@"slow_select"];
-            v.isSlow = YES;
-            for (int i = 0; i < 20; i ++) {
-                [v.animateIcons addObject:[UIImage imageNamed:[NSString stringWithFormat:@"jump_%d",i]]];
-            }
-            v;
-        })];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_effectSelectView setEffectList:effectArray];
-        });
-    });
-}
-
-- (void)onFilterBtnClicked
-{
-    _bottomBar.hidden = YES;
-    _deleteBtn.hidden = YES;
-    [self resetConfirmBtn];
-    [self resetVideoProgress];
-    [self onShowEffectView];
-    [self setLeftPanFrame:0 rightPanFrame:0];
-    NSMutableArray <EffectInfo *> *effectArray = [NSMutableArray array];
-    [effectArray addObject:({
-        EffectInfo * v= [EffectInfo new];
-        v.name = @"原图";
-        v.icon = [UIImage imageNamed:@"orginal"];
-        v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-        v;
-    })];
-    
-    [effectArray addObject:({
-        EffectInfo *v = [EffectInfo new];
-        v.name = @"美白";
-        v.icon = [UIImage imageNamed:@"fwhite"];
-        v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-        v;
-    })];
-    
-    [effectArray addObject:({
-        EffectInfo *v = [EffectInfo new];
-        v.name = @"浪漫";
-        v.icon = [UIImage imageNamed:@"langman"];
-        v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-        v;
-    })];
-    [effectArray addObject:({
-        EffectInfo *v = [EffectInfo new];
-        v.name = @"清新";
-        v.icon = [UIImage imageNamed:@"qingxin"];
-        v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-        v;
-    })];
-    [effectArray addObject:({
-        EffectInfo *v = [EffectInfo new];
-        v.name = @"唯美";
-        v.icon = [UIImage imageNamed:@"weimei"];
-        v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-        v;
-    })];
-    [effectArray addObject:({
-        EffectInfo *v = [EffectInfo new];
-        v.name = @"粉嫩";
-        v.icon = [UIImage imageNamed:@"fennen"];
-        v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-        v;
-    })];
-    [effectArray addObject:({
-        EffectInfo *v = [EffectInfo new];
-        v.name = @"怀旧";
-        v.icon = [UIImage imageNamed:@"huaijiu"];
-        v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-        v;
-    })];
-    [effectArray addObject:({
-        EffectInfo *v = [EffectInfo new];
-        v.name = @"蓝调";
-        v.icon = [UIImage imageNamed:@"landiao"];
-        v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-        v;
-    })];
-    [effectArray addObject:({
-        EffectInfo *v = [EffectInfo new];
-        v.name = @"清凉";
-        v.icon = [UIImage imageNamed:@"qingliang"];
-        v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-        v;
-    })];
-    [effectArray addObject:({
-        EffectInfo *v = [EffectInfo new];
-        v.name = @"日系";
-        v.icon = [UIImage imageNamed:@"rixi"];
-        v.selectIcon = [UIImage imageNamed:@"orginal_select"];
-        v;
-    })];
-    [_effectSelectView setEffectList:effectArray];
-    _effectSelectType = EffectSelectType_Filter;
-    [_videoCutView setColorType:ColorType_Filter];
-    [_videoCutView setCenterPanHidden:YES];
-    [self removeAllTextFieldFromSuperView];
-    [self removeAllPasterViewFromSuperView];
-}
-
-- (void)onPasterBtnClicked
-{
-    _bottomBar.hidden = YES;
-    _deleteBtn.hidden = NO;
-    [self resetConfirmBtn];
-    [self resetVideoProgress];
-    [self onShowEffectView];
-    [self removeAllTextFieldFromSuperView];
-    [self setLeftPanFrame:0 rightPanFrame:0];
-    [_effectSelectView setEffectList:_pasterEffectArray];
-    [_videoCutView setColorType:ColorType_Paster];
-    [_videoCutView setCenterPanHidden:YES];
-    _effectSelectType = EffectSelectType_Paster;
-}
-
-- (void)onTextBtnClicked
-{
-    _bottomBar.hidden = YES;
-    _deleteBtn.hidden = NO;
-    [self resetConfirmBtn];
-    [self resetVideoProgress];
-    [self onShowEffectView];
-    [self removeAllPasterViewFromSuperView];
-    [self setLeftPanFrame:0 rightPanFrame:0];
-    [_effectSelectView setEffectList:_textEffectArray];
-    [_videoCutView setColorType:ColorType_Text];
-    [_videoCutView setCenterPanHidden:YES];
-    _effectSelectType = EffectSelectType_Text;
-}
 
 #pragma mark EffectSelectViewDelegate
 -(void)onEffectBtnBeginSelect:(UIButton *)btn

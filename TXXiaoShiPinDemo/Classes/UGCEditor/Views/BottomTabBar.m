@@ -14,7 +14,7 @@
 
 @implementation BottomTabBar
 {
-    UIView*         _contentView;
+    UIScrollView*         _contentView;
     UIButton*       _btnMusic;      //音乐
     UILabel*        _labelMusic;    //音乐
     UIButton*       _btnEffect;     //特效
@@ -33,8 +33,8 @@
 - (id)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        _contentView = [[UIView alloc] initWithFrame:self.bounds];
-        _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _contentView = [[UIScrollView alloc] initWithFrame:self.bounds];
+//        _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:_contentView];
 
         _btnMusic = [[UIButton alloc] init];
@@ -114,6 +114,16 @@
         _labelText.textColor = [UIColor whiteColor];
         _labelText.textAlignment = NSTextAlignmentCenter;
         [_contentView addSubview:_labelText];
+        
+        _contentView.contentSize = CGSizeMake(_labelText.right, self.height);
+
+        if (_contentView.contentSize.width > self.width) {
+            _contentView.alwaysBounceHorizontal = YES;
+        }else{
+            _contentView.alwaysBounceHorizontal = NO;
+        }
+        
+        _contentView.alwaysBounceHorizontal = YES;
     }
     
     return self;
@@ -199,3 +209,4 @@
 }
 
 @end
+

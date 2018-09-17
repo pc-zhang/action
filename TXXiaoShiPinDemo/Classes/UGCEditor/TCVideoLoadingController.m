@@ -7,9 +7,10 @@
 //
 
 #import "TCVideoLoadingController.h"
-#import "TCVideoCutViewController.h"
+#import "TCVideoEditViewController.h"
 #import "TCVideoJoinViewController.h"
 #import <Photos/Photos.h>
+#import "TXXiaoShiPinDemo-Swift.h"
 
 @interface TCVideoLoadingController ()
 @property IBOutlet UIImageView *loadingImageView;
@@ -95,14 +96,12 @@
         switch (self.composeMode) {
             case ComposeMode_Edit:
             {
-                TCVideoCutViewController *vc = [TCVideoCutViewController new];
-                //vc.videoPath = _localPaths[0];
-                if (_assetType == AssetType_Video) {
-                    vc.videoAsset = _videosToEditAssets[0];
-                }else{
-                    vc.imageList = _imagesToEdit;
-                }
-                if(!_loadingIsInterrupt) [self.navigationController pushViewController:vc animated:YES];
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+                TCVideoEditViewController2 *editViewController = (TCVideoEditViewController2*)[storyboard instantiateViewControllerWithIdentifier:@"TCVideoEditViewController2"];
+                editViewController.videoAsset = _videosToEditAssets[0];
+                editViewController.isFromCut = YES;
+                if(!_loadingIsInterrupt) [self.navigationController pushViewController:editViewController animated:YES];
+                
             }
                 return;
             case ComposeMode_Join:

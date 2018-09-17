@@ -14,7 +14,6 @@
 #import "UIView+Additions.h"
 #import "ColorMacro.h"
 #import "MBProgressHUD.h"
-#import "BottomTabBar.h"
 #import "VideoCutView.h"
 #import "PasterAddView.h"
 #import "EffectSelectView.h"
@@ -32,3 +31,5 @@
 #import <AFNetworking.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "TXCVEFColorPalette.h"
+#import "ColorMacro.h"
+#import "UIView+Additions.h"
