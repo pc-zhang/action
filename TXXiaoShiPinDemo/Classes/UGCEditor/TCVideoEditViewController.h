@@ -20,4 +20,9 @@
 
 //从合唱过来
 @property (assign,nonatomic) BOOL     isFromChorus;
+
+@property (assign,nonatomic) NSString* videoOutputPath;
+
+- (void)publishVideo;
+
 @end

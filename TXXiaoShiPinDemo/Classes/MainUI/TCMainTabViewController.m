@@ -196,7 +196,7 @@
             [btn setImage:[UIImage imageNamed:@"play_normal"] forState:UIControlStateNormal];
             [btn setImage:[UIImage imageNamed:@"play_click"] forState:UIControlStateSelected];
             btn.adjustsImageWhenHighlighted = NO;//去除按钮的按下效果（阴影）
-            [btn addTarget:self action:@selector(onLiveButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+            [btn addTarget:self action:@selector(onVideoBtnClicked) forControlEvents:UIControlEventTouchUpInside];
             btn.frame = CGRectMake(self.tabBar.frame.size.width/2-60, -6, 120, 120);
             btn.imageEdgeInsets = UIEdgeInsetsMake(0, 35, 70, 35);
             btn;

@@ -134,7 +134,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     NSInteger           _effectType;
 
     NSObject*     _BGMPath;
-    NSString*    _videoOutputPath;
+    
     BOOL          _isReverse;
     BOOL          _isSeek;
     BOOL          _isPlay;
@@ -232,9 +232,9 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    if (!_videoPreview.isPlaying) {
-        [_videoPreview playVideo];
-    }
+//    if (!_videoPreview.isPlaying) {
+//        [_videoPreview playVideo];
+//    }
 }
 
 - (void)onVideoEnterBackground
@@ -261,146 +261,149 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    __weak __typeof(self) wself = self;
-    dispatch_async(_imageLoadingQueue, ^{
-        EffectInfo *(^CreateEffect)(NSString *name, NSString *animPrefix)=^(NSString *name, NSString *animPrefix){
-            EffectInfo * v= [EffectInfo new];
-            v.name = name;
-            v.animateIcons = [NSMutableArray array];
-            NSString *imageName = [NSString stringWithFormat: @"%@_select", animPrefix];
-            NSString *path = [[NSBundle mainBundle] pathForResource:imageName ofType:@"png"];
-            v.selectIcon = [UIImage imageWithContentsOfFile:path];
-            for (int i = 0; i < 24; i ++) {
-                imageName = [NSString stringWithFormat: @"%@%d", animPrefix, i];
-                path = [[NSBundle mainBundle] pathForResource:imageName ofType:@"png"];
-                [v.animateIcons addObject:[UIImage imageWithContentsOfFile:path]];
-            }
-            return v;
-        };
-
-        NSArray <EffectInfo *> *effectList = @[ CreateEffect(@"动感光波", @"donggan"),
-                                                CreateEffect(@"暗黑幻境", @"anhei"),
-                                                CreateEffect(@"灵魂出窍", @"linghun"),
-                                                CreateEffect(@"画面分裂", @"fenlie"),
-                                                CreateEffect(@"百叶窗", @"donggan"),
-                                                CreateEffect(@"鬼影", @"donggan"),
-                                                CreateEffect(@"幻影", @"donggan"),
-                                                CreateEffect(@"幽灵", @"donggan"),
-                                                CreateEffect(@"闪电", @"donggan"),
-                                                CreateEffect(@"镜像", @"donggan"),
-                                                CreateEffect(@"幻觉", @"donggan"),
-                                                ];
-        __strong __typeof(wself) self = wself;
-        if (self) {
-            self->_effectList = effectList;
-        }
-    });
-
-    if (_videoAsset == nil && _videoPath != nil) {
-        NSURL *avUrl = [NSURL fileURLWithPath:_videoPath];
-        _videoAsset = [AVAsset assetWithURL:avUrl];
-    }
-    self.view.backgroundColor = UIColor.blackColor;
     
-    _videoPreview = [[VideoPreview alloc] initWithFrame:self.view.bounds coverImage:nil];
-    _videoPreview.delegate = self;
-    [_videoPreview setPlayBtnHidden:YES];
-    [self.view addSubview:_videoPreview];
-    //点击选中文字
-    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
-    [_videoPreview addGestureRecognizer:singleTap];
-    CGFloat offset = 0;
-    if (@available(iOS 11, *)) {
-        offset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
-    }
-    _bottomBar = [[BottomTabBar alloc] initWithFrame:CGRectMake(0, self.view.height - 62 * kScaleY - offset, self.view.width, 40 * kScaleY)];
-    _bottomBar.delegate = self;
-    [self.view addSubview:_bottomBar];
-
-    // 特效取消按钮
-    UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [backBtn setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
-    backBtn.frame = CGRectMake(10 * kScaleX, 10 * kScaleY, 50 * kScaleX, 44 * kScaleY);
-    [backBtn addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:backBtn];
-    
-    CGFloat btnConfirmWidth = 70;
-    CGFloat btnConfirmHeight = 30;
-    _effectConfirmBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_effectConfirmBtn setTitle:@"完成" forState:UIControlStateNormal];
-    _effectConfirmBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-    [_effectConfirmBtn setBackgroundImage:[UIImage imageNamed:@"next_normal"] forState:UIControlStateNormal];
-    [_effectConfirmBtn setBackgroundImage:[UIImage imageNamed:@"next_press"] forState:UIControlStateHighlighted];
-    _effectConfirmBtn.frame = CGRectMake(self.view.width - 15 * kScaleX - btnConfirmWidth, 20 * kScaleY, btnConfirmWidth, btnConfirmHeight);
-    [_effectConfirmBtn addTarget:self action:@selector(goFinish) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:_effectConfirmBtn];
-    
-    _coverImageView = [[UIImageView alloc] initWithFrame:_videoPreview.frame];
-    _coverImageView.hidden = YES;
-    _coverImageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self.view addSubview:_coverImageView];
-
-    // 特效容器
-    _effectView= [[UIView alloc] initWithFrame:CGRectMake(0, self.view.height, self.view.width, 205 * kScaleY)];
-    [self.view addSubview:_effectView];
-    
-    _timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(15 * kScaleX, 0, 40, 54)];
-    _timeLabel.text = @"00:00";
-    _timeLabel.font = [UIFont systemFontOfSize:14];
-    _timeLabel.textColor = [UIColor whiteColor];
-    [_effectView addSubview:_timeLabel];
-    
-    _playBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_playBtn setBackgroundImage:[UIImage imageNamed:@"editPlay_normal"] forState:UIControlStateNormal];
-    [_playBtn setBackgroundImage:[UIImage imageNamed:@"editPlay__press"] forState:UIControlStateHighlighted];
-    _playBtn.frame = CGRectMake(self.view.width / 2 - 15, 10 * kScaleY, 30, 30);
-    [_playBtn addTarget:self action:@selector(onPlayVideo) forControlEvents:UIControlEventTouchUpInside];
-    [_effectView addSubview:_playBtn];
-    
-    _deleteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_deleteBtn setBackgroundImage:[UIImage imageNamed:@"effectDelete_normal"] forState:UIControlStateNormal];
-    [_deleteBtn setBackgroundImage:[UIImage imageNamed:@"effectDelete_press"] forState:UIControlStateHighlighted];
-    _deleteBtn.frame = CGRectMake(self.view.width - 15 * kScaleX - 30, 10 * kScaleY, 30, 30);
-    [_deleteBtn addTarget:self action:@selector(onDeleteEffect) forControlEvents:UIControlEventTouchUpInside];
-    [_effectView addSubview:_deleteBtn];
-
-    CGFloat cutViewHeight = 34 * kScaleY;
-    RangeContentConfig *config = [[RangeContentConfig alloc] init];
-    config.pinWidth = PIN_WIDTH;
-    config.thumbHeight = cutViewHeight;
-    config.borderHeight = 0;
-    config.imageCount = 20;
-    _videoCutView = [[VideoCutView alloc] initWithFrame:CGRectMake(0,_timeLabel.bottom + 3, _effectView.width,cutViewHeight) videoPath:_videoPath videoAssert:_videoAsset config:config];
-    _videoCutView.delegate = self;
-    [_videoCutView setCenterPanHidden:YES];
-    [_effectView addSubview:_videoCutView];
-    
-    UIImageView *flagView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.width / 2 - 6, _timeLabel.bottom, 12, 48)];
-    flagView.image = [UIImage imageNamed:@"videoSlider"];
-    [_effectView addSubview:flagView];
-    
-    _effectSelectView = [[EffectSelectView alloc] initWithFrame:CGRectMake(0, _videoCutView.bottom + 24 * kScaleY,_effectView.width,70 * kScaleY)];
-    _effectSelectView.delegate = self;
-    _effectSelectView.hidden = NO;
-    [_effectView addSubview:_effectSelectView];
-    
-    _pasterAddView = [[PasterAddView alloc] initWithFrame:CGRectMake(0,self.view.height - 205 * kScaleY, self.view.width,205 * kScaleY)];
-    _pasterAddView.delegate = self;
-    _pasterAddView.hidden = YES;
-    [self.view addSubview:_pasterAddView];
-    
-    _musicView = [[TCVideoRecordMusicView alloc] initWithFrame:CGRectMake(0, self.view.bottom - 268 * kScaleY, self.view.width, 268 * kScaleY) needEffect:NO];
-    _musicView.delegate = self;
-    _musicView.hidden = YES;
-    [self.view addSubview:_musicView];
-    
-    _bgmListVC = [[TCBGMListViewController alloc] init];
-    [_bgmListVC setBGMControllerListener:self];
-
-    [self initVideoEditor];
     [self initVideoPublish];
 }
+//{
+//    __weak __typeof(self) wself = self;
+//    dispatch_async(_imageLoadingQueue, ^{
+//        EffectInfo *(^CreateEffect)(NSString *name, NSString *animPrefix)=^(NSString *name, NSString *animPrefix){
+//            EffectInfo * v= [EffectInfo new];
+//            v.name = name;
+//            v.animateIcons = [NSMutableArray array];
+//            NSString *imageName = [NSString stringWithFormat: @"%@_select", animPrefix];
+//            NSString *path = [[NSBundle mainBundle] pathForResource:imageName ofType:@"png"];
+//            v.selectIcon = [UIImage imageWithContentsOfFile:path];
+//            for (int i = 0; i < 24; i ++) {
+//                imageName = [NSString stringWithFormat: @"%@%d", animPrefix, i];
+//                path = [[NSBundle mainBundle] pathForResource:imageName ofType:@"png"];
+//                [v.animateIcons addObject:[UIImage imageWithContentsOfFile:path]];
+//            }
+//            return v;
+//        };
+//
+//        NSArray <EffectInfo *> *effectList = @[ CreateEffect(@"动感光波", @"donggan"),
+//                                                CreateEffect(@"暗黑幻境", @"anhei"),
+//                                                CreateEffect(@"灵魂出窍", @"linghun"),
+//                                                CreateEffect(@"画面分裂", @"fenlie"),
+//                                                CreateEffect(@"百叶窗", @"donggan"),
+//                                                CreateEffect(@"鬼影", @"donggan"),
+//                                                CreateEffect(@"幻影", @"donggan"),
+//                                                CreateEffect(@"幽灵", @"donggan"),
+//                                                CreateEffect(@"闪电", @"donggan"),
+//                                                CreateEffect(@"镜像", @"donggan"),
+//                                                CreateEffect(@"幻觉", @"donggan"),
+//                                                ];
+//        __strong __typeof(wself) self = wself;
+//        if (self) {
+//            self->_effectList = effectList;
+//        }
+//    });
+//
+//    if (_videoAsset == nil && _videoPath != nil) {
+//        NSURL *avUrl = [NSURL fileURLWithPath:_videoPath];
+//        _videoAsset = [AVAsset assetWithURL:avUrl];
+//    }
+//    self.view.backgroundColor = UIColor.blackColor;
+//
+//    _videoPreview = [[VideoPreview alloc] initWithFrame:self.view.bounds coverImage:nil];
+//    _videoPreview.delegate = self;
+//    [_videoPreview setPlayBtnHidden:YES];
+//    [self.view addSubview:_videoPreview];
+//    //点击选中文字
+//    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
+//    [_videoPreview addGestureRecognizer:singleTap];
+//    CGFloat offset = 0;
+//    if (@available(iOS 11, *)) {
+//        offset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+//    }
+//    _bottomBar = [[BottomTabBar alloc] initWithFrame:CGRectMake(0, self.view.height - 62 * kScaleY - offset, self.view.width, 40 * kScaleY)];
+//    _bottomBar.delegate = self;
+//    [self.view addSubview:_bottomBar];
+//
+//    // 特效取消按钮
+//    UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [backBtn setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
+//    backBtn.frame = CGRectMake(10 * kScaleX, 10 * kScaleY, 50 * kScaleX, 44 * kScaleY);
+//    [backBtn addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:backBtn];
+//
+//    CGFloat btnConfirmWidth = 70;
+//    CGFloat btnConfirmHeight = 30;
+//    _effectConfirmBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [_effectConfirmBtn setTitle:@"完成" forState:UIControlStateNormal];
+//    _effectConfirmBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+//    [_effectConfirmBtn setBackgroundImage:[UIImage imageNamed:@"next_normal"] forState:UIControlStateNormal];
+//    [_effectConfirmBtn setBackgroundImage:[UIImage imageNamed:@"next_press"] forState:UIControlStateHighlighted];
+//    _effectConfirmBtn.frame = CGRectMake(self.view.width - 15 * kScaleX - btnConfirmWidth, 20 * kScaleY, btnConfirmWidth, btnConfirmHeight);
+//    [_effectConfirmBtn addTarget:self action:@selector(goFinish) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:_effectConfirmBtn];
+//
+//    _coverImageView = [[UIImageView alloc] initWithFrame:_videoPreview.frame];
+//    _coverImageView.hidden = YES;
+//    _coverImageView.contentMode = UIViewContentModeScaleAspectFit;
+//    [self.view addSubview:_coverImageView];
+//
+//    // 特效容器
+//    _effectView= [[UIView alloc] initWithFrame:CGRectMake(0, self.view.height, self.view.width, 205 * kScaleY)];
+//    [self.view addSubview:_effectView];
+//
+//    _timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(15 * kScaleX, 0, 40, 54)];
+//    _timeLabel.text = @"00:00";
+//    _timeLabel.font = [UIFont systemFontOfSize:14];
+//    _timeLabel.textColor = [UIColor whiteColor];
+//    [_effectView addSubview:_timeLabel];
+//
+//    _playBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [_playBtn setBackgroundImage:[UIImage imageNamed:@"editPlay_normal"] forState:UIControlStateNormal];
+//    [_playBtn setBackgroundImage:[UIImage imageNamed:@"editPlay__press"] forState:UIControlStateHighlighted];
+//    _playBtn.frame = CGRectMake(self.view.width / 2 - 15, 10 * kScaleY, 30, 30);
+//    [_playBtn addTarget:self action:@selector(onPlayVideo) forControlEvents:UIControlEventTouchUpInside];
+//    [_effectView addSubview:_playBtn];
+//
+//    _deleteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [_deleteBtn setBackgroundImage:[UIImage imageNamed:@"effectDelete_normal"] forState:UIControlStateNormal];
+//    [_deleteBtn setBackgroundImage:[UIImage imageNamed:@"effectDelete_press"] forState:UIControlStateHighlighted];
+//    _deleteBtn.frame = CGRectMake(self.view.width - 15 * kScaleX - 30, 10 * kScaleY, 30, 30);
+//    [_deleteBtn addTarget:self action:@selector(onDeleteEffect) forControlEvents:UIControlEventTouchUpInside];
+//    [_effectView addSubview:_deleteBtn];
+//
+//    CGFloat cutViewHeight = 34 * kScaleY;
+//    RangeContentConfig *config = [[RangeContentConfig alloc] init];
+//    config.pinWidth = PIN_WIDTH;
+//    config.thumbHeight = cutViewHeight;
+//    config.borderHeight = 0;
+//    config.imageCount = 20;
+//    _videoCutView = [[VideoCutView alloc] initWithFrame:CGRectMake(0,_timeLabel.bottom + 3, _effectView.width,cutViewHeight) videoPath:_videoPath videoAssert:_videoAsset config:config];
+//    _videoCutView.delegate = self;
+//    [_videoCutView setCenterPanHidden:YES];
+//    [_effectView addSubview:_videoCutView];
+//
+//    UIImageView *flagView = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.width / 2 - 6, _timeLabel.bottom, 12, 48)];
+//    flagView.image = [UIImage imageNamed:@"videoSlider"];
+//    [_effectView addSubview:flagView];
+//
+//    _effectSelectView = [[EffectSelectView alloc] initWithFrame:CGRectMake(0, _videoCutView.bottom + 24 * kScaleY,_effectView.width,70 * kScaleY)];
+//    _effectSelectView.delegate = self;
+//    _effectSelectView.hidden = NO;
+//    [_effectView addSubview:_effectSelectView];
+//
+//    _pasterAddView = [[PasterAddView alloc] initWithFrame:CGRectMake(0,self.view.height - 205 * kScaleY, self.view.width,205 * kScaleY)];
+//    _pasterAddView.delegate = self;
+//    _pasterAddView.hidden = YES;
+//    [self.view addSubview:_pasterAddView];
+//
+//    _musicView = [[TCVideoRecordMusicView alloc] initWithFrame:CGRectMake(0, self.view.bottom - 268 * kScaleY, self.view.width, 268 * kScaleY) needEffect:NO];
+//    _musicView.delegate = self;
+//    _musicView.hidden = YES;
+//    [self.view addSubview:_musicView];
+//
+//    _bgmListVC = [[TCBGMListViewController alloc] init];
+//    [_bgmListVC setBGMControllerListener:self];
+//
+//    [self initVideoEditor];
+//    [self initVideoPublish];
+//}
 
 - (void)initVideoEditor
 {

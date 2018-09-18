@@ -15,6 +15,7 @@
 #import "MBProgressHUD.h"
 #import "UIAlertView+BlocksKit.h"
 #import "SDKHeader.h"
+#import "TXXiaoShiPinDemo-Swift.h"
 
 #define BUTTON_RECORD_SIZE          75
 #define BUTTON_CONTROL_SIZE         40
@@ -1114,35 +1115,45 @@ typedef NS_ENUM(NSInteger,RecordType)
     if ([TXUGCRecord shareInstance].partsManager.getVideoPathList.count > 0) {
         int result = [[TXUGCRecord shareInstance].partsManager joinAllParts:_recordVideoPath];
         if(0 == result){
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+            TCVideoEditViewController2 *editViewController = (TCVideoEditViewController2*)[storyboard instantiateViewControllerWithIdentifier:@"TCVideoEditViewController2"];
+            
             if (_recordType == RecordType_Normal) {
-                TCVideoEditViewController *vc = [[TCVideoEditViewController alloc] init];
-                vc.videoPath = _recordVideoPath;
-                [self.navigationController pushViewController:vc animated:YES];
+                editViewController.firstVideoPath = _recordVideoPath;
+                editViewController.isFromCut = YES;
+                editViewController.isFromChorus = NO;
             }else{
-                CGFloat width = 720;
-                CGFloat height = 1280;
-                CGRect recordScreen = CGRectMake(0, 0, width, height);
-                //播放视频所占画布的大小这里要计算下，防止视频拉伸
-                CGRect playScreen = CGRectZero;
-                if (_size.height / _size.width >= height / width) {
-                    CGFloat playScreen_w = height * _size.width / _size.height;
-                    playScreen = CGRectMake(width + (width - playScreen_w) / 2.0, 0, playScreen_w, height);
-                }else{
-                    CGFloat playScreen_h = width * _size.height / _size.width;
-                    playScreen = CGRectMake(width, (height - playScreen_h) / 2.0, width, playScreen_h);
-                }
-                if (_recordVideoPath && _videoPath && [[NSFileManager defaultManager] fileExistsAtPath:_recordVideoPath] && [[NSFileManager defaultManager] fileExistsAtPath:_videoPath]) {
-                    [_videoJoiner setVideoPathList:@[_recordVideoPath,_videoPath]];
-                    [_videoJoiner setSplitScreenList:@[[NSValue valueWithCGRect:recordScreen],[NSValue valueWithCGRect:playScreen]] canvasWidth:720 * 2 canvasHeight:1280];
-                    [_videoJoiner splitJoinVideo:VIDEO_COMPRESSED_720P videoOutputPath:_joinVideoPath];
-                    
-                    _hub = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                    _hub.mode = MBProgressHUDModeText;
-                    _hub.label.text = @"视频合成中...";
-                }else{
-                    [self alert:@"视频合成失败" msg:@"请重新录制合成"];
-                }
+                editViewController.firstVideoPath = _videoPath;
+                editViewController.secondVideoPath = _recordVideoPath;
+                editViewController.isFromCut = NO;
+                editViewController.isFromChorus = YES;
             }
+            [self.navigationController pushViewController:editViewController animated:YES];
+//            {
+//                CGFloat width = 720;
+//                CGFloat height = 1280;
+//                CGRect recordScreen = CGRectMake(0, 0, width, height);
+//                //播放视频所占画布的大小这里要计算下，防止视频拉伸
+//                CGRect playScreen = CGRectZero;
+//                if (_size.height / _size.width >= height / width) {
+//                    CGFloat playScreen_w = height * _size.width / _size.height;
+//                    playScreen = CGRectMake(width + (width - playScreen_w) / 2.0, 0, playScreen_w, height);
+//                }else{
+//                    CGFloat playScreen_h = width * _size.height / _size.width;
+//                    playScreen = CGRectMake(width, (height - playScreen_h) / 2.0, width, playScreen_h);
+//                }
+//                if (_recordVideoPath && _videoPath && [[NSFileManager defaultManager] fileExistsAtPath:_recordVideoPath] && [[NSFileManager defaultManager] fileExistsAtPath:_videoPath]) {
+//                    [_videoJoiner setVideoPathList:@[_recordVideoPath,_videoPath]];
+//                    [_videoJoiner setSplitScreenList:@[[NSValue valueWithCGRect:recordScreen],[NSValue valueWithCGRect:playScreen]] canvasWidth:720 * 2 canvasHeight:1280];
+//                    [_videoJoiner splitJoinVideo:VIDEO_COMPRESSED_720P videoOutputPath:_joinVideoPath];
+//
+//                    _hub = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//                    _hub.mode = MBProgressHUDModeText;
+//                    _hub.label.text = @"视频合成中...";
+//                }else{
+//                    [self alert:@"视频合成失败" msg:@"请重新录制合成"];
+//                }
+//            }
             [[TXUGCRecord shareInstance] pauseAudioSession];
             [[TXUGCRecord shareInstance] setMotionMute:YES];
             [TCUtil report:xiaoshipin_videorecord userName:nil code:0 msg:@"视频录制成功"];

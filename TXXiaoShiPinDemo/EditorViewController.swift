@@ -26,6 +26,9 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
         super.init(coder: aDecoder)
     }
     
+    var firstVideoPath: String?
+    var secondVideoPath: String?
+    
     // MARK: Properties
     
     fileprivate let labelFont = UIFont(name: "Menlo", size: 12)!
@@ -35,6 +38,14 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        backgroundTimelineView.isHidden = true
+        timelineView.isHidden = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         // add composition
         if composition==nil {
             composition = AVMutableComposition()
@@ -49,13 +60,6 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
         self.push(op:.nothing)
         
         playerView.playerLayer.player = player
-        
-        backgroundTimelineView.isHidden = true
-        timelineView.isHidden = true
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         
         // Access the document
         document?.open(completionHandler: { (success) in
@@ -85,6 +89,16 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
             
             self.startTimeLabel.text = self.createTimeString(time: timeElapsed)
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if let firstVideoPath = firstVideoPath {
+            addClip(URL(fileURLWithPath: firstVideoPath), trackAdded: 0)
+        }
+        if let secondVideoPath = secondVideoPath {
+            addClip(URL(fileURLWithPath: secondVideoPath), trackAdded: 1)
+        }
+        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -217,7 +231,6 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
     @IBOutlet weak var removeButton: UIButton!
     @IBOutlet weak var undoButton: UIButton!
     @IBOutlet weak var redoButton: UIButton!
-    @IBOutlet weak var documentNameLabel: UILabel!
     @IBOutlet weak var startTimeLabel: UILabel!
     @IBOutlet weak var playPauseButton: UIButton!
     @IBOutlet weak var playerView: PlayerView!
@@ -321,9 +334,9 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
         let compatiblePresets = AVAssetExportSession.exportPresets(compatibleWith: composition!)
         let exporter = AVAssetExportSession(asset: composition!, presetName: AVAssetExportPreset960x540)!
         // Set the desired output URL for the file created by the export process.
-        exporter.outputURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent(String(Int(Date.timeIntervalSinceReferenceDate))).appendingPathExtension("mov")
+        exporter.outputURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent(String(Int(Date.timeIntervalSinceReferenceDate))).appendingPathExtension("mp4")
         // Set the output file type to be a QuickTime movie.
-        exporter.outputFileType = AVFileTypeQuickTimeMovie
+        exporter.outputFileType = AVFileTypeMPEG4
         exporter.shouldOptimizeForNetworkUse = true
         exporter.videoComposition = self.videoComposition
         // Asynchronously export the composition to a video file and save this file to the camera roll once export completes.
@@ -339,6 +352,8 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
                         UISaveVideoAtPathToSavedPhotosAlbum(exporter.outputURL!.path, self, #selector(self.video), nil)
                     }
 //                    NVActivityIndicatorPresenter.sharedInstance.setMessage("导出成功")
+                    self.videoOutputPath = exporter.outputURL!.path as NSString
+                    self.publishVideo()
                     
                     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
 //                        self.stopAnimating()
@@ -417,7 +432,7 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
                 try! compositionVideoTrack.insertTimeRange(CMTimeRangeMake(kCMTimeZero, newAsset.duration), of: videoAssetTrack, at: kCMTimeZero)
                 
 
-                if let audioAssetTrack = newAsset.tracks(withMediaType: AVMediaTypeAudio).first {
+                if trackAdded == 0, let audioAssetTrack = newAsset.tracks(withMediaType: AVMediaTypeAudio).first {
                 
                     let compositionAudioTrack = self.composition!.tracks(withMediaType: AVMediaTypeAudio).first!
                     
