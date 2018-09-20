@@ -92,7 +92,7 @@
     [layout setScrollDirection:UICollectionViewScrollDirectionVertical];
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,tabView.bottom, self.view.width, self.view.height - tabView.bottom) collectionViewLayout:layout];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.collectionView registerClass:[TCLiveListCell class] forCellWithReuseIdentifier:@"TCLiveListCell"];
+    [self.collectionView registerNib:[UINib nibWithNibName:@"TCLiveListCell" bundle:nil] forCellWithReuseIdentifier:@"TCLiveListCell"];
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
     self.collectionView.backgroundColor = [UIColor blackColor];
@@ -331,6 +331,22 @@
  */
 - (void)newDataAvailable:(NSNotification *)noti {
     [self doFetchList];
+    return;
+    // 此处一定要用cell的数据，live中的对象可能已经清空了
+    TCLiveInfo *info = (TCLiveInfo*)[self.lives objectAtIndex:0];
+    
+    // MARK: 打开播放界面
+    if (_playVC == nil) {
+        if (self.lives && self.lives.count > 0 && info) {
+            _playVC = [[TCVodPlayViewController alloc] initWithPlayInfoS:self.lives liveInfo:info videoIsReady:^{
+                if (!_hasEnterplayVC) {
+                    [[TCBaseAppDelegate sharedAppDelegate] pushViewController:_playVC animated:YES];
+                    _hasEnterplayVC = YES;
+                }
+            }];
+        }
+    }
+    [self performSelector:@selector(enterPlayVC:) withObject:_playVC afterDelay:0.5];
 }
 
 /**

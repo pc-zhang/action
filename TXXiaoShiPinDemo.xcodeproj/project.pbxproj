@@ -52,7 +52,6 @@
 		91BFE7B11EB862DF008EB95C /* TCRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7AB1EB862DF008EB95C /* TCRegisterViewController.m */; };
 		91BFE7B81EB86379008EB95C /* TCMainTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7B51EB86379008EB95C /* TCMainTabViewController.m */; };
 		91BFE7B91EB86379008EB95C /* TCUserAgreementController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7B71EB86379008EB95C /* TCUserAgreementController.m */; };
-		91BFE7C21EB863AF008EB95C /* TCLiveListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7BB1EB863AF008EB95C /* TCLiveListCell.m */; };
 		91BFE7C41EB863AF008EB95C /* TCLiveListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7BF1EB863AF008EB95C /* TCLiveListModel.m */; };
 		91BFE7C51EB863AF008EB95C /* TCLiveListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7C11EB863AF008EB95C /* TCLiveListViewController.m */; };
 		91BFE7EA1EB86497008EB95C /* TCPlayDecorateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7E61EB86497008EB95C /* TCPlayDecorateView.m */; };
@@ -138,7 +137,6 @@
 		CE2CAE2B1F97A0CB0040ED54 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE2CAE131F97A0CA0040ED54 /* SystemConfiguration.framework */; };
 		CE2CAE2C1F97A0CB0040ED54 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE2CAE141F97A0CA0040ED54 /* VideoToolbox.framework */; };
 		CE2CAE2E1F97A0CB0040ED54 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE2CAE161F97A0CA0040ED54 /* Accelerate.framework */; };
-		CE2CAE2F1F97A0CB0040ED54 /* libstdc++.6.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE2CAE171F97A0CA0040ED54 /* libstdc++.6.tbd */; };
 		CE2CAE301F97A0CB0040ED54 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE2CAE181F97A0CB0040ED54 /* CoreTelephony.framework */; };
 		CE357FB81F9D8977006DD088 /* TCVideoRecordProcessView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE357FB61F9D8977006DD088 /* TCVideoRecordProcessView.m */; };
 		CE3F3C7320FED8F700CE9374 /* TXLiteAVSDK_UGC_IJK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE3F3C7220FED8F700CE9374 /* TXLiteAVSDK_UGC_IJK.framework */; };
@@ -304,6 +302,9 @@
 		D64734DF1F2734BA00A02463 /* MJRefresh.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D64734DE1F2734B900A02463 /* MJRefresh.bundle */; };
 		EF47CE2D1D4B03FC0028B598 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EF47CE2C1D4B03FC0028B598 /* main.m */; };
 		EF47CE381D4B03FC0028B598 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF47CE371D4B03FC0028B598 /* Assets.xcassets */; };
+		F032238B21540B1000533AA3 /* TCLiveListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F032238921540B1000533AA3 /* TCLiveListCell.xib */; };
+		F032238E21540F0500533AA3 /* TCLiveListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F032238C21540F0400533AA3 /* TCLiveListCell.m */; };
+		F046B6112153DE36009939D6 /* TCPlayViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F046B6102153DE36009939D6 /* TCPlayViewCell.xib */; };
 		F08756EA21495B36006CF4B6 /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E021495B34006CF4B6 /* EditorViewController.swift */; };
 		F08756EC21495B36006CF4B6 /* SegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E221495B34006CF4B6 /* SegmentView.swift */; };
 		F08756ED21495B36006CF4B6 /* APLCustomVideoCompositor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E421495B35006CF4B6 /* APLCustomVideoCompositor.swift */; };
@@ -591,8 +592,6 @@
 		91BFE7B51EB86379008EB95C /* TCMainTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCMainTabViewController.m; path = TXXiaoShiPinDemo/Classes/MainUI/TCMainTabViewController.m; sourceTree = SOURCE_ROOT; };
 		91BFE7B61EB86379008EB95C /* TCUserAgreementController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCUserAgreementController.h; path = TXXiaoShiPinDemo/Classes/MainUI/TCUserAgreementController.h; sourceTree = SOURCE_ROOT; };
 		91BFE7B71EB86379008EB95C /* TCUserAgreementController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCUserAgreementController.m; path = TXXiaoShiPinDemo/Classes/MainUI/TCUserAgreementController.m; sourceTree = SOURCE_ROOT; };
-		91BFE7BA1EB863AF008EB95C /* TCLiveListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCLiveListCell.h; path = TXXiaoShiPinDemo/Classes/List/TCLiveListCell.h; sourceTree = SOURCE_ROOT; };
-		91BFE7BB1EB863AF008EB95C /* TCLiveListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCLiveListCell.m; path = TXXiaoShiPinDemo/Classes/List/TCLiveListCell.m; sourceTree = SOURCE_ROOT; };
 		91BFE7BE1EB863AF008EB95C /* TCLiveListModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCLiveListModel.h; path = TXXiaoShiPinDemo/Classes/List/TCLiveListModel.h; sourceTree = SOURCE_ROOT; };
 		91BFE7BF1EB863AF008EB95C /* TCLiveListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCLiveListModel.m; path = TXXiaoShiPinDemo/Classes/List/TCLiveListModel.m; sourceTree = SOURCE_ROOT; };
 		91BFE7C01EB863AF008EB95C /* TCLiveListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCLiveListViewController.h; path = TXXiaoShiPinDemo/Classes/List/TCLiveListViewController.h; sourceTree = SOURCE_ROOT; };
@@ -928,6 +927,10 @@
 		EF47CE2C1D4B03FC0028B598 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		EF47CE371D4B03FC0028B598 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EF47CE3C1D4B03FC0028B598 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F032238921540B1000533AA3 /* TCLiveListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TCLiveListCell.xib; sourceTree = "<group>"; };
+		F032238C21540F0400533AA3 /* TCLiveListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCLiveListCell.m; sourceTree = "<group>"; };
+		F032238D21540F0400533AA3 /* TCLiveListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCLiveListCell.h; sourceTree = "<group>"; };
+		F046B6102153DE36009939D6 /* TCPlayViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TCPlayViewCell.xib; sourceTree = "<group>"; };
 		F08756DD21495B31006CF4B6 /* TXXiaoShiPinDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TXXiaoShiPinDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		F08756E021495B34006CF4B6 /* EditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
 		F08756E221495B34006CF4B6 /* SegmentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentView.swift; sourceTree = "<group>"; };
@@ -960,7 +963,6 @@
 				CEC6550920875DF800B0EB7C /* libSocialQQ.a in Frameworks */,
 				CEBA131B1F9F5A0B00D8FA56 /* GPUImage.framework in Frameworks */,
 				CE2CAE191F97A0CB0040ED54 /* CoreGraphics.framework in Frameworks */,
-				CE2CAE2F1F97A0CB0040ED54 /* libstdc++.6.tbd in Frameworks */,
 				CEC6550720875DF800B0EB7C /* libSocialWeChat.a in Frameworks */,
 				CE2CAE241F97A0CB0040ED54 /* AVFoundation.framework in Frameworks */,
 				CE2CAE301F97A0CB0040ED54 /* CoreTelephony.framework in Frameworks */,
@@ -1066,6 +1068,7 @@
 				91BFE7E61EB86497008EB95C /* TCPlayDecorateView.m */,
 				CE1ABF3B2024403E00A2219E /* TCPlayViewCell.h */,
 				CE1ABF3C2024403E00A2219E /* TCPlayViewCell.m */,
+				F046B6102153DE36009939D6 /* TCPlayViewCell.xib */,
 			);
 			name = Play;
 			path = Classes/Play;
@@ -1273,12 +1276,13 @@
 		B70080B81D7588EA0073897E /* List */ = {
 			isa = PBXGroup;
 			children = (
-				91BFE7BA1EB863AF008EB95C /* TCLiveListCell.h */,
-				91BFE7BB1EB863AF008EB95C /* TCLiveListCell.m */,
+				F032238D21540F0400533AA3 /* TCLiveListCell.h */,
+				F032238C21540F0400533AA3 /* TCLiveListCell.m */,
 				91BFE7BE1EB863AF008EB95C /* TCLiveListModel.h */,
 				91BFE7BF1EB863AF008EB95C /* TCLiveListModel.m */,
 				91BFE7C01EB863AF008EB95C /* TCLiveListViewController.h */,
 				91BFE7C11EB863AF008EB95C /* TCLiveListViewController.m */,
+				F032238921540B1000533AA3 /* TCLiveListCell.xib */,
 			);
 			name = List;
 			path = Classes/List;
@@ -2170,6 +2174,7 @@
 				CE89A5A62010A0820005B88B /* linghun3.png in Resources */,
 				CE89A5AC2010A0820005B88B /* linghun9.png in Resources */,
 				CE89A5872010A0820005B88B /* anhei21.png in Resources */,
+				F046B6112153DE36009939D6 /* TCPlayViewCell.xib in Resources */,
 				CE93B6E1201F271100CD89B7 /* anhei_select.png in Resources */,
 				CE89A5A02010A0820005B88B /* linghun4.png in Resources */,
 				CE4827371FDA6CCE009C5862 /* AnimatedPaster.bundle in Resources */,
@@ -2197,6 +2202,7 @@
 				CE89A5C72010A0820005B88B /* donggan3.png in Resources */,
 				CE89A58A2010A0820005B88B /* anhei2.png in Resources */,
 				CE93B5CA201B044900CD89B7 /* detector.bundle in Resources */,
+				F032238B21540B1000533AA3 /* TCLiveListCell.xib in Resources */,
 				CE29EBA61FE8BCA10038C200 /* TCBGMCell.xib in Resources */,
 				CE89A5A12010A0820005B88B /* linghun10.png in Resources */,
 				CE89A5AA2010A0820005B88B /* linghun18.png in Resources */,
@@ -2433,7 +2439,6 @@
 				91BFE81D1EB8669F008EB95C /* TCVideoEditViewController.m in Sources */,
 				91BFE7C51EB863AF008EB95C /* TCLiveListViewController.m in Sources */,
 				91BFE82C1EB866E0008EB95C /* TCUserInfoModel.m in Sources */,
-				91BFE7C21EB863AF008EB95C /* TCLiveListCell.m in Sources */,
 				CE0BE03D1FFB27F900DEBA5C /* QCloudAuthentationHeadV5Creator.m in Sources */,
 				CE0BE0341FFB27F900DEBA5C /* UIColor+MLPFlatColors.m in Sources */,
 				CE29EBCA1FE8BDFB0038C200 /* PasterAddView.m in Sources */,
@@ -2451,6 +2456,7 @@
 				CE29EBA41FE8BCA10038C200 /* TCCircleProgressView.m in Sources */,
 				A0AEBC3420CFB36D00F41117 /* SmallButton.m in Sources */,
 				CE29EBA71FE8BCA10038C200 /* TCBGMHelper.m in Sources */,
+				F032238E21540F0500533AA3 /* TCLiveListCell.m in Sources */,
 				91BFE8291EB866E0008EB95C /* TCEditUserInfoViewController.m in Sources */,
 				F08756F021495B36006CF4B6 /* PlayerView.swift in Sources */,
 				CE0BE0361FFB27F900DEBA5C /* TCUploadHelper.m in Sources */,
@@ -2588,6 +2594,7 @@
 			baseConfigurationReference = 55A430FCA48428CAC6D5DB0B /* Pods-TXXiaoShiPinDemo.dailybuild.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
@@ -2778,6 +2785,7 @@
 			baseConfigurationReference = DDFDA7DAA7F5E707E462E938 /* Pods-TXXiaoShiPinDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -2844,6 +2852,7 @@
 			baseConfigurationReference = 0EA953CF458C729179DB3D6B /* Pods-TXXiaoShiPinDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";

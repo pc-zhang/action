@@ -16,17 +16,17 @@
 
 @interface TCLiveListCell()
 {
-    UIImageView *_headImageView;
-    UIImageView *_bigPicView;
-    UIImageView *_flagView;
-    UIImageView *_timeSelectView;
-    UILabel     *_titleLabel;
-    UILabel     *_nameLabel;
-    UILabel     *_locationLabel;
-    UILabel     *_timeLable;
-    UILabel     *_reviewLabel;
-    UIView      *_userMsgView;
-    UIView      *_lineView;
+    __weak IBOutlet UIImageView *_headImageView;
+    __weak IBOutlet UIImageView *_bigPicView;
+    __weak IBOutlet UIImageView *_flagView;
+    __weak IBOutlet UIImageView *_timeSelectView;
+    __weak IBOutlet UILabel     *_titleLabel;
+    __weak IBOutlet UILabel     *_nameLabel;
+    __weak IBOutlet UILabel     *_locationLabel;
+    __weak IBOutlet UILabel     *_timeLable;
+    __weak IBOutlet UILabel     *_reviewLabel;
+    __weak IBOutlet UIView      *_userMsgView;
+    __weak IBOutlet UIView      *_lineView;
     UIImage     *_defaultImage;
     CGRect      _titleRect;
 }
@@ -35,14 +35,15 @@
 
 @implementation TCLiveListCell
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self initUIForUGC];
+- (void)awakeFromNib{
+    [super awakeFromNib];
+
+    if (_defaultImage == nil) {
+        _defaultImage = [self scaleClipImage:[UIImage imageNamed:@"bg.jpg"] clipW: [UIScreen mainScreen].bounds.size.width * 2 clipH:274 * 2 ];
     }
-    return self;
+    
 }
+
 
 -(void)layoutSubviews{
     [super layoutSubviews];
