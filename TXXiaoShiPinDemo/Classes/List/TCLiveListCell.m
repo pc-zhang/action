@@ -47,7 +47,11 @@
 
 -(void)layoutSubviews{
     [super layoutSubviews];
-    [self layoutForUGC];
+    
+    _headImageView.layer.cornerRadius  = _headImageView.height * 0.5;
+    _headImageView.layer.masksToBounds = YES;
+    _headImageView.layer.borderWidth   = 1;
+    _headImageView.layer.borderColor   = kClearColor.CGColor;
 }
 
 - (void)prepareForReuse
@@ -57,83 +61,6 @@
     [_bigPicView sd_setImageWithURL:nil];
 }
 
-- (void)initUIForUGC {
-    for (UIView *view in self.contentView.subviews) {
-        [view removeFromSuperview];
-    }
-    
-    self.contentView.backgroundColor = [UIColor clearColor];
-    //背景图
-    _bigPicView = [[UIImageView alloc] initWithFrame:CGRectZero];
-    _bigPicView.contentMode = UIViewContentModeScaleAspectFill;
-    _bigPicView.clipsToBounds = YES;
-    [self.contentView addSubview:_bigPicView];
-    
-    //左上角的审核状态
-    _reviewLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    [_reviewLabel setFont:[UIFont systemFontOfSize:14]];
-    [_reviewLabel setTextColor:[UIColor whiteColor]];
-    [self.contentView addSubview:_reviewLabel];
-    
-    //右上角的时间
-    _timeSelectView = [[UIImageView alloc] initWithFrame:CGRectZero];
-    _timeSelectView.image = [UIImage imageNamed:@"time"];
-    [self.contentView addSubview:_timeSelectView];
-    
-    _timeLable = [[UILabel alloc] initWithFrame:CGRectZero];
-    [_timeLable setFont:[UIFont systemFontOfSize:12]];
-    [_timeLable setTextColor:UIColorFromRGB(0xFFFFFF)];
-    [_timeLable setTextAlignment:NSTextAlignmentCenter];
-    [self.contentView addSubview:_timeLable];
-    
-    //用户信息
-    _userMsgView = [[UIView alloc] initWithFrame:CGRectZero];
-    _userMsgView.backgroundColor = [UIColor clearColor];
-    [self.contentView addSubview:_userMsgView];
-    
-    //头像
-    _headImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-    [_userMsgView addSubview:_headImageView];
-    
-    //用户名
-    _nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    [_nameLabel setFont:[UIFont systemFontOfSize:14]];
-    [_nameLabel setTextColor:[UIColor whiteColor]];
-    [_userMsgView addSubview:_nameLabel];
-    
-    if (_defaultImage == nil) {
-        _defaultImage = [self scaleClipImage:[UIImage imageNamed:@"bg.jpg"] clipW: [UIScreen mainScreen].bounds.size.width * 2 clipH:274 * 2 ];
-    }
-}
-
-
-- (void)layoutForUGC {
-    //背景图
-    _bigPicView.frame = CGRectMake(0 , 0.5, self.width, self.height - 1);
-    
-    //左上角的审核状态
-    _reviewLabel.frame = CGRectMake(14, 5, 62, 20);
-
-    //右上角的时间
-    _timeSelectView.frame = CGRectMake(self.width - 67, 5, 62, 20);
-    _timeLable.frame = _timeSelectView.frame;
-    
-    //用户信息
-    _userMsgView.frame = CGRectMake(0, _bigPicView.bottom - 50, self.width, 50);
-    
-    //line
-    _lineView.frame = CGRectMake(0, _userMsgView.height - 1, _userMsgView.width, 1);
-    
-    //头像
-    _headImageView.frame = CGRectMake(14, 7.5, 35, 35);
-    _headImageView.layer.cornerRadius  = _headImageView.height * 0.5;
-    _headImageView.layer.masksToBounds = YES;
-    _headImageView.layer.borderWidth   = 1;
-    _headImageView.layer.borderColor   = kClearColor.CGColor;
-    
-    //用户名
-    _nameLabel.frame = CGRectMake(_headImageView.right + 12, 18, self.width - _headImageView.right - 12, 14);
-}
 
 - (void)setModel:(TCLiveInfo *)model {
     _model = model;
@@ -195,7 +122,7 @@
         [self setTimeLable:_model.timestamp];
     }
     
-    [self layoutForUGC];
+    [self setNeedsLayout];
 }
 
 -(TCLiveInfo *)model{
