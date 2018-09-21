@@ -54,7 +54,6 @@
 		91BFE7B91EB86379008EB95C /* TCUserAgreementController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7B71EB86379008EB95C /* TCUserAgreementController.m */; };
 		91BFE7C41EB863AF008EB95C /* TCLiveListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7BF1EB863AF008EB95C /* TCLiveListModel.m */; };
 		91BFE7C51EB863AF008EB95C /* TCLiveListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7C11EB863AF008EB95C /* TCLiveListViewController.m */; };
-		91BFE7EA1EB86497008EB95C /* TCPlayDecorateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7E61EB86497008EB95C /* TCPlayDecorateView.m */; };
 		91BFE8031EB86543008EB95C /* TCVideoRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE8001EB86543008EB95C /* TCVideoRecordViewController.m */; };
 		91BFE8061EB8657E008EB95C /* TCVideoPublishController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE8051EB8657E008EB95C /* TCVideoPublishController.m */; };
 		91BFE81D1EB8669F008EB95C /* TCVideoEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE8171EB8669F008EB95C /* TCVideoEditViewController.m */; };
@@ -596,8 +595,6 @@
 		91BFE7BF1EB863AF008EB95C /* TCLiveListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCLiveListModel.m; path = TXXiaoShiPinDemo/Classes/List/TCLiveListModel.m; sourceTree = SOURCE_ROOT; };
 		91BFE7C01EB863AF008EB95C /* TCLiveListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCLiveListViewController.h; path = TXXiaoShiPinDemo/Classes/List/TCLiveListViewController.h; sourceTree = SOURCE_ROOT; };
 		91BFE7C11EB863AF008EB95C /* TCLiveListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCLiveListViewController.m; path = TXXiaoShiPinDemo/Classes/List/TCLiveListViewController.m; sourceTree = SOURCE_ROOT; };
-		91BFE7E51EB86497008EB95C /* TCPlayDecorateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCPlayDecorateView.h; path = TXXiaoShiPinDemo/Classes/Play/TCPlayDecorateView.h; sourceTree = SOURCE_ROOT; };
-		91BFE7E61EB86497008EB95C /* TCPlayDecorateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCPlayDecorateView.m; path = TXXiaoShiPinDemo/Classes/Play/TCPlayDecorateView.m; sourceTree = SOURCE_ROOT; };
 		91BFE7FF1EB86543008EB95C /* TCVideoRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCVideoRecordViewController.h; path = TXXiaoShiPinDemo/Classes/UGCRecord/TCVideoRecordViewController.h; sourceTree = SOURCE_ROOT; };
 		91BFE8001EB86543008EB95C /* TCVideoRecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCVideoRecordViewController.m; path = TXXiaoShiPinDemo/Classes/UGCRecord/TCVideoRecordViewController.m; sourceTree = SOURCE_ROOT; };
 		91BFE8041EB8657E008EB95C /* TCVideoPublishController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCVideoPublishController.h; path = TXXiaoShiPinDemo/Classes/UGCPublish/TCVideoPublishController.h; sourceTree = SOURCE_ROOT; };
@@ -1064,8 +1061,6 @@
 				9102BD521F6B7AAE003CBBFA /* TCBasePlayViewController.m */,
 				9102BD621F6B80DD003CBBFA /* TCVodPlayViewController.h */,
 				9102BD631F6B80DD003CBBFA /* TCVodPlayViewController.m */,
-				91BFE7E51EB86497008EB95C /* TCPlayDecorateView.h */,
-				91BFE7E61EB86497008EB95C /* TCPlayDecorateView.m */,
 				CE1ABF3B2024403E00A2219E /* TCPlayViewCell.h */,
 				CE1ABF3C2024403E00A2219E /* TCPlayViewCell.m */,
 				F046B6102153DE36009939D6 /* TCPlayViewCell.xib */,
@@ -2447,7 +2442,6 @@
 				91B45A541E8CE2010058E8F6 /* MCPackageDownloadTask.m in Sources */,
 				CE1C23132080D3990002FF8C /* TVCClient.m in Sources */,
 				CE29EBF01FE8C1AC0038C200 /* TCVideoRecordMusicView.m in Sources */,
-				91BFE7EA1EB86497008EB95C /* TCPlayDecorateView.m in Sources */,
 				91BFE7B11EB862DF008EB95C /* TCRegisterViewController.m in Sources */,
 				CE29EBED1FE8C0010038C200 /* VideoInfo.m in Sources */,
 				910C5CF31D4B607C003B31FE /* TCBaseAppDelegate.m in Sources */,

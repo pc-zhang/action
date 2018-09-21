@@ -7,8 +7,8 @@
 //
 
 #import "TCBasePlayViewController.h"
-
 #import "SDKHeader.h"
+#import "TCPlayViewCell.h"
 
 @interface TCVodPlayViewController : TCBasePlayViewController<UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate, TXVodPlayListener,TCPlayDecorateDelegate>
 

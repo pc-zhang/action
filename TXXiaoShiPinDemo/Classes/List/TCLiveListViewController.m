@@ -331,7 +331,7 @@
  */
 - (void)newDataAvailable:(NSNotification *)noti {
     [self doFetchList];
-    return;
+//    return;
     // 此处一定要用cell的数据，live中的对象可能已经清空了
     TCLiveInfo *info = (TCLiveInfo*)[self.lives objectAtIndex:0];
     

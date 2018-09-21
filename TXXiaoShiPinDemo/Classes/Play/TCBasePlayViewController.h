@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TCPlayDecorateView.h"
 #import "TCLiveListModel.h"
 #import "SDKHeader.h"
 #import "SDKHeader.h"

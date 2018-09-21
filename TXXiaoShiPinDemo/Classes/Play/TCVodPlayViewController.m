@@ -122,6 +122,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
     //    [self.view addSubview:_videoParentView];
     const CGFloat rowHeight = SCREEN_HEIGHT;
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    [_tableView registerNib:[UINib nibWithNibName:@"TCPlayViewCell" bundle:nil] forCellReuseIdentifier:@"TCPlayViewCell"];
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.pagingEnabled = YES;
@@ -161,7 +162,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
         //这里如果是从录制界面，或则其他播放界面过来的，要重新startPlay，因为AudioSession有可能被修改了，导致当前视频播放有异常
         NSMutableDictionary *param = [self getPlayerParam:_currentPlayer];
         [_currentPlayer startPlay:param[@"playUrl"]];
-        [_currentCell.logicView.playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
+        [_currentCell.playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
         [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
         _videoPause = NO;
     }
@@ -315,7 +316,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
         [_currentPlayer seek:0];
         [_currentPlayer pause];
     }
-    [_currentCell.logicView.playBtn setImage:[UIImage imageNamed:@"start"] forState:UIControlStateNormal];
+    [_currentCell.playBtn setImage:[UIImage imageNamed:@"start"] forState:UIControlStateNormal];
     
     //开启下一个播放器
     BOOL findPlayer = NO;
@@ -336,7 +337,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
             //判断播放器是否收到 PLAY_PREPARE 事件，如果收到，直接resume播放，如果没收到，在播放回调里面resume播放
             if ([playParam[PLAY_PREPARE] boolValue]) {
                 [_currentPlayer resume];
-                [_currentCell.logicView.playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
+                [_currentCell.playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
             }
             
             //边界检查，防止越界
@@ -449,7 +450,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
     
     NSString* ver = [TXLiveBase getSDKVersionStr];
     _logMsg = [NSString stringWithFormat:@"rtmp sdk version: %@",ver];
-    [_currentCell.logicView.logViewEvt setText:_logMsg];
+    [_currentCell.logViewEvt setText:_logMsg];
     return YES;
 }
 
@@ -457,7 +458,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
     [self clearLog];
     NSString* ver = [TXLiveBase getSDKVersionStr];
     _logMsg = [NSString stringWithFormat:@"rtmp sdk version: %@",ver];
-    [_currentCell.logicView.logViewEvt setText:_logMsg];
+    [_currentCell.logViewEvt setText:_logMsg];
     
     _currentPlayer.vodDelegate = self;
     NSMutableDictionary *playerParam = [self getPlayerParam:_currentPlayer];
@@ -514,18 +515,18 @@ typedef NS_ENUM(NSInteger,DragDirection){
     if (!_videoFinished) {
         if (_videoPause) {
             [_currentPlayer resume];
-            [_currentCell.logicView.playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
+            [_currentCell.playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
             [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
         } else {
             [_currentPlayer pause];
-            [_currentCell.logicView.playBtn setImage:[UIImage imageNamed:@"start"] forState:UIControlStateNormal];
+            [_currentCell.playBtn setImage:[UIImage imageNamed:@"start"] forState:UIControlStateNormal];
             [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
         }
         _videoPause = !_videoPause;
     }
     else {
         [_currentPlayer resume];
-        [_currentCell.logicView.playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
+        [_currentCell.playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
         [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     }
 }
@@ -537,19 +538,19 @@ typedef NS_ENUM(NSInteger,DragDirection){
 - (void)clickLog:(UIButton*)btn {
     if (_log_switch == YES)
     {
-        _currentCell.logicView.statusView.hidden = YES;
-        _currentCell.logicView.logViewEvt.hidden = YES;
+        _currentCell.statusView.hidden = YES;
+        _currentCell.logViewEvt.hidden = YES;
         [btn setImage:[UIImage imageNamed:@"log"] forState:UIControlStateNormal];
-        _currentCell.logicView.cover.hidden = YES;
+        _currentCell.cover.hidden = YES;
         _log_switch = NO;
     }
     else
     {
-        _currentCell.logicView.statusView.hidden = NO;
-        _currentCell.logicView.logViewEvt.hidden = NO;
+        _currentCell.statusView.hidden = NO;
+        _currentCell.logViewEvt.hidden = NO;
         [btn setImage:[UIImage imageNamed:@"log2"] forState:UIControlStateNormal];
-        _currentCell.logicView.cover.alpha = 0.5;
-        _currentCell.logicView.cover.hidden = NO;
+        _currentCell.cover.alpha = 0.5;
+        _currentCell.cover.hidden = NO;
         _log_switch = YES;
     }
 }
@@ -606,7 +607,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
 -(void)onDrag:(UISlider *)slider {
     float progress = slider.value;
     int intProgress = progress + 0.5;
-    _currentCell.logicView.playLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d",(int)intProgress / 3600,(int)(intProgress / 60), (int)(intProgress % 60)];
+    _currentCell.playLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d",(int)intProgress / 3600,(int)(intProgress / 60), (int)(intProgress % 60)];
     _sliderValue = slider.value;
 }
 
@@ -638,7 +639,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
         if (EvtID == PLAY_EVT_VOD_PLAY_PREPARED) {
             //收到PREPARED事件的时候 resume播放器
             [_currentPlayer resume];
-            [_currentCell.logicView.playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
+            [_currentCell.playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
             
         } else if (EvtID == PLAY_EVT_PLAY_BEGIN) {
             _videoFinished = NO;
@@ -658,14 +659,14 @@ typedef NS_ENUM(NSInteger,DragDirection){
             
             float progress = [dict[EVT_PLAY_PROGRESS] floatValue];
             int intProgress = progress + 0.5;
-            _currentCell.logicView.playLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d",(int)(intProgress / 3600), (int)(intProgress / 60), (int)(intProgress % 60)];
-            [_currentCell.logicView.playProgress setValue:progress];
+            _currentCell.playLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d",(int)(intProgress / 3600), (int)(intProgress / 60), (int)(intProgress % 60)];
+            [_currentCell.playProgress setValue:progress];
             
             float duration = [dict[EVT_PLAY_DURATION] floatValue];
             int intDuration = duration + 0.5;
-            if (duration > 0 && _currentCell.logicView.playProgress.maximumValue != duration) {
-                [_currentCell.logicView.playProgress setMaximumValue:duration];
-                _currentCell.logicView.playDuration.text = [NSString stringWithFormat:@"%02d:%02d:%02d",(int)(intDuration / 3600), (int)(intDuration / 60 % 60), (int)(intDuration % 60)];
+            if (duration > 0 && _currentCell.playProgress.maximumValue != duration) {
+                [_currentCell.playProgress setMaximumValue:duration];
+                _currentCell.playDuration.text = [NSString stringWithFormat:@"%02d:%02d:%02d",(int)(intDuration / 3600), (int)(intDuration / 60 % 60), (int)(intDuration % 60)];
             }
             return ;
         } else if (EvtID == PLAY_ERR_NET_DISCONNECT || EvtID == PLAY_EVT_PLAY_END) {
@@ -674,10 +675,10 @@ typedef NS_ENUM(NSInteger,DragDirection){
             _videoPause  = NO;
             _videoFinished = YES;
             [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-            [_currentCell.logicView.playProgress setValue:0];
-            _currentCell.logicView.playLabel.text = @"00:00:00";
+            [_currentCell.playProgress setValue:0];
+            _currentCell.playLabel.text = @"00:00:00";
             
-            [_currentCell.logicView.playBtn setImage:[UIImage imageNamed:@"start"] forState:UIControlStateNormal];
+            [_currentCell.playBtn setImage:[UIImage imageNamed:@"start"] forState:UIControlStateNormal];
             [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
             
         } else if (EvtID == PLAY_EVT_PLAY_LOADING){
@@ -727,7 +728,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
         _logMsg = @"";
     }
     _logMsg = [NSString stringWithFormat:@"%@\n%@", _logMsg, log];
-    [_currentCell.logicView.logViewEvt setText:_logMsg];
+    [_currentCell.logViewEvt setText:_logMsg];
 }
 
 
@@ -758,11 +759,9 @@ typedef NS_ENUM(NSInteger,DragDirection){
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *reuseIdentifier = @"reuseIdentifier";
-    TCPlayViewCell *cell = (TCPlayViewCell *)[_tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
-    if (cell == nil) {
-        cell = [[TCPlayViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
-    }
+    static NSString *reuseIdentifier = @"TCPlayViewCell";
+    TCPlayViewCell *cell = (TCPlayViewCell *)[_tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
+    
     cell.delegate = self;
     [cell setLiveInfo:_liveInfos[indexPath.row]];
     return cell;
@@ -793,8 +792,8 @@ typedef NS_ENUM(NSInteger,DragDirection){
 #pragma mark Utils
 - (void)clearLog {
     _logMsg = @"";
-    [_currentCell.logicView.statusView setText:@""];
-    [_currentCell.logicView.logViewEvt setText:@""];
+    [_currentCell.statusView setText:@""];
+    [_currentCell.logViewEvt setText:@""];
 }
 
 -(NSString *)checkHttps:(NSString *)playUrl{
