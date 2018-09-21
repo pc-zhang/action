@@ -39,13 +39,6 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        backgroundTimelineView.isHidden = true
-        timelineView.isHidden = true
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
         // add composition
         if composition==nil {
             composition = AVMutableComposition()
@@ -60,6 +53,20 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
         self.push(op:.nothing)
         
         playerView.playerLayer.player = player
+        
+        if let firstVideoPath = firstVideoPath {
+            addClip(URL(fileURLWithPath: firstVideoPath), trackAdded: 0)
+        }
+        if let secondVideoPath = secondVideoPath {
+            addClip(URL(fileURLWithPath: secondVideoPath), trackAdded: 1)
+        }
+        
+        backgroundTimelineView.isHidden = true
+        timelineView.isHidden = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         // Access the document
         document?.open(completionHandler: { (success) in
@@ -89,16 +96,6 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
             
             self.startTimeLabel.text = self.createTimeString(time: timeElapsed)
         }
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        if let firstVideoPath = firstVideoPath {
-            addClip(URL(fileURLWithPath: firstVideoPath), trackAdded: 0)
-        }
-        if let secondVideoPath = secondVideoPath {
-            addClip(URL(fileURLWithPath: secondVideoPath), trackAdded: 1)
-        }
-        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -332,6 +329,7 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
     {
         // Create the export session with the composition and set the preset to the highest quality.
         let compatiblePresets = AVAssetExportSession.exportPresets(compatibleWith: composition!)
+        assert(compatiblePresets.contains(AVAssetExportPreset960x540))
         let exporter = AVAssetExportSession(asset: composition!, presetName: AVAssetExportPreset960x540)!
         // Set the desired output URL for the file created by the export process.
         exporter.outputURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent(String(Int(Date.timeIntervalSinceReferenceDate))).appendingPathExtension("mp4")
@@ -341,7 +339,7 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
         exporter.videoComposition = self.videoComposition
         // Asynchronously export the composition to a video file and save this file to the camera roll once export completes.
         
-        let size = CGSize(width: 100, height: 100)
+//        let size = CGSize(width: 100, height: 100)
         
 //        startAnimating(size, message: "正在导出...", type: NVActivityIndicatorType(rawValue: NVActivityIndicatorType.lineScalePulseOut.rawValue)!)
         
