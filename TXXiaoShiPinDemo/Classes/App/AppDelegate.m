@@ -7,12 +7,12 @@
 //
 
 #import  "AppDelegate.h"
-#import "TCMainTabViewController.h"
-#import "TCLoginViewController.h"
+//#import "TCMainTabViewController.h"
+//#import "TCLoginViewController.h"
 #import "TCLog.h"
 #import "TCConstants.h"
 #import <Bugly/Bugly.h>
-#import "TCUserAgreementController.h"
+//#import "TCUserAgreementController.h"
 #import <UMSocialCore/UMSocialCore.h>
 #import "TCLoginModel.h"
 
@@ -26,13 +26,13 @@
     dispatch_source_t _timer;
     uint64_t          _beginTime;
     uint64_t          _endTime;
-    TCMainTabViewController *_mainViewController;
+//    TCMainTabViewController *_mainViewController;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     [self initCrashReport];
-    _mainViewController = [[TCMainTabViewController alloc] init];
+//    _mainViewController = [[TCMainTabViewController alloc] init];
 
     //这里只是测试使用，客户需要按照官网文档生成正式的URL 和 key值
     [TXUGCBase setLicenceURL:@"" key:@"9bc74ac7bfd07ea392e8fdff2ba5678a"];
@@ -41,15 +41,11 @@
     [TXLiveBase sharedInstance].delegate = [TCLog shareInstance];
     
     // Override point for customization after application launch.
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
-    self.window.backgroundColor = [UIColor whiteColor];
-    
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:hasAgreeUserAgreement]) {
-        [self confirmEnterMainUI];
+//        [self confirmEnterMainUI];
     }else{
-        [self enterUserAgreementUI];
+//        [self enterUserAgreementUI];
     }
     
     if (![[NSUserDefaults standardUserDefaults] boolForKey:isFirstInstallApp]) {
@@ -119,60 +115,60 @@
     
 }
 
-- (CAAnimation *)animationFrom:(UIViewController *)sourceController to:(UIViewController *)targetController {
-    if (sourceController == nil) {
-        return nil;
-    }
-    CATransition *transition = [CATransition animation];
-    transition.type = kCATransitionPush;
-    if ([sourceController isKindOfClass:[UINavigationController class]]) {
-        sourceController = [(UINavigationController *)sourceController viewControllers].firstObject;
-    }
-    if ([sourceController isKindOfClass:[TCUserAgreementController class]]) {
-        transition.type = kCATransitionFade;
-    } else if ([sourceController isKindOfClass:[TCMainTabViewController class]]) {
-        transition.subtype = kCATransitionFromRight;
-    } else if ([targetController isKindOfClass:[TCMainTabViewController class]]) {
-        transition.subtype = kCATransitionFromLeft;
-    }
-    return transition;
-}
+//- (CAAnimation *)animationFrom:(UIViewController *)sourceController to:(UIViewController *)targetController {
+//    if (sourceController == nil) {
+//        return nil;
+//    }
+//    CATransition *transition = [CATransition animation];
+//    transition.type = kCATransitionPush;
+//    if ([sourceController isKindOfClass:[UINavigationController class]]) {
+//        sourceController = [(UINavigationController *)sourceController viewControllers].firstObject;
+//    }
+//    if ([sourceController isKindOfClass:[TCUserAgreementController class]]) {
+//        transition.type = kCATransitionFade;
+//    } else if ([sourceController isKindOfClass:[TCMainTabViewController class]]) {
+//        transition.subtype = kCATransitionFromRight;
+//    } else if ([targetController isKindOfClass:[TCMainTabViewController class]]) {
+//        transition.subtype = kCATransitionFromLeft;
+//    }
+//    return transition;
+//}
 
-- (void)enterLoginUI {
-    TCLoginViewController *loginViewController = [[TCLoginViewController alloc] init];
-//  CAAnimation *transition = [self animationFrom:self.window.rootViewController to:loginViewController];
-    [self presentViewController:loginViewController animated:YES completion:nil];
-//    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController: loginViewController];
+//- (void)enterLoginUI {
+//    TCLoginViewController *loginViewController = [[TCLoginViewController alloc] init];
+////  CAAnimation *transition = [self animationFrom:self.window.rootViewController to:loginViewController];
+//    [self presentViewController:loginViewController animated:YES completion:nil];
+////    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController: loginViewController];
+////    [self.window makeKeyAndVisible];
+////    if (transition) {
+////        [self.window.layer addAnimation:transition forKey:@"transition"];
+////    }
+//}
+
+//- (void)confirmEnterMainUI{
+//    CAAnimation *transition = [self animationFrom:self.window.rootViewController to:_mainViewController];
+//    self.window.rootViewController = _mainViewController;
 //    [self.window makeKeyAndVisible];
 //    if (transition) {
 //        [self.window.layer addAnimation:transition forKey:@"transition"];
 //    }
-}
+//}
 
-- (void)confirmEnterMainUI{
-    CAAnimation *transition = [self animationFrom:self.window.rootViewController to:_mainViewController];
-    self.window.rootViewController = _mainViewController;
-    [self.window makeKeyAndVisible];
-    if (transition) {
-        [self.window.layer addAnimation:transition forKey:@"transition"];
-    }
-}
-
-- (void)enterUserAgreementUI{
-    TCUserAgreementController *agreementController = [[TCUserAgreementController alloc] init];
-    __weak __typeof(self) weakSelf = self;
-    agreementController.agree = ^(BOOL isAgree) {
-        if (isAgree) {
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:hasAgreeUserAgreement];
-            [weakSelf confirmEnterMainUI];
-        }else{
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"为了营造良好的用户环境，不同意用户协议将无法正常使用本APP" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-            [alertView show];
-        }
-    };
-    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:agreementController];
-    [self.window makeKeyAndVisible];
-}
+//- (void)enterUserAgreementUI{
+//    TCUserAgreementController *agreementController = [[TCUserAgreementController alloc] init];
+//    __weak __typeof(self) weakSelf = self;
+//    agreementController.agree = ^(BOOL isAgree) {
+//        if (isAgree) {
+//            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:hasAgreeUserAgreement];
+//            [weakSelf confirmEnterMainUI];
+//        }else{
+//            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"为了营造良好的用户环境，不同意用户协议将无法正常使用本APP" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+//            [alertView show];
+//        }
+//    };
+//    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:agreementController];
+//    [self.window makeKeyAndVisible];
+//}
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {

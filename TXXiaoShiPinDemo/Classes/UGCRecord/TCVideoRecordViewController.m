@@ -1113,9 +1113,10 @@ typedef NS_ENUM(NSInteger,RecordType)
 
     //调用partsManager快速合成视频，不破坏录制状态，下次返回后可以接着录制（注意需要先暂停视频录制）
     if ([TXUGCRecord shareInstance].partsManager.getVideoPathList.count > 0) {
-        int result = [[TXUGCRecord shareInstance].partsManager joinAllParts:_recordVideoPath];
+        int result = 0;
+//        [[TXUGCRecord shareInstance].partsManager joinAllParts:_recordVideoPath];
         if(0 == result){
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Editor" bundle:[NSBundle mainBundle]];
             TCVideoEditViewController2 *editViewController = (TCVideoEditViewController2*)[storyboard instantiateViewControllerWithIdentifier:@"TCVideoEditViewController2"];
             
             if (_recordType == RecordType_Normal) {

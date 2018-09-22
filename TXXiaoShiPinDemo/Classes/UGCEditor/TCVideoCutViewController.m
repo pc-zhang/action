@@ -304,7 +304,7 @@ typedef  NS_ENUM(NSInteger,VideoType)
     if (_videoType == VideoType_Video) {
         if (_leftTime == 0 && _rightTime == _duration) {
             //视频如果没发生剪裁，这里不用走编辑逻辑，减少画面质量损失
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Editor" bundle:[NSBundle mainBundle]];
             
             UIViewController *documentViewController = [storyboard instantiateInitialViewController];
             [self.navigationController pushViewController:documentViewController animated:YES];
