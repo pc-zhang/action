@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+    <device id="retina5_9" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Tab Bar Controller-->
+        <scene sceneID="yl2-sM-qoP">
+            <objects>
+                <tabBarController id="49e-Tb-3d3" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="W28-zg-YXA">
+                        <rect key="frame" x="0.0" y="975" width="768" height="49"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                        <color key="backgroundColor" red="0.070588235294117646" green="0.050980392156862744" blue="0.13725490196078433" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="barTintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="TL7-xW-1fW" kind="relationship" relationship="viewControllers" id="aG6-SS-Ui0"/>
+                        <segue destination="6xr-Bh-LJD" kind="relationship" relationship="viewControllers" id="UxJ-8v-4Fc"/>
+                        <segue destination="9Ke-0X-uYY" kind="relationship" relationship="viewControllers" id="zCk-dF-R9Z"/>
+                        <segue destination="19W-KH-Vws" kind="relationship" relationship="viewControllers" id="1JJ-11-dYf"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1356" y="-35"/>
+        </scene>
+        <!--首页-->
+        <scene sceneID="PAV-Rh-DpV">
+            <objects>
+                <viewController id="TL7-xW-1fW" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="jgg-kK-13Z">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="user_info" translatesAutoresizingMaskIntoConstraints="NO" id="Xud-hY-2l7">
+                                <rect key="frame" x="10" y="592" width="290" height="137"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="functions" translatesAutoresizingMaskIntoConstraints="NO" id="Pha-XK-LAb">
+                                <rect key="frame" x="295" y="407" width="80" height="322"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="top" translatesAutoresizingMaskIntoConstraints="NO" id="EHZ-SP-Rh8">
+                                <rect key="frame" x="102" y="0.0" width="257" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="3aA-UL-O6D"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="首页" image="main_item" id="8Gt-32-Qc1"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6EJ-uV-nwo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2682.4000000000001" y="738.91625615763553"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="E4t-KD-tXl">
+            <objects>
+                <viewController id="PgO-Oz-xP1" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="wFc-lf-kJz">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="IMG_3137" translatesAutoresizingMaskIntoConstraints="NO" id="U6d-8o-3U6">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="U6d-8o-3U6" firstAttribute="trailing" secondItem="MWO-Xb-HSQ" secondAttribute="trailing" id="5yu-6u-RQC"/>
+                            <constraint firstItem="U6d-8o-3U6" firstAttribute="top" secondItem="wFc-lf-kJz" secondAttribute="top" id="CUQ-tL-q9b"/>
+                            <constraint firstAttribute="bottom" secondItem="U6d-8o-3U6" secondAttribute="bottom" id="jGy-ii-Odk"/>
+                            <constraint firstItem="U6d-8o-3U6" firstAttribute="leading" secondItem="MWO-Xb-HSQ" secondAttribute="leading" id="oAn-wg-yzf"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="MWO-Xb-HSQ"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dEg-mT-pHL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-71" y="739"/>
+        </scene>
+        <!--我的-->
+        <scene sceneID="rHC-WG-azy">
+            <objects>
+                <viewController id="19W-KH-Vws" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="GpX-YF-8hT">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="IMG_3135" translatesAutoresizingMaskIntoConstraints="NO" id="pMe-pm-fmd">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="pMe-pm-fmd" secondAttribute="bottom" id="UBq-FY-Nfw"/>
+                            <constraint firstItem="pMe-pm-fmd" firstAttribute="top" secondItem="GpX-YF-8hT" secondAttribute="top" id="Uoe-V8-RXP"/>
+                            <constraint firstItem="pMe-pm-fmd" firstAttribute="leading" secondItem="A66-DL-1pO" secondAttribute="leading" id="dXa-8U-k4u"/>
+                            <constraint firstItem="pMe-pm-fmd" firstAttribute="trailing" secondItem="A66-DL-1pO" secondAttribute="trailing" id="yfJ-Ql-V2W"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="A66-DL-1pO"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="我的" image="user_item" id="8XE-rA-bde"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aCl-Lr-U38" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-711" y="739"/>
+        </scene>
+        <!--消息-->
+        <scene sceneID="P4b-ia-8un">
+            <objects>
+                <viewController id="9Ke-0X-uYY" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ONS-yG-fkP">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="IMG_3134" translatesAutoresizingMaskIntoConstraints="NO" id="2s7-lG-CRB">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="2s7-lG-CRB" firstAttribute="trailing" secondItem="gbY-qp-R5m" secondAttribute="trailing" id="5hS-qk-H9u"/>
+                            <constraint firstItem="2s7-lG-CRB" firstAttribute="top" secondItem="ONS-yG-fkP" secondAttribute="top" id="BTR-q8-xau"/>
+                            <constraint firstItem="2s7-lG-CRB" firstAttribute="leading" secondItem="gbY-qp-R5m" secondAttribute="leading" id="tCo-80-McM"/>
+                            <constraint firstAttribute="bottom" secondItem="2s7-lG-CRB" secondAttribute="bottom" id="yHh-LP-cQ2"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="gbY-qp-R5m"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="消息" image="message_item" id="Cwq-Wo-zAS"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oTO-ma-cSZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1356" y="739"/>
+        </scene>
+        <!--发现-->
+        <scene sceneID="C5Q-bI-mjD">
+            <objects>
+                <viewController id="6xr-Bh-LJD" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="J8m-Aw-GSO">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="IMG_3133" translatesAutoresizingMaskIntoConstraints="NO" id="KQI-Xb-yRc">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="KQI-Xb-yRc" firstAttribute="top" secondItem="J8m-Aw-GSO" secondAttribute="top" id="9dp-KA-6oz"/>
+                            <constraint firstAttribute="bottom" secondItem="KQI-Xb-yRc" secondAttribute="bottom" id="HI0-rM-0oD"/>
+                            <constraint firstItem="KQI-Xb-yRc" firstAttribute="trailing" secondItem="JfX-PK-3Us" secondAttribute="trailing" id="bZx-Ep-gzg"/>
+                            <constraint firstItem="KQI-Xb-yRc" firstAttribute="leading" secondItem="JfX-PK-3Us" secondAttribute="leading" id="sHP-Wi-TBj"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="JfX-PK-3Us"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="发现" image="explore_item" id="EuN-l8-MQe"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5oL-fZ-36f" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2017" y="739"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="rTV-Uq-mX8">
+            <objects>
+                <viewController id="Gfq-hy-l7C" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="1y0-i4-D86">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="IMG_3135" translatesAutoresizingMaskIntoConstraints="NO" id="OhV-V9-OFY">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="OhV-V9-OFY" firstAttribute="trailing" secondItem="LHo-l3-7BU" secondAttribute="trailing" id="Ef8-sI-9lD"/>
+                            <constraint firstAttribute="bottom" secondItem="OhV-V9-OFY" secondAttribute="bottom" id="jTb-3m-hdg"/>
+                            <constraint firstItem="OhV-V9-OFY" firstAttribute="leading" secondItem="LHo-l3-7BU" secondAttribute="leading" id="l3y-7D-DYV"/>
+                            <constraint firstItem="OhV-V9-OFY" firstAttribute="top" secondItem="1y0-i4-D86" secondAttribute="top" id="ydz-ZY-g3Q"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="LHo-l3-7BU"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KKk-f5-j6G" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="630" y="739"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="IMG_3133" width="1125" height="2436"/>
+        <image name="IMG_3134" width="1125" height="2436"/>
+        <image name="IMG_3135" width="1125" height="2436"/>
+        <image name="IMG_3137" width="1125" height="2436"/>
+        <image name="explore_item" width="25" height="25"/>
+        <image name="functions" width="209" height="961"/>
+        <image name="main_item" width="29" height="25"/>
+        <image name="message_item" width="20" height="25"/>
+        <image name="top" width="777" height="71"/>
+        <image name="user_info" width="903" height="343"/>
+        <image name="user_item" width="26" height="25"/>
+    </resources>
+</document>
