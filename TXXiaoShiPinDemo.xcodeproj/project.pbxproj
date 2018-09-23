@@ -304,7 +304,6 @@
 		F032238E21540F0500533AA3 /* TCLiveListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F032238C21540F0400533AA3 /* TCLiveListCell.m */; };
 		F0365C8A2156C19900726A70 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F03AF0352155F4A1007D1E60 /* Main.storyboard */; };
 		F0365C8B2156C22F00726A70 /* Assets2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F03AF0382155F4A2007D1E60 /* Assets2.xcassets */; };
-		F046B6112153DE36009939D6 /* TCPlayViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F046B6102153DE36009939D6 /* TCPlayViewCell.xib */; };
 		F08756EA21495B36006CF4B6 /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E021495B34006CF4B6 /* EditorViewController.swift */; };
 		F08756EC21495B36006CF4B6 /* SegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E221495B34006CF4B6 /* SegmentView.swift */; };
 		F08756ED21495B36006CF4B6 /* APLCustomVideoCompositor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E421495B35006CF4B6 /* APLCustomVideoCompositor.swift */; };
@@ -928,7 +927,6 @@
 		F032238D21540F0400533AA3 /* TCLiveListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCLiveListCell.h; sourceTree = "<group>"; };
 		F03AF0362155F4A1007D1E60 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F03AF0382155F4A2007D1E60 /* Assets2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets2.xcassets; sourceTree = "<group>"; };
-		F046B6102153DE36009939D6 /* TCPlayViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TCPlayViewCell.xib; sourceTree = "<group>"; };
 		F08756DD21495B31006CF4B6 /* TXXiaoShiPinDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TXXiaoShiPinDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		F08756E021495B34006CF4B6 /* EditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
 		F08756E221495B34006CF4B6 /* SegmentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentView.swift; sourceTree = "<group>"; };
@@ -1063,7 +1061,6 @@
 				9102BD631F6B80DD003CBBFA /* TCVodPlayViewController.m */,
 				CE1ABF3B2024403E00A2219E /* TCPlayViewCell.h */,
 				CE1ABF3C2024403E00A2219E /* TCPlayViewCell.m */,
-				F046B6102153DE36009939D6 /* TCPlayViewCell.xib */,
 			);
 			name = Play;
 			path = Classes/Play;
@@ -2173,7 +2170,6 @@
 				CE89A5A62010A0820005B88B /* linghun3.png in Resources */,
 				CE89A5AC2010A0820005B88B /* linghun9.png in Resources */,
 				CE89A5872010A0820005B88B /* anhei21.png in Resources */,
-				F046B6112153DE36009939D6 /* TCPlayViewCell.xib in Resources */,
 				CE93B6E1201F271100CD89B7 /* anhei_select.png in Resources */,
 				CE89A5A02010A0820005B88B /* linghun4.png in Resources */,
 				CE4827371FDA6CCE009C5862 /* AnimatedPaster.bundle in Resources */,

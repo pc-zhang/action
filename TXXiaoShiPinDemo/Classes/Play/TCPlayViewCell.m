@@ -27,7 +27,6 @@
 @implementation TCPlayViewCell
 {
     TCLiveInfo         *_liveInfo;
-    __weak IBOutlet UIButton *_closeBtn;
     CGPoint            _touchBeginLocation;
     BOOL               _bulletBtnIsOn;
     BOOL               _viewsHidden;
@@ -310,7 +309,7 @@
     [UIView animateWithDuration:0.2 animations:^{
         if(moveX > 10){
             for (UIView *view in self.subviews) {
-                if (![view isEqual:_closeBtn]) {
+                if (![view isEqual:_closeButton]) {
                     CGRect rect = view.frame;
                     if (rect.origin.x >= 0 && rect.origin.x < SCREEN_WIDTH) {
                         rect = CGRectOffset(rect, self.width, 0);
@@ -321,7 +320,7 @@
             }
         }else if(moveX < -10){
             for (UIView *view in self.subviews) {
-                if (![view isEqual:_closeBtn]) {
+                if (![view isEqual:_closeButton]) {
                     CGRect rect = view.frame;
                     if (rect.origin.x >= SCREEN_WIDTH) {
                         rect = CGRectOffset(rect, -self.width, 0);

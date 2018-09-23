@@ -26,4 +26,5 @@ extern NSString *const kTCLivePlayError;
 - (void)onAppDidEnterBackGround:(UIApplication*)app;
 
 - (void)onAppWillEnterForeground:(UIApplication*)app;
+
 @end

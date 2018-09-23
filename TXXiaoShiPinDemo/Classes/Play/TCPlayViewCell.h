@@ -38,6 +38,7 @@
 @property (weak, nonatomic) IBOutlet UIView* videoParentView;
 @property (weak, nonatomic) IBOutlet UILabel* reviewLabel;
 @property (weak, nonatomic) IBOutlet UISlider *playProgress;
+@property (weak, nonatomic) IBOutlet UIButton *closeButton;
 
 
 @property(weak,nonatomic)   id<TCPlayDecorateDelegate>delegate;

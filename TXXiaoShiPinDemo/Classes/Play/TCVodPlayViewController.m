@@ -7,7 +7,6 @@
 //
 
 #import "TCVodPlayViewController.h"
-#import "TCVideoPublishController.h"
 #import "TCVideoRecordViewController.h"
 #import <mach/mach.h>
 #import <UIImageView+WebCache.h>
@@ -21,12 +20,8 @@
 #import "TCPlayViewCell.h"
 #import "TCUserInfoModel.h"
 #import "SDKHeader.h"
-
 #import <UShareUI/UMSocialUIManager.h>
 #import <UMSocialCore/UMSocialCore.h>
-#import "SDKHeader.h"
-#import "SDKHeader.h"
-#import <mach/mach.h>
 #import <UIImageView+WebCache.h>
 #import "TCBaseAppDelegate.h"
 #import "TCConstants.h"
@@ -37,7 +32,6 @@
 #import "NSString+Common.h"
 #import "TCVideoPublishController.h"
 #import "TCUserInfoModel.h"
-
 #import "TCLiveListModel.h"
 #import <MJRefresh/MJRefresh.h>
 #import <AFNetworking.h>
@@ -64,7 +58,6 @@ typedef NS_ENUM(NSInteger,DragDirection){
 @interface TCVodPlayViewController ()
 
 @property TCLiveListMgr *liveListMgr;
-
 @property(nonatomic, strong) NSMutableArray *lives;
 @property BOOL isLoading;
 
@@ -84,14 +77,12 @@ typedef NS_ENUM(NSInteger,DragDirection){
     NSString             *_logMsg;
     NSString             *_rtmpUrl;
     
-    UIView               *_videoParentView;
-    
     BOOL                 _isErrorAlert; //是否已经弹出了错误提示框，用于保证在同时收到多个错误通知时，只弹一个错误提示框
     BOOL                 _statusBarHidden;
     BOOL                 _navigationBarHidden;
     BOOL                 _beginDragging;
     
-    UITableView*         _tableView;
+    __weak IBOutlet UITableView *_tableView;
     NSMutableArray*      _playerList;
     NSInteger            _liveInfoIndex;
    
@@ -157,48 +148,8 @@ typedef NS_ENUM(NSInteger,DragDirection){
 
 -(void)viewDidLoad{
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor blackColor];
-    //    [self joinGroup];
     
-    /*预加载UI 背景图*/
-    UIImage *backImage =  self.liveInfo.userinfo.frontcoverImage;
-    UIImage *clipImage = nil;
-    if (backImage) {
-        CGFloat backImageNewHeight = self.view.height;
-        CGFloat backImageNewWidth = backImageNewHeight * backImage.size.width / backImage.size.height;
-        UIImage *gsImage = [self gsImage:backImage withGsNumber:10];
-        UIImage *scaleImage = [self scaleImage:gsImage scaleToSize:CGSizeMake(backImageNewWidth, backImageNewHeight)];
-        clipImage = [self clipImage:scaleImage inRect:CGRectMake((backImageNewWidth - self.view.width)/2, (backImageNewHeight - self.view.height)/2, self.view.width, self.view.height)];
-    }
-    UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
-    backgroundImageView.image = clipImage;
-    backgroundImageView.contentMode = UIViewContentModeScaleToFill;
-    backgroundImageView.backgroundColor = [UIColor blackColor];
-    [self.view addSubview:backgroundImageView];
-    
-    //视频画面父view
-    _videoParentView = [[UIView alloc] initWithFrame:self.view.bounds];
-    //    _videoParentView.tag = FULL_SCREEN_PLAY_VIDEO_VIEW;
-    //    [self.view addSubview:_videoParentView];
-    const CGFloat rowHeight = SCREEN_HEIGHT;
-    _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
-    [_tableView registerNib:[UINib nibWithNibName:@"TCPlayViewCell" bundle:nil] forCellReuseIdentifier:@"TCPlayViewCell"];
-    _tableView.delegate = self;
-    _tableView.dataSource = self;
-    _tableView.pagingEnabled = YES;
-    _tableView.showsVerticalScrollIndicator = NO;
-    _tableView.showsHorizontalScrollIndicator = NO;
-    _tableView.estimatedRowHeight = 0;
-    _tableView.estimatedSectionFooterHeight = 0;
-    _tableView.estimatedSectionHeaderHeight = 0;
-    _tableView.rowHeight = rowHeight;// - statusBarHeight;
-    if (@available(iOS 11, *)) {
-        _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-    }
-    [self.view addSubview:_tableView];
-    [_tableView reloadData];
-    
-    [_tableView setContentOffset:CGPointMake(0, rowHeight * _liveInfoIndex) animated:NO];
+    _tableView.rowHeight = [UIScreen mainScreen].bounds.size.height;
     
     [self setup];
 }
@@ -816,8 +767,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *reuseIdentifier = @"TCPlayViewCell";
-    TCPlayViewCell *cell = (TCPlayViewCell *)[_tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
+    TCPlayViewCell *cell = (TCPlayViewCell *)[_tableView dequeueReusableCellWithIdentifier:@"TCPlayViewCell" forIndexPath:indexPath];
     
     cell.delegate = self;
     [cell setLiveInfo:self.lives[indexPath.row]];
