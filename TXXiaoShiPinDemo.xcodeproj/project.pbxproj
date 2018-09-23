@@ -34,7 +34,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		9102BD531F6B7AAE003CBBFA /* TCBasePlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9102BD521F6B7AAE003CBBFA /* TCBasePlayViewController.m */; };
 		9102BD641F6B80DD003CBBFA /* TCVodPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9102BD631F6B80DD003CBBFA /* TCVodPlayViewController.m */; };
 		910C5CF31D4B607C003B31FE /* TCBaseAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 910C5CF21D4B607C003B31FE /* TCBaseAppDelegate.m */; };
 		91B45A4F1E8CE2010058E8F6 /* UIColor+MCColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 91B45A3F1E8CE2010058E8F6 /* UIColor+MCColor.m */; };
@@ -555,8 +554,6 @@
 		0DC4F4A21985F9B70B3A4BAB /* libPods-TXXiaoShiPinDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TXXiaoShiPinDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EA953CF458C729179DB3D6B /* Pods-TXXiaoShiPinDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TXXiaoShiPinDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-TXXiaoShiPinDemo/Pods-TXXiaoShiPinDemo.release.xcconfig"; sourceTree = "<group>"; };
 		55A430FCA48428CAC6D5DB0B /* Pods-TXXiaoShiPinDemo.dailybuild.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TXXiaoShiPinDemo.dailybuild.xcconfig"; path = "Pods/Target Support Files/Pods-TXXiaoShiPinDemo/Pods-TXXiaoShiPinDemo.dailybuild.xcconfig"; sourceTree = "<group>"; };
-		9102BD511F6B7AAE003CBBFA /* TCBasePlayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TCBasePlayViewController.h; path = TXXiaoShiPinDemo/Classes/Play/TCBasePlayViewController.h; sourceTree = SOURCE_ROOT; };
-		9102BD521F6B7AAE003CBBFA /* TCBasePlayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TCBasePlayViewController.m; path = TXXiaoShiPinDemo/Classes/Play/TCBasePlayViewController.m; sourceTree = SOURCE_ROOT; };
 		9102BD621F6B80DD003CBBFA /* TCVodPlayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TCVodPlayViewController.h; path = TXXiaoShiPinDemo/Classes/Play/TCVodPlayViewController.h; sourceTree = SOURCE_ROOT; };
 		9102BD631F6B80DD003CBBFA /* TCVodPlayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TCVodPlayViewController.m; path = TXXiaoShiPinDemo/Classes/Play/TCVodPlayViewController.m; sourceTree = SOURCE_ROOT; };
 		910C5CF11D4B607C003B31FE /* TCBaseAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCBaseAppDelegate.h; path = App/TCBaseAppDelegate.h; sourceTree = "<group>"; };
@@ -1062,8 +1059,6 @@
 		9105C2B51EB193FD00DB85F3 /* Play */ = {
 			isa = PBXGroup;
 			children = (
-				9102BD511F6B7AAE003CBBFA /* TCBasePlayViewController.h */,
-				9102BD521F6B7AAE003CBBFA /* TCBasePlayViewController.m */,
 				9102BD621F6B80DD003CBBFA /* TCVodPlayViewController.h */,
 				9102BD631F6B80DD003CBBFA /* TCVodPlayViewController.m */,
 				CE1ABF3B2024403E00A2219E /* TCPlayViewCell.h */,
@@ -2476,7 +2471,6 @@
 				9102BD641F6B80DD003CBBFA /* TCVodPlayViewController.m in Sources */,
 				CE0BE0331FFB27F900DEBA5C /* UIView+CustomAutoLayout.m in Sources */,
 				CE1C230D2080D3990002FF8C /* TXUGCPublish.m in Sources */,
-				9102BD531F6B7AAE003CBBFA /* TCBasePlayViewController.m in Sources */,
 				CE29EBE21FE8BE470038C200 /* V8HorizontalPickerView.m in Sources */,
 				CE0BE0391FFB27F900DEBA5C /* UIButton+Glossy.m in Sources */,
 			);

@@ -22,6 +22,33 @@
 #import "TCUserInfoModel.h"
 #import "SDKHeader.h"
 
+#import <UShareUI/UMSocialUIManager.h>
+#import <UMSocialCore/UMSocialCore.h>
+#import "SDKHeader.h"
+#import "SDKHeader.h"
+#import <mach/mach.h>
+#import <UIImageView+WebCache.h>
+#import "TCBaseAppDelegate.h"
+#import "TCConstants.h"
+#import <Accelerate/Accelerate.h>
+#import <UShareUI/UMSocialUIManager.h>
+#import <UMSocialCore/UMSocialCore.h>
+#import "TCLoginModel.h"
+#import "NSString+Common.h"
+#import "TCVideoPublishController.h"
+#import "TCUserInfoModel.h"
+
+#import "TCLiveListModel.h"
+#import <MJRefresh/MJRefresh.h>
+#import <AFNetworking.h>
+#import "HUDHelper.h"
+#import <MJExtension/MJExtension.h>
+#import <BlocksKit/BlocksKit.h>
+#import "UIColor+MLPFlatColors.h"
+
+
+NSString *const kTCLivePlayError = @"kTCLivePlayError";
+
 
 #define RTMP_URL    @"请输入或扫二维码获取播放地址"
 #define CACHE_PLAYER  3
@@ -35,6 +62,11 @@ typedef NS_ENUM(NSInteger,DragDirection){
 };
 
 @interface TCVodPlayViewController ()
+
+@property TCLiveListMgr *liveListMgr;
+
+@property(nonatomic, strong) NSMutableArray *lives;
+@property BOOL isLoading;
 
 @end
 
@@ -60,7 +92,6 @@ typedef NS_ENUM(NSInteger,DragDirection){
     BOOL                 _beginDragging;
     
     UITableView*         _tableView;
-    NSArray*             _liveInfos;
     NSMutableArray*      _playerList;
     NSInteger            _liveInfoIndex;
    
@@ -70,24 +101,53 @@ typedef NS_ENUM(NSInteger,DragDirection){
     MBProgressHUD*       _hub;
 }
 
--(id)initWithPlayInfoS:(NSArray<TCLiveInfo *>*) liveInfos  liveInfo:(TCLiveInfo *)liveInfo videoIsReady:(videoIsReadyBlock)videoIsReady;
+- (void)setup
 {
-    self = [super initWithPlayInfo:liveInfo videoIsReady:videoIsReady];
+    [_tableView.mj_header endRefreshing];
+    [_tableView.mj_footer endRefreshing];
+    if(self.lives) [self.lives removeAllObjects];
+    
+    _tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        self.isLoading = YES;
+        self.lives = [NSMutableArray array];
+        [_liveListMgr queryVideoList:GetType_Up];
+    }];
+    
+    _tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+        self.isLoading = YES;
+        [_liveListMgr queryVideoList:GetType_Down];
+    }];
+    
+    // 先加载缓存的数据，然后再开始网络请求，以防用户打开是看到空数据
+    [self.liveListMgr loadVodsFromArchive];
+    [self doFetchList];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [_tableView.mj_header beginRefreshing];
+    });
+    
+    [(MJRefreshHeader *)_tableView.mj_header endRefreshingWithCompletionBlock:^{
+        self.isLoading = NO;
+    }];
+    [(MJRefreshHeader *)_tableView.mj_footer endRefreshingWithCompletionBlock:^{
+        self.isLoading = NO;
+    }];
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
     if (self) {
-        _videoPause    = NO;
-        _videoFinished = YES;
-        _isInVC        = NO;
-        _log_switch    = NO;
-        _liveInfos     = liveInfos;
-        _liveInfoIndex = [liveInfos indexOfObject:liveInfo];
-        _playerList    = [NSMutableArray array];
-        _isErrorAlert = NO;
-        _dragDirection = DragDirection_Down;
-        [self initPlayer];
-        [self addNotify];
+        self.lives = [NSMutableArray array];
+        _liveListMgr = [TCLiveListMgr sharedMgr];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newDataAvailable:) name:kTCLiveListNewDataAvailable object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(listDataUpdated:) name:kTCLiveListUpdated object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(svrError:) name:kTCLiveListSvrError object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playError:) name:kTCLivePlayError object:nil];
     }
     return self;
 }
+
+
 
 - (void)addNotify{
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAudioSessionEvent:) name:AVAudioSessionInterruptionNotification object:nil];
@@ -139,11 +199,8 @@ typedef NS_ENUM(NSInteger,DragDirection){
     [_tableView reloadData];
     
     [_tableView setContentOffset:CGPointMake(0, rowHeight * _liveInfoIndex) animated:NO];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_liveInfoIndex inSection:0];
-    //    [_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
-    _currentCell = [_tableView cellForRowAtIndexPath:indexPath];
-    [self resumePlayer];
     
+    [self setup];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -234,14 +291,14 @@ typedef NS_ENUM(NSInteger,DragDirection){
         liveIndex = 0;
         liveIndexOffset = 0;
     }
-    if (_liveInfoIndex >= _liveInfos.count - CACHE_PLAYER / 2 - 1) {
-        liveIndex = (int)_liveInfos.count - CACHE_PLAYER;
+    if (_liveInfoIndex >= self.lives.count - CACHE_PLAYER / 2 - 1) {
+        liveIndex = (int)self.lives.count - CACHE_PLAYER;
         liveIndexOffset = 0;
     }
     while (playerCount < CACHE_PLAYER) {
         TXVodPlayer *player = [[TXVodPlayer alloc] init];
         player.isAutoPlay = NO;
-        TCLiveInfo *info = _liveInfos[liveIndex + liveIndexOffset];
+        TCLiveInfo *info = self.lives[liveIndex + liveIndexOffset];
         NSString *playUrl = [self checkHttps:info.playurl];
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
         [param setObject:player forKey:@"player"];
@@ -266,8 +323,8 @@ typedef NS_ENUM(NSInteger,DragDirection){
         }
         
         //播放器重新对应 -> playeUrl
-        if (_liveInfoIndex + liveIndexOffset >= 0 && _liveInfoIndex + liveIndexOffset < _liveInfos.count) {
-            TCLiveInfo *info = _liveInfos[_liveInfoIndex + liveIndexOffset];
+        if (_liveInfoIndex + liveIndexOffset >= 0 && _liveInfoIndex + liveIndexOffset < self.lives.count) {
+            TCLiveInfo *info = self.lives[_liveInfoIndex + liveIndexOffset];
             NSString *playUrl = [self checkHttps:info.playurl];
             [playerParam setObject:playUrl forKey:@"playUrl"];
             [playerParam setObject:@(NO) forKey:PLAY_CLICK];
@@ -341,7 +398,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
             }
             
             //边界检查，防止越界
-            if (_liveInfoIndex < CACHE_PLAYER / 2 || _liveInfoIndex > _liveInfos.count - CACHE_PLAYER / 2 - 1) {
+            if (_liveInfoIndex < CACHE_PLAYER / 2 || _liveInfoIndex > self.lives.count - CACHE_PLAYER / 2 - 1) {
                 break;
             }
             //缓存播放器切换
@@ -355,7 +412,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
                         [player removeVideoWidget];
                     }
                     
-                    TCLiveInfo *liveInfo = _liveInfos[_liveInfoIndex + 1 + j];
+                    TCLiveInfo *liveInfo = self.lives[_liveInfoIndex + 1 + j];
                     NSString *playUrl = [self checkHttps:liveInfo.playurl];
                     NSMutableDictionary *newParam = [NSMutableDictionary dictionary];
                     [newParam setObject:player forKey:@"player"];
@@ -377,7 +434,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
                         [player removeVideoWidget];
                     }
                     
-                    TCLiveInfo *liveInfo = _liveInfos[_liveInfoIndex - 1 - j];
+                    TCLiveInfo *liveInfo = self.lives[_liveInfoIndex - 1 - j];
                     NSString *playUrl = [self checkHttps:liveInfo.playurl];
                     NSMutableDictionary *newParam = [NSMutableDictionary dictionary];
                     [newParam setObject:player forKey:@"player"];
@@ -478,7 +535,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
 }
 
 - (NSString *)playUrl{
-    TCLiveInfo *liveInfo = _liveInfos[_liveInfoIndex];
+    TCLiveInfo *liveInfo = self.lives[_liveInfoIndex];
     NSString *playUrl = [self checkHttps:liveInfo.playurl];
     return playUrl;
 }
@@ -754,7 +811,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
 {
-    return _liveInfos.count;
+    return self.lives.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -763,7 +820,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
     TCPlayViewCell *cell = (TCPlayViewCell *)[_tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
     
     cell.delegate = self;
-    [cell setLiveInfo:_liveInfos[indexPath.row]];
+    [cell setLiveInfo:self.lives[indexPath.row]];
     return cell;
 }
 
@@ -825,5 +882,337 @@ typedef NS_ENUM(NSInteger,DragDirection){
     
     return YES;
 }
+
+
+/*
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
+
+
+//创建高斯模糊效果图片
+-(UIImage *)gsImage:(UIImage *)image withGsNumber:(CGFloat)blur
+{
+    if (blur < 0.f || blur > 1.f) {
+        blur = 0.5f;
+    }
+    int boxSize = (int)(blur * 40);
+    boxSize = boxSize - (boxSize % 2) + 1;
+    CGImageRef img = image.CGImage;
+    vImage_Buffer inBuffer, outBuffer;
+    vImage_Error error;
+    void *pixelBuffer;
+    //从CGImage中获取数据
+    CGDataProviderRef inProvider = CGImageGetDataProvider(img);
+    CFDataRef inBitmapData = CGDataProviderCopyData(inProvider);
+    //设置从CGImage获取对象的属性
+    inBuffer.width = CGImageGetWidth(img);
+    inBuffer.height = CGImageGetHeight(img);
+    inBuffer.rowBytes = CGImageGetBytesPerRow(img);
+    inBuffer.data = (void*)CFDataGetBytePtr(inBitmapData);
+    pixelBuffer = malloc(CGImageGetBytesPerRow(img) * CGImageGetHeight(img));
+    if(pixelBuffer == NULL)
+        NSLog(@"No pixelbuffer");
+    outBuffer.data = pixelBuffer;
+    outBuffer.width = CGImageGetWidth(img);
+    outBuffer.height = CGImageGetHeight(img);
+    outBuffer.rowBytes = CGImageGetBytesPerRow(img);
+    error = vImageBoxConvolve_ARGB8888(&inBuffer, &outBuffer, NULL, 0, 0, boxSize, boxSize, NULL, kvImageEdgeExtend);
+    if (error) {
+        NSLog(@"error from convolution %ld", error);
+    }
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef ctx = CGBitmapContextCreate( outBuffer.data, outBuffer.width, outBuffer.height, 8, outBuffer.rowBytes, colorSpace, kCGImageAlphaNoneSkipLast);
+    CGImageRef imageRef = CGBitmapContextCreateImage (ctx);
+    UIImage *returnImage = [UIImage imageWithCGImage:imageRef];
+    //clean up
+    CGContextRelease(ctx);
+    CGColorSpaceRelease(colorSpace);
+    free(pixelBuffer);
+    CFRelease(inBitmapData);
+    CGColorSpaceRelease(colorSpace);
+    CGImageRelease(imageRef);
+    return returnImage;
+}
+
+/**
+ *缩放图片
+ */
+-(UIImage*)scaleImage:(UIImage *)image scaleToSize:(CGSize)size{
+    UIGraphicsBeginImageContext(size);
+    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    UIImage* scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return scaledImage;
+}
+
+/**
+ *裁剪图片
+ */
+-(UIImage *)clipImage:(UIImage *)image inRect:(CGRect)rect{
+    CGImageRef sourceImageRef = [image CGImage];
+    CGImageRef newImageRef = CGImageCreateWithImageInRect(sourceImageRef, rect);
+    UIImage *newImage = [UIImage imageWithCGImage:newImageRef];
+    CGImageRelease(newImageRef);
+    return newImage;
+}
+/**
+ @method 获取指定宽度width的字符串在UITextView上的高度
+ @param textView 待计算的UITextView
+ @param Width 限制字符串显示区域的宽度
+ @result float 返回的高度
+ */
+- (float) heightForString:(UITextView *)textView andWidth:(float)width{
+    CGSize sizeToFit = [textView sizeThatFits:CGSizeMake(width, MAXFLOAT)];
+    return sizeToFit.height;
+}
+
+
+- (void) toastTip:(NSString*)toastInfo
+{
+    CGRect frameRC = [[UIScreen mainScreen] bounds];
+    frameRC.origin.y = frameRC.size.height - 110;
+    frameRC.size.height -= 110;
+    __block UITextView * toastView = [[UITextView alloc] init];
+    
+    toastView.editable = NO;
+    toastView.selectable = NO;
+    
+    frameRC.size.height = [self heightForString:toastView andWidth:frameRC.size.width];
+    
+    toastView.frame = frameRC;
+    
+    toastView.text = toastInfo;
+    toastView.backgroundColor = [UIColor whiteColor];
+    toastView.alpha = 0.5;
+    
+    [self.view addSubview:toastView];
+    
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+    
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(){
+        [toastView removeFromSuperview];
+        toastView = nil;
+    });
+}
+
+- (void)shareLive {
+    __weak typeof(self) weakSelf = self;
+    //显示分享面板
+    [UMSocialUIManager showShareMenuViewInWindowWithPlatformSelectionBlock:^(UMSocialPlatformType platformType, NSDictionary *userInfo) {
+        [weakSelf shareDataWithPlatform:platformType];
+    }];
+}
+
+- (void)shareDataWithPlatform:(UMSocialPlatformType)platformType
+{
+    // 创建UMSocialMessageObject实例进行分享
+    // 分享数据对象
+    UMSocialMessageObject *messageObject = [UMSocialMessageObject messageObject];
+    
+    NSString *title = self.liveInfo.title;
+    
+    NSString *url = [NSString stringWithFormat:@"%@?userid=%@&type=%d&fileid=%@&ts=%@&sdkappid=%@&acctype=%@",
+                     kLivePlayShareAddr,
+                     TC_PROTECT_STR([self.liveInfo.userid stringByUrlEncoding]),
+                     1,
+                     TC_PROTECT_STR([self.liveInfo.fileid stringByUrlEncoding]),
+                     [NSString stringWithFormat:@"%d", self.liveInfo.timestamp],
+                     [[TCUserInfoModel sharedInstance] getUserProfile].appid,
+                     [[TCUserInfoModel sharedInstance] getUserProfile].accountType];
+    NSString *text = [NSString stringWithFormat:@"%@ 正在直播", self.liveInfo.userinfo.nickname ? self.liveInfo.userinfo.nickname : self.liveInfo.userid];
+    
+    
+    /* 以下分享类型，开发者可根据需求调用 */
+    // 1、纯文本分享
+    messageObject.text = @"开播啦，小伙伴火速围观～～～";
+    
+    
+    
+    // 2、 图片或图文分享
+    // 图片分享参数可设置URL、NSData类型
+    // 注意：由于iOS系统限制(iOS9+)，非HTTPS的URL图片可能会分享失败
+    UMShareImageObject *shareObject = [UMShareImageObject shareObjectWithTitle:title descr:text thumImage:self.liveInfo.userinfo.frontcover];
+    [shareObject setShareImage:self.liveInfo.userinfo.frontcoverImage];
+    
+    UMShareWebpageObject *share2Object = [UMShareWebpageObject shareObjectWithTitle:title descr:text thumImage:self.liveInfo.userinfo.frontcoverImage];
+    share2Object.webpageUrl = url;
+    
+    //新浪微博有个bug，放在shareObject里面设置url，分享到网页版的微博不显示URL链接，这里在text后面也加上链接
+    if (platformType == UMSocialPlatformType_Sina) {
+        messageObject.text = [NSString stringWithFormat:@"%@  %@",messageObject.text,share2Object.webpageUrl];
+    }else{
+        messageObject.shareObject = share2Object;
+    }
+    [[UMSocialManager defaultManager] shareToPlatform:platformType messageObject:messageObject currentViewController:self completion:^(id data, NSError *error) {
+        
+        
+        NSString *message = nil;
+        if (!error) {
+            message = [NSString stringWithFormat:@"分享成功"];
+        } else {
+            if (error.code == UMSocialPlatformErrorType_Cancel) {
+                message = [NSString stringWithFormat:@"分享取消"];
+            } else if (error.code == UMSocialPlatformErrorType_NotInstall) {
+                message = [NSString stringWithFormat:@"应用未安装"];
+            } else {
+                message = [NSString stringWithFormat:@"分享失败，失败原因(Code＝%d)\n",(int)error.code];
+            }
+            
+        }
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@""
+                                                        message:message
+                                                       delegate:nil
+                                              cancelButtonTitle:NSLocalizedString(@"确定", nil)
+                                              otherButtonTitles:nil];
+        [alert show];
+    }];
+}
+
+
+#pragma mark - Net fetch
+/**
+ * 拉取直播列表。TCLiveListMgr在启动是，会将所有数据下载下来。在未全部下载完前，通过loadLives借口，
+ * 能取到部分数据。通过finish接口，判断是否已取到最后的数据
+ *
+ */
+- (void)doFetchList {
+    NSRange range = NSMakeRange(self.lives.count, 20);
+    BOOL finish;
+    NSArray *result = [_liveListMgr readVods:range finish:&finish];
+    if (result.count) {
+        result = [self mergeResult:result];
+        [self.lives addObjectsFromArray:result];
+    } else {
+        if (finish) {
+            MBProgressHUD *hud = [[HUDHelper sharedInstance] tipMessage:@"没有啦"];
+            hud.userInteractionEnabled = NO;
+        }
+    }
+    _tableView.mj_footer.hidden = finish;
+    [_tableView reloadData];
+    [_tableView.mj_header endRefreshing];
+    [_tableView.mj_footer endRefreshing];
+    
+//    if (self.lives.count == 0) {
+//        _nullDataView.hidden = NO;
+//    }else{
+//        _nullDataView.hidden = YES;
+//    }
+}
+
+/**
+ *  将取到的数据于已存在的数据进行合并。
+ *
+ *  @param result 新拉取到的数据
+ *
+ *  @return 新数据去除已存在记录后，剩余的数据
+ */
+- (NSArray *)mergeResult:(NSArray *)result {
+    
+    // 每个直播的播放地址不同，通过其进行去重处理
+    NSArray *existArray = [self.lives bk_map:^id(TCLiveInfo *obj) {
+        return obj.playurl;
+    }];
+    NSArray *newArray = [result bk_reject:^BOOL(TCLiveInfo *obj) {
+        return [existArray containsObject:obj.playurl];
+    }];
+    
+    return newArray;
+}
+
+/**
+ *  TCLiveListMgr有新数据过来
+ *
+ *  @param noti
+ */
+- (void)newDataAvailable:(NSNotification *)noti {
+    [self doFetchList];
+    //    return;
+    // 此处一定要用cell的数据，live中的对象可能已经清空了
+    TCLiveInfo *info = (TCLiveInfo*)[self.lives objectAtIndex:0];
+    
+    // MARK: 打开播放界面
+    if (self.lives && self.lives.count > 0 && info) {
+        _videoIsReady = ^(){};
+        _liveInfo     = info;
+        if (true) {
+            _videoPause    = NO;
+            _videoFinished = YES;
+            _isInVC        = NO;
+            _log_switch    = NO;
+            _liveInfoIndex = 0;
+            _playerList    = [NSMutableArray array];
+            _isErrorAlert = NO;
+            _dragDirection = DragDirection_Down;
+            [self initPlayer];
+            [self addNotify];
+        }
+    }
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_liveInfoIndex inSection:0];
+    //    [_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    _currentCell = [_tableView cellForRowAtIndexPath:indexPath];
+    
+    [self startVodPlay];
+}
+
+/**
+ *  TCLiveListMgr数据有更新
+ *
+ *  @param noti
+ */
+- (void)listDataUpdated:(NSNotification *)noti {
+//    [self setup];
+}
+
+
+/**
+ *  TCLiveListMgr内部出错
+ *
+ *  @param noti
+ */
+- (void)svrError:(NSNotification *)noti {
+    NSError *e = noti.object;
+    if ([e isKindOfClass:[NSError class]]) {
+        if ([e localizedFailureReason]) {
+            [HUDHelper alert:[e localizedFailureReason]];
+        }
+        else if ([e localizedDescription]) {
+            [HUDHelper alert:[e localizedDescription]];
+        }
+    }
+    
+    // 如果还在加载，停止加载动画
+    if (self.isLoading) {
+        [_tableView.mj_header endRefreshing];
+        [_tableView.mj_footer endRefreshing];
+        self.isLoading = NO;
+    }
+}
+
+/**
+ *  TCPlayViewController出错，加入房间失败
+ *
+ */
+- (void)playError:(NSNotification *)noti {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        //        [self.tableView.mj_header beginRefreshing];
+        //加房间失败后，刷新列表，不需要刷新动画
+        self.lives = [NSMutableArray array];
+        self.isLoading = YES;
+        [_liveListMgr queryVideoList:GetType_Up];
+    });
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 @end
 
