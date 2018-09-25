@@ -43,7 +43,6 @@
 
 NSString *const kTCLivePlayError = @"kTCLivePlayError";
 
-
 #define RTMP_URL    @"请输入或扫二维码获取播放地址"
 #define CACHE_PLAYER  3
 #define PLAY_CLICK @"PLAY_CLICK"       //当前播放器启动播放
@@ -83,17 +82,46 @@ typedef NS_ENUM(NSInteger,DragDirection){
     BOOL                 _beginDragging;
     
     __weak IBOutlet UITableView *_tableView;
-    NSMutableArray*      _playerList;
     NSInteger            _liveInfoIndex;
-   
     TCPlayViewCell *     _currentCell;
-    TXVodPlayer *        _currentPlayer;
-    DragDirection        _dragDirection;
     MBProgressHUD*       _hub;
 }
 
-- (void)setup
-{
+
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        _videoIsReady = ^(){};
+        
+        self.lives = [NSMutableArray array];
+        _liveListMgr = [TCLiveListMgr sharedMgr];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newDataAvailable:) name:kTCLiveListNewDataAvailable object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(listDataUpdated:) name:kTCLiveListUpdated object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(svrError:) name:kTCLiveListSvrError object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playError:) name:kTCLivePlayError object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAudioSessionEvent:) name:AVAudioSessionInterruptionNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAppDidEnterBackGround:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAppWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    }
+    
+    return self;
+}
+
+
+-(void)viewDidLoad{
+    [super viewDidLoad];
+    
+    _videoPause    = NO;
+    _videoFinished = YES;
+    _isInVC        = NO;
+    _log_switch    = NO;
+    _liveInfoIndex = 0;
+    _isErrorAlert = NO;
+    
+    _tableView.rowHeight = _tableView.height;
+    
     [_tableView.mj_header endRefreshing];
     [_tableView.mj_footer endRefreshing];
     if(self.lives) [self.lives removeAllObjects];
@@ -123,35 +151,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
     [(MJRefreshHeader *)_tableView.mj_footer endRefreshingWithCompletionBlock:^{
         self.isLoading = NO;
     }];
-}
 
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        self.lives = [NSMutableArray array];
-        _liveListMgr = [TCLiveListMgr sharedMgr];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newDataAvailable:) name:kTCLiveListNewDataAvailable object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(listDataUpdated:) name:kTCLiveListUpdated object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(svrError:) name:kTCLiveListSvrError object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playError:) name:kTCLivePlayError object:nil];
-    }
-    return self;
-}
-
-
-
-- (void)addNotify{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAudioSessionEvent:) name:AVAudioSessionInterruptionNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAppDidEnterBackGround:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAppWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-}
-
--(void)viewDidLoad{
-    [super viewDidLoad];
-    
-    _tableView.rowHeight = [UIScreen mainScreen].bounds.size.height;
-    
-    [self setup];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -159,30 +159,30 @@ typedef NS_ENUM(NSInteger,DragDirection){
     _isInVC = YES;
 }
 
--(void)viewWillAppear:(BOOL)animated{
+-(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     _navigationBarHidden = self.navigationController.navigationBar.hidden;
     [self.navigationController setNavigationBarHidden:YES];
     _statusBarHidden = [UIApplication sharedApplication].statusBarHidden;
-    [[UIApplication sharedApplication]setStatusBarHidden:YES];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
     
-    if (_videoPause && _currentPlayer) {
-        //这里如果是从录制界面，或则其他播放界面过来的，要重新startPlay，因为AudioSession有可能被修改了，导致当前视频播放有异常
-        NSMutableDictionary *param = [self getPlayerParam:_currentPlayer];
-        [_currentPlayer startPlay:param[@"playUrl"]];
-        [_currentCell.playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
-        [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
-        _videoPause = NO;
-    }
+//    if (_videoPause && _currentPlayer) {
+//        //这里如果是从录制界面，或则其他播放界面过来的，要重新startPlay，因为AudioSession有可能被修改了，导致当前视频播放有异常
+//        NSMutableDictionary *param = [self getPlayerParam:_currentPlayer];
+//        [_currentPlayer startPlay:param[@"playUrl"]];
+//        [_currentCell.playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
+//        [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+//        _videoPause = NO;
+//    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [self.navigationController setNavigationBarHidden:_navigationBarHidden];
     [[UIApplication sharedApplication]setStatusBarHidden:_statusBarHidden];
-    if (!_videoPause && _currentPlayer) {
-        [self clickPlayVod];
-    }
+//    if (!_videoPause && _currentPlayer) {
+//        [self clickPlayVod];
+//    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -234,188 +234,6 @@ typedef NS_ENUM(NSInteger,DragDirection){
     }
 }
 
-- (void)initPlayer{
-    int playerCount = 0;
-    int liveIndex   = (int)_liveInfoIndex;
-    int liveIndexOffset = - CACHE_PLAYER / 2;
-    if (_liveInfoIndex <= CACHE_PLAYER / 2) {
-        liveIndex = 0;
-        liveIndexOffset = 0;
-    }
-    if (_liveInfoIndex >= self.lives.count - CACHE_PLAYER / 2 - 1) {
-        liveIndex = (int)self.lives.count - CACHE_PLAYER;
-        liveIndexOffset = 0;
-    }
-    while (playerCount < CACHE_PLAYER) {
-        TXVodPlayer *player = [[TXVodPlayer alloc] init];
-        player.isAutoPlay = NO;
-        TCLiveInfo *info = self.lives[liveIndex + liveIndexOffset];
-        NSString *playUrl = [self checkHttps:info.playurl];
-        NSMutableDictionary *param = [NSMutableDictionary dictionary];
-        [param setObject:player forKey:@"player"];
-        [param setObject:playUrl forKey:@"playUrl"];
-        [param setObject:@(NO) forKey:PLAY_CLICK];
-        [param setObject:@(NO) forKey:PLAY_PREPARE];
-        [param setObject:@(info.reviewStatus) forKey:PLAY_REVIEW];
-        [_playerList addObject:param];
-        playerCount ++;
-        liveIndexOffset ++;
-    }
-}
-
-- (void)resetPlayer{
-    int liveIndexOffset = - CACHE_PLAYER / 2;
-    for(NSMutableDictionary *playerParam in _playerList){
-        //先停掉所有的播放器
-        TXVodPlayer *player = playerParam[@"player"];
-        if ([playerParam[PLAY_REVIEW] intValue] == ReviewStatus_Normal) {
-            [player stopPlay];
-            [player removeVideoWidget];
-        }
-        
-        //播放器重新对应 -> playeUrl
-        if (_liveInfoIndex + liveIndexOffset >= 0 && _liveInfoIndex + liveIndexOffset < self.lives.count) {
-            TCLiveInfo *info = self.lives[_liveInfoIndex + liveIndexOffset];
-            NSString *playUrl = [self checkHttps:info.playurl];
-            [playerParam setObject:playUrl forKey:@"playUrl"];
-            [playerParam setObject:@(NO) forKey:PLAY_CLICK];
-            [playerParam setObject:@(NO) forKey:PLAY_PREPARE];
-            [playerParam setObject:@(info.reviewStatus) forKey:PLAY_REVIEW];
-        }
-        liveIndexOffset ++;
-    }
-}
-
-- (void)loadNextPlayer{
-    //找到下一个player预加载
-    int index = (int)[_playerList indexOfObject:[self getPlayerParam:_currentPlayer]];
-    switch (_dragDirection) {
-        case DragDirection_Down:
-        {
-            //向下拖动，预加载下一个播放器
-            if (index < _playerList.count - 1) {
-                NSMutableDictionary *param = _playerList[index + 1];
-                if (![param[PLAY_CLICK] boolValue]) {
-                    [self startPlay:param];
-                }
-            }
-        }
-            break;
-        case DragDirection_Up:
-        {
-            //向上拖动，预加载上一个播放器
-            if (index > 0) {
-                NSMutableDictionary *param = _playerList[index - 1];
-                if (![param[PLAY_CLICK] boolValue]) {
-                    [self startPlay:param];
-                }
-            }
-        }
-            break;
-            
-        default:
-            break;
-    }
-}
-
-- (void)resumePlayer{
-    //先暂停上一个播放器
-    if (_currentPlayer) {
-        [_currentPlayer seek:0];
-        [_currentPlayer pause];
-    }
-    [_currentCell.playBtn setImage:[UIImage imageNamed:@"start"] forState:UIControlStateNormal];
-    
-    //开启下一个播放器
-    BOOL findPlayer = NO;
-    for (int i = 0; i < _playerList.count; i ++) {
-        NSMutableDictionary *playParam = _playerList[i];
-        NSString *playUrl = [playParam objectForKey:@"playUrl"];
-        if ([playUrl isEqualToString:[self playUrl]]) {
-            findPlayer = YES;
-            _currentPlayer = (TXVodPlayer *)[playParam objectForKey:@"player"];
-            [_currentPlayer setupVideoWidget:_currentCell.videoParentView insertIndex:0];
-//            [_currentPlayer setRenderRotation:HOME_ORIENTATION_DOWN];
-            
-            //判断播放器是否启动播放,如果没有，先启动播放
-            if (![playParam[PLAY_CLICK] boolValue]) {
-                [self startPlay:playParam];
-            }
-            
-            //判断播放器是否收到 PLAY_PREPARE 事件，如果收到，直接resume播放，如果没收到，在播放回调里面resume播放
-            if ([playParam[PLAY_PREPARE] boolValue]) {
-                [_currentPlayer resume];
-                [_currentCell.playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
-            }
-            
-            //边界检查，防止越界
-            if (_liveInfoIndex < CACHE_PLAYER / 2 || _liveInfoIndex > self.lives.count - CACHE_PLAYER / 2 - 1) {
-                break;
-            }
-            //缓存播放器切换
-            if (i > CACHE_PLAYER / 2) {
-                int needMove = i - CACHE_PLAYER / 2;
-                for (int j = 0; j < needMove; j ++) {
-                    NSMutableDictionary *oldParam = _playerList[j];
-                    TXVodPlayer *player = [oldParam objectForKey:@"player"];
-                    if ([oldParam[PLAY_REVIEW] intValue] == ReviewStatus_Normal) {
-                        [player stopPlay];
-                        [player removeVideoWidget];
-                    }
-                    
-                    TCLiveInfo *liveInfo = self.lives[_liveInfoIndex + 1 + j];
-                    NSString *playUrl = [self checkHttps:liveInfo.playurl];
-                    NSMutableDictionary *newParam = [NSMutableDictionary dictionary];
-                    [newParam setObject:player forKey:@"player"];
-                    [newParam setObject:playUrl forKey:@"playUrl"];
-                    [newParam setObject:@(NO) forKey:PLAY_CLICK];
-                    [newParam setObject:@(NO) forKey:PLAY_PREPARE];
-                    [newParam setObject:@(liveInfo.reviewStatus) forKey:PLAY_REVIEW];
-                    [_playerList removeObject:oldParam];
-                    [_playerList addObject:newParam];
-                }
-            }
-            if (i < CACHE_PLAYER / 2){
-                int needMove = CACHE_PLAYER / 2 - i;
-                for (int j = 0; j < needMove; j ++) {
-                    NSMutableDictionary *oldParam = _playerList[CACHE_PLAYER - 1 - j];
-                    TXVodPlayer *player = [oldParam objectForKey:@"player"];
-                    if ([oldParam[PLAY_REVIEW] intValue] == ReviewStatus_Normal) {
-                        [player stopPlay];
-                        [player removeVideoWidget];
-                    }
-                    
-                    TCLiveInfo *liveInfo = self.lives[_liveInfoIndex - 1 - j];
-                    NSString *playUrl = [self checkHttps:liveInfo.playurl];
-                    NSMutableDictionary *newParam = [NSMutableDictionary dictionary];
-                    [newParam setObject:player forKey:@"player"];
-                    [newParam setObject:playUrl forKey:@"playUrl"];
-                    [newParam setObject:@(NO) forKey:PLAY_CLICK];
-                    [newParam setObject:@(NO) forKey:PLAY_PREPARE];
-                    [newParam setObject:@(liveInfo.reviewStatus) forKey:PLAY_REVIEW];
-                    [_playerList removeObject:oldParam];
-                    [_playerList insertObject:newParam atIndex:0];
-                }
-            }
-            //这里注意break，防止逻辑错误
-            break;
-        }
-    }
-    if (!findPlayer) {
-        //重新对应 player <-> playUrl
-        [self resetPlayer];
-        
-        //启动当前播放器
-        NSMutableDictionary *playerParam = _playerList[CACHE_PLAYER / 2];
-        _currentPlayer = playerParam[@"player"];
-        [_currentPlayer setupVideoWidget:_currentCell.videoParentView insertIndex:0];
-        [_currentPlayer setRenderRotation:HOME_ORIENTATION_DOWN];
-        [self startPlay:playerParam];
-    }
-    
-    //预加载下一个播放器
-    [self loadNextPlayer];
-}
 
 -(BOOL)startPlay:(NSMutableDictionary *)playerParam{
     NSString *playUrl = playerParam[@"playUrl"];
@@ -462,25 +280,12 @@ typedef NS_ENUM(NSInteger,DragDirection){
     return YES;
 }
 
--(BOOL)startVodPlay{
-    [self clearLog];
-    NSString* ver = [TXLiveBase getSDKVersionStr];
-    _logMsg = [NSString stringWithFormat:@"rtmp sdk version: %@",ver];
-    [_currentCell.logViewEvt setText:_logMsg];
-    
-    _currentPlayer.vodDelegate = self;
-    NSMutableDictionary *playerParam = [self getPlayerParam:_currentPlayer];
-    [playerParam setObject:@(NO) forKey:PLAY_PREPARE];
-    [self resumePlayer];
-    return YES;
-}
 
 - (void)stopRtmp{
-    for (NSMutableDictionary *param in _playerList) {
-        TXVodPlayer *player = param[@"player"];
-        player.vodDelegate = nil;
-        [player stopPlay];
-        [player removeVideoWidget];
+    for (TCLiveInfo *liveInfo in self.lives) {
+        liveInfo.player.vodDelegate = nil;
+        [liveInfo.player stopPlay];
+        [liveInfo.player removeVideoWidget];
     }
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
 }
@@ -491,14 +296,6 @@ typedef NS_ENUM(NSInteger,DragDirection){
     return playUrl;
 }
 
-- (NSMutableDictionary *)getPlayerParam:(TXVodPlayer *)player{
-    for (NSMutableDictionary *param in _playerList) {
-        if ([[param objectForKey:@"player"] isEqual:player]) {
-            return param;
-        }
-    }
-    return nil;
-}
 
 #pragma mark - UI EVENT
 -(void)closeVC:(BOOL)isRefresh  popViewController:(BOOL)popViewController{
@@ -771,6 +568,9 @@ typedef NS_ENUM(NSInteger,DragDirection){
     
     cell.delegate = self;
     [cell setLiveInfo:self.lives[indexPath.row]];
+    _currentCell = cell;
+    _liveInfoIndex = indexPath.row;
+    
     return cell;
 }
 
@@ -785,13 +585,16 @@ typedef NS_ENUM(NSInteger,DragDirection){
     NSInteger index = rect.y / self.view.height;
     if (_beginDragging && _liveInfoIndex != index) {
         if (index > _liveInfoIndex) {
-            _dragDirection = DragDirection_Down;
+            ((TCLiveInfo*)self.lives[index+1]).initPlayer;
+            ((TCLiveInfo*)self.lives[index-2]).deletePlayer;
+            
         }else{
-            _dragDirection = DragDirection_Up;
+            ((TCLiveInfo*)self.lives[index-1]).initPlayer;
+            ((TCLiveInfo*)self.lives[index+2]).deletePlayer;
         }
         _liveInfoIndex = index;
         _currentCell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_liveInfoIndex inSection:0]];
-        [self resumePlayer];
+
         _beginDragging = NO;
     }
 }
@@ -1038,6 +841,11 @@ typedef NS_ENUM(NSInteger,DragDirection){
     if (result.count) {
         result = [self mergeResult:result];
         [self.lives addObjectsFromArray:result];
+        for (int i = 0; i < range.length; i++) {
+            if (labs(_liveInfoIndex - i)<=1) {
+                ((TCLiveInfo*)self.lives[i]).player = [[TXVodPlayer alloc] init];
+            }
+        }
     } else {
         if (finish) {
             MBProgressHUD *hud = [[HUDHelper sharedInstance] tipMessage:@"没有啦"];
@@ -1048,12 +856,6 @@ typedef NS_ENUM(NSInteger,DragDirection){
     [_tableView reloadData];
     [_tableView.mj_header endRefreshing];
     [_tableView.mj_footer endRefreshing];
-    
-//    if (self.lives.count == 0) {
-//        _nullDataView.hidden = NO;
-//    }else{
-//        _nullDataView.hidden = YES;
-//    }
 }
 
 /**
@@ -1083,33 +885,6 @@ typedef NS_ENUM(NSInteger,DragDirection){
  */
 - (void)newDataAvailable:(NSNotification *)noti {
     [self doFetchList];
-    //    return;
-    // 此处一定要用cell的数据，live中的对象可能已经清空了
-    TCLiveInfo *info = (TCLiveInfo*)[self.lives objectAtIndex:0];
-    
-    // MARK: 打开播放界面
-    if (self.lives && self.lives.count > 0 && info) {
-        _videoIsReady = ^(){};
-        _liveInfo     = info;
-        if (true) {
-            _videoPause    = NO;
-            _videoFinished = YES;
-            _isInVC        = NO;
-            _log_switch    = NO;
-            _liveInfoIndex = 0;
-            _playerList    = [NSMutableArray array];
-            _isErrorAlert = NO;
-            _dragDirection = DragDirection_Down;
-            [self initPlayer];
-            [self addNotify];
-        }
-    }
-    
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_liveInfoIndex inSection:0];
-    //    [_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
-    _currentCell = [_tableView cellForRowAtIndexPath:indexPath];
-    
-    [self startVodPlay];
 }
 
 /**

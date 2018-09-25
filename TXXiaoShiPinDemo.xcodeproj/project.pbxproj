@@ -34,7 +34,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		9102BD641F6B80DD003CBBFA /* TCVodPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9102BD631F6B80DD003CBBFA /* TCVodPlayViewController.m */; };
 		910C5CF31D4B607C003B31FE /* TCBaseAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 910C5CF21D4B607C003B31FE /* TCBaseAppDelegate.m */; };
 		91B45A4F1E8CE2010058E8F6 /* UIColor+MCColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 91B45A3F1E8CE2010058E8F6 /* UIColor+MCColor.m */; };
 		91B45A501E8CE2010058E8F6 /* UIImage+MCImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 91B45A411E8CE2010058E8F6 /* UIImage+MCImage.m */; };
@@ -49,10 +48,8 @@
 		91BFE7AD1EB862DF008EB95C /* TCLoginParam.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7A31EB862DF008EB95C /* TCLoginParam.m */; };
 		91BFE7AE1EB862DF008EB95C /* TCLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7A51EB862DF008EB95C /* TCLoginViewController.m */; };
 		91BFE7B11EB862DF008EB95C /* TCRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7AB1EB862DF008EB95C /* TCRegisterViewController.m */; };
-		91BFE7B81EB86379008EB95C /* TCMainTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7B51EB86379008EB95C /* TCMainTabViewController.m */; };
 		91BFE7B91EB86379008EB95C /* TCUserAgreementController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7B71EB86379008EB95C /* TCUserAgreementController.m */; };
 		91BFE7C41EB863AF008EB95C /* TCLiveListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7BF1EB863AF008EB95C /* TCLiveListModel.m */; };
-		91BFE7C51EB863AF008EB95C /* TCLiveListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7C11EB863AF008EB95C /* TCLiveListViewController.m */; };
 		91BFE8031EB86543008EB95C /* TCVideoRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE8001EB86543008EB95C /* TCVideoRecordViewController.m */; };
 		91BFE8061EB8657E008EB95C /* TCVideoPublishController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE8051EB8657E008EB95C /* TCVideoPublishController.m */; };
 		91BFE81D1EB8669F008EB95C /* TCVideoEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE8171EB8669F008EB95C /* TCVideoEditViewController.m */; };
@@ -87,7 +84,6 @@
 		CE1ABDFC2023235B00A2219E /* handdetect in Resources */ = {isa = PBXBuildFile; fileRef = CE1ABDF92023235B00A2219E /* handdetect */; };
 		CE1ABE5E202337B400A2219E /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1ABE3D202337B300A2219E /* Metal.framework */; };
 		CE1ABE922023389200A2219E /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE1ABE712023389200A2219E /* AssetsLibrary.framework */; };
-		CE1ABF3E2024403E00A2219E /* TCPlayViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1ABF3C2024403E00A2219E /* TCPlayViewCell.m */; };
 		CE1C230C2080D3990002FF8C /* TVCUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1C22F72080D3980002FF8C /* TVCUtils.m */; };
 		CE1C230D2080D3990002FF8C /* TXUGCPublish.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1C22F92080D3980002FF8C /* TXUGCPublish.m */; };
 		CE1C230E2080D3990002FF8C /* TXUGCPublishUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1C22FE2080D3980002FF8C /* TXUGCPublishUtil.m */; };
@@ -302,8 +298,13 @@
 		EF47CE381D4B03FC0028B598 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF47CE371D4B03FC0028B598 /* Assets.xcassets */; };
 		F032238B21540B1000533AA3 /* TCLiveListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F032238921540B1000533AA3 /* TCLiveListCell.xib */; };
 		F032238E21540F0500533AA3 /* TCLiveListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F032238C21540F0400533AA3 /* TCLiveListCell.m */; };
-		F0365C8A2156C19900726A70 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F03AF0352155F4A1007D1E60 /* Main.storyboard */; };
 		F0365C8B2156C22F00726A70 /* Assets2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F03AF0382155F4A2007D1E60 /* Assets2.xcassets */; };
+		F0365C902157CC8400726A70 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F03AF0352155F4A1007D1E60 /* Main.storyboard */; };
+		F0365C98215A54A700726A70 /* AsyncFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C95215A54A600726A70 /* AsyncFetcher.swift */; };
+		F0365C99215A54A700726A70 /* DisplayData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C96215A54A600726A70 /* DisplayData.swift */; };
+		F0365C9A215A54A700726A70 /* AsyncFetcherOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C97215A54A600726A70 /* AsyncFetcherOperation.swift */; };
+		F0365C9B215A7BBE00726A70 /* TCVodPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C912158F4DE00726A70 /* TCVodPlayViewController.swift */; };
+		F0365C9C215A7BBE00726A70 /* TCPlayViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C93215A549500726A70 /* TCPlayViewCell.swift */; };
 		F08756EA21495B36006CF4B6 /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E021495B34006CF4B6 /* EditorViewController.swift */; };
 		F08756EC21495B36006CF4B6 /* SegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E221495B34006CF4B6 /* SegmentView.swift */; };
 		F08756ED21495B36006CF4B6 /* APLCustomVideoCompositor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E421495B35006CF4B6 /* APLCustomVideoCompositor.swift */; };
@@ -925,6 +926,11 @@
 		F032238921540B1000533AA3 /* TCLiveListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TCLiveListCell.xib; sourceTree = "<group>"; };
 		F032238C21540F0400533AA3 /* TCLiveListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCLiveListCell.m; sourceTree = "<group>"; };
 		F032238D21540F0400533AA3 /* TCLiveListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCLiveListCell.h; sourceTree = "<group>"; };
+		F0365C912158F4DE00726A70 /* TCVodPlayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCVodPlayViewController.swift; sourceTree = "<group>"; };
+		F0365C93215A549500726A70 /* TCPlayViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPlayViewCell.swift; sourceTree = "<group>"; };
+		F0365C95215A54A600726A70 /* AsyncFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncFetcher.swift; sourceTree = "<group>"; };
+		F0365C96215A54A600726A70 /* DisplayData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayData.swift; sourceTree = "<group>"; };
+		F0365C97215A54A600726A70 /* AsyncFetcherOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncFetcherOperation.swift; sourceTree = "<group>"; };
 		F03AF0362155F4A1007D1E60 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F03AF0382155F4A2007D1E60 /* Assets2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets2.xcassets; sourceTree = "<group>"; };
 		F08756DD21495B31006CF4B6 /* TXXiaoShiPinDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TXXiaoShiPinDemo-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -1059,8 +1065,13 @@
 			children = (
 				9102BD621F6B80DD003CBBFA /* TCVodPlayViewController.h */,
 				9102BD631F6B80DD003CBBFA /* TCVodPlayViewController.m */,
+				F0365C912158F4DE00726A70 /* TCVodPlayViewController.swift */,
 				CE1ABF3B2024403E00A2219E /* TCPlayViewCell.h */,
 				CE1ABF3C2024403E00A2219E /* TCPlayViewCell.m */,
+				F0365C93215A549500726A70 /* TCPlayViewCell.swift */,
+				F0365C95215A54A600726A70 /* AsyncFetcher.swift */,
+				F0365C97215A54A600726A70 /* AsyncFetcherOperation.swift */,
+				F0365C96215A54A600726A70 /* DisplayData.swift */,
 			);
 			name = Play;
 			path = Classes/Play;
@@ -1234,7 +1245,6 @@
 				F08756E621495B35006CF4B6 /* TimelineView.swift */,
 				F08756F121495CFE006CF4B6 /* Editor.storyboard */,
 				CE29EBCE1FE8BE140038C200 /* VideoJoin */,
-				F08756DD21495B31006CF4B6 /* TXXiaoShiPinDemo-Bridging-Header.h */,
 			);
 			name = UGCEditor;
 			sourceTree = "<group>";
@@ -1771,6 +1781,7 @@
 			isa = PBXGroup;
 			children = (
 				A0EBBBB120ECC65F00C98CAE /* SDKHeader.h */,
+				F08756DD21495B31006CF4B6 /* TXXiaoShiPinDemo-Bridging-Header.h */,
 				910C5CF01D4B6043003B31FE /* App */,
 				AEE529091D9CC34000E09861 /* Login */,
 				9105C2AD1EB1898C00DB85F3 /* MainUI */,
@@ -2128,8 +2139,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0365C902157CC8400726A70 /* Main.storyboard in Resources */,
 				F0365C8B2156C22F00726A70 /* Assets2.xcassets in Resources */,
-				F0365C8A2156C19900726A70 /* Main.storyboard in Resources */,
 				D64734DD1F2734AD00A02463 /* QBImagePicker.storyboard in Resources */,
 				D64734DB1F2734A500A02463 /* QBImagePicker.strings in Resources */,
 				CE89A5BA2010A0820005B88B /* donggan12.png in Resources */,
@@ -2382,6 +2393,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0365C9B215A7BBE00726A70 /* TCVodPlayViewController.swift in Sources */,
+				F0365C9C215A7BBE00726A70 /* TCPlayViewCell.swift in Sources */,
 				F08756EA21495B36006CF4B6 /* EditorViewController.swift in Sources */,
 				CE870ED020B4122B0012EF30 /* TransitionView.m in Sources */,
 				91BFE82B1EB866E0008EB95C /* TCUserInfoViewController.m in Sources */,
@@ -2389,10 +2402,12 @@
 				CE29EBA51FE8BCA10038C200 /* TCBGMSliderCutView.m in Sources */,
 				CE29EBA81FE8BCA10038C200 /* TCBGMCutView.m in Sources */,
 				CE0BE0351FFB27F900DEBA5C /* NSObject+CommonBlock.m in Sources */,
+				F0365C98215A54A700726A70 /* AsyncFetcher.swift in Sources */,
 				91BFE82A1EB866E0008EB95C /* TCUserInfoCell.m in Sources */,
 				F08756EE21495B36006CF4B6 /* APLCustomVideoCompositionInstruction.swift in Sources */,
 				CE1C230E2080D3990002FF8C /* TXUGCPublishUtil.m in Sources */,
 				CE29EBC61FE8BDFB0038C200 /* VideoTextFiled.m in Sources */,
+				F0365C99215A54A700726A70 /* DisplayData.swift in Sources */,
 				CE0BE0371FFB27F900DEBA5C /* TCLog.m in Sources */,
 				91B45A4F1E8CE2010058E8F6 /* UIColor+MCColor.m in Sources */,
 				CE93B730201F4D0900CD89B7 /* TCVideoLoadingController.m in Sources */,
@@ -2413,11 +2428,11 @@
 				CE0BE03E1FFB27F900DEBA5C /* HUDHelper.m in Sources */,
 				91BFE7C41EB863AF008EB95C /* TCLiveListModel.m in Sources */,
 				91B45A501E8CE2010058E8F6 /* UIImage+MCImage.m in Sources */,
-				CE1ABF3E2024403E00A2219E /* TCPlayViewCell.m in Sources */,
 				F08756ED21495B36006CF4B6 /* APLCustomVideoCompositor.swift in Sources */,
 				CE29EBDD1FE8BE140038C200 /* TCVideoJoinCell.m in Sources */,
 				CE29EBCC1FE8BDFB0038C200 /* VideoPreview.m in Sources */,
 				CE29EBC71FE8BDFB0038C200 /* VideoCutView.m in Sources */,
+				F0365C9A215A54A700726A70 /* AsyncFetcherOperation.swift in Sources */,
 				CE29EBE91FE8BF180038C200 /* RangeContent.m in Sources */,
 				CEBE18B01FD8E63A00A22F3F /* TCVideoCutViewController.m in Sources */,
 				CE0BE03B1FFB27F900DEBA5C /* UIImage+Additions.m in Sources */,
@@ -2432,7 +2447,6 @@
 				CE29EBC81FE8BDFB0038C200 /* TextAddView.m in Sources */,
 				CE93B5BF201B044900CD89B7 /* SegmentationShader.metal in Sources */,
 				91BFE81D1EB8669F008EB95C /* TCVideoEditViewController.m in Sources */,
-				91BFE7C51EB863AF008EB95C /* TCLiveListViewController.m in Sources */,
 				91BFE82C1EB866E0008EB95C /* TCUserInfoModel.m in Sources */,
 				CE0BE03D1FFB27F900DEBA5C /* QCloudAuthentationHeadV5Creator.m in Sources */,
 				CE0BE0341FFB27F900DEBA5C /* UIColor+MLPFlatColors.m in Sources */,
@@ -2445,7 +2459,6 @@
 				91BFE7B11EB862DF008EB95C /* TCRegisterViewController.m in Sources */,
 				CE29EBED1FE8C0010038C200 /* VideoInfo.m in Sources */,
 				910C5CF31D4B607C003B31FE /* TCBaseAppDelegate.m in Sources */,
-				91BFE7B81EB86379008EB95C /* TCMainTabViewController.m in Sources */,
 				A009172220B43670003EBAA5 /* TXCVEFColorPalette.m in Sources */,
 				CE29EBA41FE8BCA10038C200 /* TCCircleProgressView.m in Sources */,
 				A0AEBC3420CFB36D00F41117 /* SmallButton.m in Sources */,
@@ -2464,7 +2477,6 @@
 				91BFE7AC1EB862DF008EB95C /* TCLoginModel.m in Sources */,
 				CE357FB81F9D8977006DD088 /* TCVideoRecordProcessView.m in Sources */,
 				91BFE82F1EB86BAB008EB95C /* TCNavigationController.m in Sources */,
-				9102BD641F6B80DD003CBBFA /* TCVodPlayViewController.m in Sources */,
 				CE0BE0331FFB27F900DEBA5C /* UIView+CustomAutoLayout.m in Sources */,
 				CE1C230D2080D3990002FF8C /* TXUGCPublish.m in Sources */,
 				CE29EBE21FE8BE470038C200 /* V8HorizontalPickerView.m in Sources */,

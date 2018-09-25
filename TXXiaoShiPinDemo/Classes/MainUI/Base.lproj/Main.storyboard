@@ -21,7 +21,7 @@
                         <color key="barTintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="TL7-xW-1fW" kind="relationship" relationship="viewControllers" id="aG6-SS-Ui0"/>
+                        <segue destination="TL7-xW-1fW" kind="relationship" relationship="viewControllers" id="BYB-9e-RT8"/>
                         <segue destination="6xr-Bh-LJD" kind="relationship" relationship="viewControllers" id="UxJ-8v-4Fc"/>
                         <segue destination="9Ke-0X-uYY" kind="relationship" relationship="viewControllers" id="zCk-dF-R9Z"/>
                         <segue destination="19W-KH-Vws" kind="relationship" relationship="viewControllers" id="1JJ-11-dYf"/>
@@ -34,7 +34,7 @@
         <!--首页-->
         <scene sceneID="PAV-Rh-DpV">
             <objects>
-                <viewController id="TL7-xW-1fW" customClass="TCVodPlayViewController" sceneMemberID="viewController">
+                <viewController id="TL7-xW-1fW" customClass="TCVodPlayViewController" customModule="TXXiaoShiPinDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jgg-kK-13Z">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -43,7 +43,7 @@
                                 <rect key="frame" x="0.0" y="44" width="375" height="685"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="TCPlayViewCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TCPlayViewCell" rowHeight="937" id="sHr-nB-1d0" customClass="TCPlayViewCell">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="TCPlayViewCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TCPlayViewCell" rowHeight="937" id="sHr-nB-1d0" customClass="TCPlayViewCell" customModule="TXXiaoShiPinDemo" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="937"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="sHr-nB-1d0" id="Rfw-uL-Vsq">
@@ -95,9 +95,6 @@
                                                     <state key="normal" title="play" image="start">
                                                         <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     </state>
-                                                    <connections>
-                                                        <action selector="clickPlayVod:" destination="sHr-nB-1d0" eventType="touchUpInside" id="Pn3-uA-clk"/>
-                                                    </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vfi-Dc-Fmm">
                                                     <rect key="frame" x="60" y="888.66666666666663" width="53" height="10"/>
@@ -136,9 +133,6 @@
                                                         <constraint firstAttribute="height" constant="35" id="Yae-Ke-Mcz"/>
                                                     </constraints>
                                                     <state key="normal" title="Button" image="share"/>
-                                                    <connections>
-                                                        <action selector="clickShare:" destination="sHr-nB-1d0" eventType="touchUpInside" id="TU7-iV-ItL"/>
-                                                    </connections>
                                                 </button>
                                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TL7-gO-9Kr">
                                                     <rect key="frame" x="213" y="876" width="35" height="35"/>
@@ -147,9 +141,6 @@
                                                         <constraint firstAttribute="width" constant="35" id="wGR-E3-JX3"/>
                                                     </constraints>
                                                     <state key="normal" title="Button" image="log"/>
-                                                    <connections>
-                                                        <action selector="clickLog:" destination="sHr-nB-1d0" eventType="touchUpInside" id="DZ7-7F-Hes"/>
-                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rsd-8o-2bt">
                                                     <rect key="frame" x="258" y="872.66666666666663" width="42" height="42"/>
@@ -162,9 +153,6 @@
                                                     <state key="normal" title="合唱">
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </state>
-                                                    <connections>
-                                                        <action selector="clickChorus:" destination="sHr-nB-1d0" eventType="touchUpInside" id="Qlm-Od-JEz"/>
-                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b0L-R4-PWi">
                                                     <rect key="frame" x="310" y="876" width="35" height="35"/>
@@ -173,9 +161,6 @@
                                                         <constraint firstAttribute="height" constant="35" id="ced-Mb-BFy"/>
                                                     </constraints>
                                                     <state key="normal" title="Button" image="close"/>
-                                                    <connections>
-                                                        <action selector="closeVC2:" destination="sHr-nB-1d0" eventType="touchUpInside" id="CIz-wa-mMw"/>
-                                                    </connections>
                                                 </button>
                                                 <view hidden="YES" alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e2Y-oh-W5t">
                                                     <rect key="frame" x="25" y="190" width="325" height="198.33333333333337"/>
@@ -205,11 +190,6 @@
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="dXD-zL-CyB"/>
                                                     </constraints>
-                                                    <connections>
-                                                        <action selector="onDrag:" destination="sHr-nB-1d0" eventType="touchDragInside" id="BEE-8V-8Rg"/>
-                                                        <action selector="onSeek:" destination="sHr-nB-1d0" eventType="valueChanged" id="dK7-ZU-k1R"/>
-                                                        <action selector="onSeekBegin:" destination="sHr-nB-1d0" eventType="touchDown" id="qVh-c7-v3p"/>
-                                                    </connections>
                                                 </slider>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -257,28 +237,12 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <connections>
-                                            <outlet property="btnChat" destination="63v-Ni-YYg" id="beu-xH-ICU"/>
-                                            <outlet property="btnChorus" destination="rsd-8o-2bt" id="BiY-97-5zj"/>
-                                            <outlet property="btnLog" destination="TL7-gO-9Kr" id="iZc-1W-3xK"/>
-                                            <outlet property="btnShare" destination="fkr-S3-230" id="Qyy-8j-6Mk"/>
-                                            <outlet property="centerLabel" destination="iBJ-Cr-nV8" id="pFU-m4-mvr"/>
-                                            <outlet property="closeButton" destination="b0L-R4-PWi" id="Qdy-BA-tCh"/>
-                                            <outlet property="cover" destination="e2Y-oh-W5t" id="Cgf-0U-4yt"/>
-                                            <outlet property="logViewEvt" destination="WRU-5w-cNy" id="msw-Ae-XWz"/>
-                                            <outlet property="playBtn" destination="jtA-wO-EcD" id="0Gu-26-QeS"/>
-                                            <outlet property="playDuration" destination="E7b-qu-Ggn" id="SIm-1I-QWp"/>
-                                            <outlet property="playLabel" destination="vfi-Dc-Fmm" id="sgi-uF-cOE"/>
-                                            <outlet property="reviewLabel" destination="0W1-aW-T6v" id="nOY-Oh-lWP"/>
-                                            <outlet property="statusView" destination="F7M-zQ-q5H" id="TNS-yk-Ksz"/>
-                                            <outlet property="videoCoverView" destination="a5u-8E-4vE" id="U3H-U8-r6i"/>
-                                            <outlet property="videoParentView" destination="ALu-yD-d7T" id="foi-AU-zgF"/>
-                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
-                                    <outlet property="dataSource" destination="TL7-xW-1fW" id="eKP-gK-72v"/>
-                                    <outlet property="delegate" destination="TL7-xW-1fW" id="h6m-1b-zUj"/>
+                                    <outlet property="dataSource" destination="TL7-xW-1fW" id="WZq-LT-JWn"/>
+                                    <outlet property="delegate" destination="TL7-xW-1fW" id="6br-LI-2DV"/>
+                                    <outlet property="prefetchDataSource" destination="TL7-xW-1fW" id="Yhn-fb-VcG"/>
                                 </connections>
                             </tableView>
                         </subviews>
@@ -293,7 +257,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="首页" image="main_item" id="8Gt-32-Qc1"/>
                     <connections>
-                        <outlet property="_tableView" destination="IVd-gr-2Um" id="rxV-st-ADw"/>
+                        <outlet property="tableView" destination="IVd-gr-2Um" id="sfS-Ue-sgW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6EJ-uV-nwo" userLabel="First Responder" sceneMemberID="firstResponder"/>
