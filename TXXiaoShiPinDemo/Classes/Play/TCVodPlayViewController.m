@@ -17,21 +17,9 @@
 #import <UMSocialCore/UMSocialCore.h>
 #import "TCLoginModel.h"
 #import "NSString+Common.h"
-#import "TCPlayViewCell.h"
 #import "TCUserInfoModel.h"
 #import "SDKHeader.h"
-#import <UShareUI/UMSocialUIManager.h>
-#import <UMSocialCore/UMSocialCore.h>
-#import <UIImageView+WebCache.h>
-#import "TCBaseAppDelegate.h"
-#import "TCConstants.h"
-#import <Accelerate/Accelerate.h>
-#import <UShareUI/UMSocialUIManager.h>
-#import <UMSocialCore/UMSocialCore.h>
-#import "TCLoginModel.h"
-#import "NSString+Common.h"
 #import "TCVideoPublishController.h"
-#import "TCUserInfoModel.h"
 #import "TCLiveListModel.h"
 #import <MJRefresh/MJRefresh.h>
 #import <AFNetworking.h>
@@ -39,7 +27,6 @@
 #import <MJExtension/MJExtension.h>
 #import <BlocksKit/BlocksKit.h>
 #import "UIColor+MLPFlatColors.h"
-
 
 NSString *const kTCLivePlayError = @"kTCLivePlayError";
 
@@ -191,50 +178,6 @@ typedef NS_ENUM(NSInteger,DragDirection){
 }
 
 
-//在低系统（如7.1.2）可能收不到这个回调，请在onAppDidEnterBackGround和onAppWillEnterForeground里面处理打断逻辑
-- (void) onAudioSessionEvent: (NSNotification *) notification
-{
-    NSDictionary *info = notification.userInfo;
-    AVAudioSessionInterruptionType type = [info[AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
-    if (type == AVAudioSessionInterruptionTypeBegan) {
-        if (_appIsInterrupt == NO) {
-            if (!_videoPause) {
-                [_currentPlayer pause];
-            }
-            _appIsInterrupt = YES;
-        }
-    }else{
-        AVAudioSessionInterruptionOptions options = [info[AVAudioSessionInterruptionOptionKey] unsignedIntegerValue];
-        if (options == AVAudioSessionInterruptionOptionShouldResume) {
-            if (_appIsInterrupt == YES) {
-                if (!_videoPause) {
-                    [_currentPlayer resume];
-                }
-                _appIsInterrupt = NO;
-            }
-        }
-    }
-}
-
-- (void)onAppDidEnterBackGround:(UIApplication*)app {
-    if (_appIsInterrupt == NO) {
-        if (!_videoPause) {
-            [_currentPlayer pause];
-        }
-        _appIsInterrupt = YES;
-    }
-}
-
-- (void)onAppWillEnterForeground:(UIApplication*)app {
-    if (_appIsInterrupt == YES) {
-        if (!_videoPause) {
-            [_currentPlayer resume];
-        }
-        _appIsInterrupt = NO;
-    }
-}
-
-
 -(BOOL)startPlay:(NSMutableDictionary *)playerParam{
     NSString *playUrl = playerParam[@"playUrl"];
     if (![self checkPlayUrl:playUrl]) {
@@ -281,15 +224,6 @@ typedef NS_ENUM(NSInteger,DragDirection){
 }
 
 
-- (void)stopRtmp{
-    for (TCLiveInfo *liveInfo in self.lives) {
-        liveInfo.player.vodDelegate = nil;
-        [liveInfo.player stopPlay];
-        [liveInfo.player removeVideoWidget];
-    }
-    [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-}
-
 - (NSString *)playUrl{
     TCLiveInfo *liveInfo = self.lives[_liveInfoIndex];
     NSString *playUrl = [self checkHttps:liveInfo.playurl];
@@ -313,26 +247,6 @@ typedef NS_ENUM(NSInteger,DragDirection){
     }
     if (popViewController) {
         [self.navigationController popViewControllerAnimated:YES];
-    }
-}
-
--(void)clickPlayVod{
-    if (!_videoFinished) {
-        if (_videoPause) {
-            [_currentPlayer resume];
-            [_currentCell.playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
-            [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
-        } else {
-            [_currentPlayer pause];
-            [_currentCell.playBtn setImage:[UIImage imageNamed:@"start"] forState:UIControlStateNormal];
-            [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-        }
-        _videoPause = !_videoPause;
-    }
-    else {
-        [_currentPlayer resume];
-        [_currentCell.playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
-        [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     }
 }
 
@@ -360,28 +274,6 @@ typedef NS_ENUM(NSInteger,DragDirection){
     }
 }
 
-- (void)clickChorus:(UIButton *)button {
-    if([TCLoginParam shareInstance].isExpired){
-        [[AppDelegate sharedAppDelegate] enterLoginUI];
-        return;
-    }
-    [TCUtil report:xiaoshipin_videochorus userName:nil code:0 msg:@"合唱事件"];
-    if (_currentPlayer.isPlaying) {
-        [self clickPlayVod];
-    }
-    _hub = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    _hub.mode = MBProgressHUDModeText;
-    _hub.label.text = @"正在加载视频...";
-    
-    __weak __typeof(self) weakSelf = self;
-    NSMutableDictionary *playerParam = [self getPlayerParam:_currentPlayer];
-    [TCUtil downloadVideo:playerParam[@"playUrl"] process:^(CGFloat process) {
-        [weakSelf onloadVideoProcess:process];
-    } complete:^(NSString *videoPath) {
-        [weakSelf onloadVideoComplete:videoPath];
-    }];
-}
-
 -(void)onloadVideoProcess:(CGFloat)process {
     _hub.label.text = [NSString stringWithFormat:@"正在加载视频%d%%",(int)(process * 100)];
 }
@@ -398,12 +290,6 @@ typedef NS_ENUM(NSInteger,DragDirection){
     }
 }
 
-#pragma mark UISlider - play seek
--(void)onSeek:(UISlider *)slider{
-    [_currentPlayer seek:_sliderValue];
-    _trackingTouchTS = [[NSDate date]timeIntervalSince1970]*1000;
-    _startSeek = NO;
-}
 
 -(void)onSeekBegin:(UISlider *)slider{
     _startSeek = YES;
@@ -420,77 +306,77 @@ typedef NS_ENUM(NSInteger,DragDirection){
 -(void) onPlayEvent:(TXVodPlayer *)player event:(int)EvtID withParam:(NSDictionary*)param
 {
     NSDictionary* dict = param;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        //player 收到准备好事件，记录下状态，下次可以直接resume
-        if (EvtID == PLAY_EVT_VOD_PLAY_PREPARED) {
-            NSMutableDictionary *playerParam = [self getPlayerParam:player];
-            [playerParam setObject:@(YES) forKey:PLAY_PREPARE];
-            if ([_currentPlayer isEqual:player]){
-                [player resume];
-        }
-        }
-        
-//        //暂时不需要旋转逻辑
-//        if (EvtID == PLAY_EVT_CHANGE_RESOLUTION) {
-//            if (player.width > player.height) {
-//                [player setRenderRotation:HOME_ORIENTATION_RIGHT];
-//            }
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        //player 收到准备好事件，记录下状态，下次可以直接resume
+//        if (EvtID == PLAY_EVT_VOD_PLAY_PREPARED) {
+//            NSMutableDictionary *playerParam = [self getPlayerParam:player];
+//            [playerParam setObject:@(YES) forKey:PLAY_PREPARE];
+//            if ([_currentPlayer isEqual:player]){
+//                [player resume];
 //        }
-        
-        //只处理当前播放器的Event事件
-        if (![_currentPlayer isEqual:player]) return;
-        [self report:EvtID];
-        
-        if (EvtID == PLAY_EVT_VOD_PLAY_PREPARED) {
-            //收到PREPARED事件的时候 resume播放器
-            [_currentPlayer resume];
-            [_currentCell.playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
-            
-        } else if (EvtID == PLAY_EVT_PLAY_BEGIN) {
-            _videoFinished = NO;
-            
-        } else if (EvtID == PLAY_EVT_RCV_FIRST_I_FRAME) {
-            if (!_isInVC) {
-                self.videoIsReady();
-            }
-        } else if (EvtID == PLAY_EVT_PLAY_PROGRESS && !_videoFinished) {
-            if (_startSeek) return ;
-            // 避免滑动进度条松开的瞬间可能出现滑动条瞬间跳到上一个位置
-            long long curTs = [[NSDate date]timeIntervalSince1970]*1000;
-            if (llabs(curTs - _trackingTouchTS) < 500) {
-                return;
-            }
-            _trackingTouchTS = curTs;
-            
-            float progress = [dict[EVT_PLAY_PROGRESS] floatValue];
-            int intProgress = progress + 0.5;
-            _currentCell.playLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d",(int)(intProgress / 3600), (int)(intProgress / 60), (int)(intProgress % 60)];
-            [_currentCell.playProgress setValue:progress];
-            
-            float duration = [dict[EVT_PLAY_DURATION] floatValue];
-            int intDuration = duration + 0.5;
-            if (duration > 0 && _currentCell.playProgress.maximumValue != duration) {
-                [_currentCell.playProgress setMaximumValue:duration];
-                _currentCell.playDuration.text = [NSString stringWithFormat:@"%02d:%02d:%02d",(int)(intDuration / 3600), (int)(intDuration / 60 % 60), (int)(intDuration % 60)];
-            }
-            return ;
-        } else if (EvtID == PLAY_ERR_NET_DISCONNECT || EvtID == PLAY_EVT_PLAY_END) {
-            //            [self stopRtmp];
-            [_currentPlayer pause];
-            _videoPause  = NO;
-            _videoFinished = YES;
-            [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-            [_currentCell.playProgress setValue:0];
-            _currentCell.playLabel.text = @"00:00:00";
-            
-            [_currentCell.playBtn setImage:[UIImage imageNamed:@"start"] forState:UIControlStateNormal];
-            [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-            
-        } else if (EvtID == PLAY_EVT_PLAY_LOADING){
-            
-        }
-        
-    });
+//        }
+//
+////        //暂时不需要旋转逻辑
+////        if (EvtID == PLAY_EVT_CHANGE_RESOLUTION) {
+////            if (player.width > player.height) {
+////                [player setRenderRotation:HOME_ORIENTATION_RIGHT];
+////            }
+////        }
+//
+//        //只处理当前播放器的Event事件
+//        if (![_currentPlayer isEqual:player]) return;
+//        [self report:EvtID];
+//
+//        if (EvtID == PLAY_EVT_VOD_PLAY_PREPARED) {
+//            //收到PREPARED事件的时候 resume播放器
+//            [_currentPlayer resume];
+//            [_currentCell.playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
+//
+//        } else if (EvtID == PLAY_EVT_PLAY_BEGIN) {
+//            _videoFinished = NO;
+//
+//        } else if (EvtID == PLAY_EVT_RCV_FIRST_I_FRAME) {
+//            if (!_isInVC) {
+//                self.videoIsReady();
+//            }
+//        } else if (EvtID == PLAY_EVT_PLAY_PROGRESS && !_videoFinished) {
+//            if (_startSeek) return ;
+//            // 避免滑动进度条松开的瞬间可能出现滑动条瞬间跳到上一个位置
+//            long long curTs = [[NSDate date]timeIntervalSince1970]*1000;
+//            if (llabs(curTs - _trackingTouchTS) < 500) {
+//                return;
+//            }
+//            _trackingTouchTS = curTs;
+//
+//            float progress = [dict[EVT_PLAY_PROGRESS] floatValue];
+//            int intProgress = progress + 0.5;
+//            _currentCell.playLabel.text = [NSString stringWithFormat:@"%02d:%02d:%02d",(int)(intProgress / 3600), (int)(intProgress / 60), (int)(intProgress % 60)];
+//            [_currentCell.playProgress setValue:progress];
+//
+//            float duration = [dict[EVT_PLAY_DURATION] floatValue];
+//            int intDuration = duration + 0.5;
+//            if (duration > 0 && _currentCell.playProgress.maximumValue != duration) {
+//                [_currentCell.playProgress setMaximumValue:duration];
+//                _currentCell.playDuration.text = [NSString stringWithFormat:@"%02d:%02d:%02d",(int)(intDuration / 3600), (int)(intDuration / 60 % 60), (int)(intDuration % 60)];
+//            }
+//            return ;
+//        } else if (EvtID == PLAY_ERR_NET_DISCONNECT || EvtID == PLAY_EVT_PLAY_END) {
+//            //            [self stopRtmp];
+////            [_currentPlayer pause];
+//            _videoPause  = NO;
+//            _videoFinished = YES;
+//            [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+//            [_currentCell.playProgress setValue:0];
+//            _currentCell.playLabel.text = @"00:00:00";
+//
+//            [_currentCell.playBtn setImage:[UIImage imageNamed:@"start"] forState:UIControlStateNormal];
+//            [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+//
+//        } else if (EvtID == PLAY_EVT_PLAY_LOADING){
+//
+//        }
+//
+//    });
 }
 
 -(void)report:(int)EvtID
@@ -566,8 +452,8 @@ typedef NS_ENUM(NSInteger,DragDirection){
 {
     TCPlayViewCell *cell = (TCPlayViewCell *)[_tableView dequeueReusableCellWithIdentifier:@"TCPlayViewCell" forIndexPath:indexPath];
     
-    cell.delegate = self;
-    [cell setLiveInfo:self.lives[indexPath.row]];
+//    cell.delegate = self;
+//    [cell setLiveInfo:self.lives[indexPath.row]];
     _currentCell = cell;
     _liveInfoIndex = indexPath.row;
     
@@ -585,12 +471,12 @@ typedef NS_ENUM(NSInteger,DragDirection){
     NSInteger index = rect.y / self.view.height;
     if (_beginDragging && _liveInfoIndex != index) {
         if (index > _liveInfoIndex) {
-            ((TCLiveInfo*)self.lives[index+1]).initPlayer;
-            ((TCLiveInfo*)self.lives[index-2]).deletePlayer;
+//            ((TCLiveInfo*)self.lives[index+1]).initPlayer;
+//            ((TCLiveInfo*)self.lives[index-2]).deletePlayer;
             
         }else{
-            ((TCLiveInfo*)self.lives[index-1]).initPlayer;
-            ((TCLiveInfo*)self.lives[index+2]).deletePlayer;
+//            ((TCLiveInfo*)self.lives[index-1]).initPlayer;
+//            ((TCLiveInfo*)self.lives[index+2]).deletePlayer;
         }
         _liveInfoIndex = index;
         _currentCell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_liveInfoIndex inSection:0]];
@@ -843,7 +729,7 @@ typedef NS_ENUM(NSInteger,DragDirection){
         [self.lives addObjectsFromArray:result];
         for (int i = 0; i < range.length; i++) {
             if (labs(_liveInfoIndex - i)<=1) {
-                ((TCLiveInfo*)self.lives[i]).player = [[TXVodPlayer alloc] init];
+//                ((TCLiveInfo*)self.lives[i]).player = [[TXVodPlayer alloc] init];
             }
         }
     } else {

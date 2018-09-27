@@ -303,8 +303,8 @@
 		F0365C98215A54A700726A70 /* AsyncFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C95215A54A600726A70 /* AsyncFetcher.swift */; };
 		F0365C99215A54A700726A70 /* DisplayData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C96215A54A600726A70 /* DisplayData.swift */; };
 		F0365C9A215A54A700726A70 /* AsyncFetcherOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C97215A54A600726A70 /* AsyncFetcherOperation.swift */; };
-		F0365C9B215A7BBE00726A70 /* TCVodPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C912158F4DE00726A70 /* TCVodPlayViewController.swift */; };
 		F0365C9C215A7BBE00726A70 /* TCPlayViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C93215A549500726A70 /* TCPlayViewCell.swift */; };
+		F06E4334215CB9EF007E5E77 /* TCVodPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C912158F4DE00726A70 /* TCVodPlayViewController.swift */; };
 		F08756EA21495B36006CF4B6 /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E021495B34006CF4B6 /* EditorViewController.swift */; };
 		F08756EC21495B36006CF4B6 /* SegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E221495B34006CF4B6 /* SegmentView.swift */; };
 		F08756ED21495B36006CF4B6 /* APLCustomVideoCompositor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E421495B35006CF4B6 /* APLCustomVideoCompositor.swift */; };
@@ -657,8 +657,6 @@
 		CE1ABDF92023235B00A2219E /* handdetect */ = {isa = PBXFileReference; lastKnownFileType = folder; path = handdetect; sourceTree = "<group>"; };
 		CE1ABE3D202337B300A2219E /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		CE1ABE712023389200A2219E /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
-		CE1ABF3B2024403E00A2219E /* TCPlayViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TCPlayViewCell.h; sourceTree = "<group>"; };
-		CE1ABF3C2024403E00A2219E /* TCPlayViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TCPlayViewCell.m; sourceTree = "<group>"; };
 		CE1C22F72080D3980002FF8C /* TVCUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TVCUtils.m; sourceTree = "<group>"; };
 		CE1C22F82080D3980002FF8C /* TVCHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TVCHeader.h; sourceTree = "<group>"; };
 		CE1C22F92080D3980002FF8C /* TXUGCPublish.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TXUGCPublish.m; sourceTree = "<group>"; };
@@ -1066,8 +1064,6 @@
 				9102BD621F6B80DD003CBBFA /* TCVodPlayViewController.h */,
 				9102BD631F6B80DD003CBBFA /* TCVodPlayViewController.m */,
 				F0365C912158F4DE00726A70 /* TCVodPlayViewController.swift */,
-				CE1ABF3B2024403E00A2219E /* TCPlayViewCell.h */,
-				CE1ABF3C2024403E00A2219E /* TCPlayViewCell.m */,
 				F0365C93215A549500726A70 /* TCPlayViewCell.swift */,
 				F0365C95215A54A600726A70 /* AsyncFetcher.swift */,
 				F0365C97215A54A600726A70 /* AsyncFetcherOperation.swift */,
@@ -2393,7 +2389,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F0365C9B215A7BBE00726A70 /* TCVodPlayViewController.swift in Sources */,
+				F06E4334215CB9EF007E5E77 /* TCVodPlayViewController.swift in Sources */,
 				F0365C9C215A7BBE00726A70 /* TCPlayViewCell.swift in Sources */,
 				F08756EA21495B36006CF4B6 /* EditorViewController.swift in Sources */,
 				CE870ED020B4122B0012EF30 /* TransitionView.m in Sources */,

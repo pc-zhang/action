@@ -7,13 +7,13 @@
 //
 
 #import "SDKHeader.h"
-#import "TCPlayViewCell.h"
 #import "TCLiveListModel.h"
+#import "TXXiaoShiPinDemo-Swift.h"
 
 typedef void(^videoIsReadyBlock)(void);
 extern NSString *const kTCLivePlayError;
 
-@interface TCVodPlayViewController : UIViewController<UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate, TXVodPlayListener,TCPlayDecorateDelegate>
+@interface TCVodPlayViewController : UIViewController<UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate, TXVodPlayListener>
 
 @property (nonatomic, assign) BOOL  log_switch;
 @property  TCLiveInfo           *liveInfo;

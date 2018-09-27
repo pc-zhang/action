@@ -30,7 +30,7 @@ typedef NS_ENUM(NSInteger,ReviewStatus){
 @interface TCLiveInfo : NSObject
 
 @property NSString *userid;
-@property TXVodPlayer* player;
+//@property TXVodPlayer* player;
 @property NSString *groupid;
 @property NSString  *title;
 @property NSString  *playurl;
