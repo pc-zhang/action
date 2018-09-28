@@ -21,7 +21,7 @@ class PlayerView: UIView {
         }
     }
     
-    var playerLayer: AVPlayerLayer {
+    private var playerLayer: AVPlayerLayer {
         return layer as! AVPlayerLayer
     }
 

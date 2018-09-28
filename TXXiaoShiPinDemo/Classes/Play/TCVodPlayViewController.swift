@@ -10,7 +10,7 @@ import UIKit
 
 let kTCLivePlayError: String = "kTCLivePlayError"
 
-class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITableViewDataSourcePrefetching {
+class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITableViewDataSourcePrefetching, TCPlayDecorateDelegate {
     
     var liveListMgr: TCLiveListMgr?
     var isLoading: Bool = false
@@ -90,6 +90,9 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
             self.lives.removeAll()
         }
         
+        tableView.rowHeight = tableView.height
+        tableView.contentSize.width = tableView.width
+        
         tableView.mj_header = MJRefreshNormalHeader(refreshingBlock: {
             self.isLoading = true
             self.lives = []
@@ -150,42 +153,49 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         return models.count
     }
     
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let playViewCell = cell as! TCPlayViewCell
+        playViewCell.player?.pause()
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TCPlayViewCell.reuseIdentifier, for: indexPath) as? TCPlayViewCell else {
             fatalError("Expected `\(TCPlayViewCell.self)` type for reuseIdentifier \(TCPlayViewCell.reuseIdentifier). Check the configuration in Main.storyboard.")
         }
         
+        cell.delegate = self
+        
         if indexPath.row < self.lives.count {
             cell.setLiveInfo(liveInfo: self.lives[indexPath.row])
         }
         
-        let model = models[indexPath.row]
-        let id = model.id
-        cell.representedId = id
-        
-        // Check if the `asyncFetcher` has already fetched data for the specified identifier.
-        if let fetchedData = asyncFetcher.fetchedData(for: id) {
-            // The data has already been fetched and cached; use it to configure the cell.
-            cell.configure(with: fetchedData)
-        } else {
-            // There is no data available; clear the cell until we've fetched data.
-            cell.configure(with: nil)
-            
-            // Ask the `asyncFetcher` to fetch data for the specified identifier.
-            asyncFetcher.fetchAsync(id) { fetchedData in
-                DispatchQueue.main.async {
-                    /*
-                     The `asyncFetcher` has fetched data for the identifier. Before
-                     updating the cell, check if it has been recycled by the
-                     collection view to represent other data.
-                     */
-                    guard cell.representedId == id else { return }
-                    
-                    // Configure the cell with the fetched image.
-                    cell.configure(with: fetchedData)
-                }
-            }
-        }
+//        let model = models[indexPath.row]
+//        let id = model.id
+//        cell.representedId = id
+//
+//        // Check if the `asyncFetcher` has already fetched data for the specified identifier.
+//        if let fetchedData = asyncFetcher.fetchedData(for: id) {
+//            // The data has already been fetched and cached; use it to configure the cell.
+//            cell.configure(with: fetchedData)
+//        } else {
+//            // There is no data available; clear the cell until we've fetched data.
+//            cell.configure(with: nil)
+//
+//            // Ask the `asyncFetcher` to fetch data for the specified identifier.
+//            asyncFetcher.fetchAsync(id) { fetchedData in
+//                DispatchQueue.main.async {
+//                    /*
+//                     The `asyncFetcher` has fetched data for the identifier. Before
+//                     updating the cell, check if it has been recycled by the
+//                     collection view to represent other data.
+//                     */
+//                    guard cell.representedId == id else { return }
+//
+//                    // Configure the cell with the fetched image.
+//                    cell.configure(with: fetchedData)
+//                }
+//            }
+//        }
         
         return cell
     }
@@ -296,6 +306,12 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         })
     }
     
+    func onloadVideoComplete(_ videoPath:String) {
+        let videoRecord = TCVideoRecordViewController()
+        videoRecord.videoPath = videoPath
+        let nav = TCNavigationController(rootViewController: videoRecord)
+        self.present(nav, animated:true, completion:nil)
+    }
 }
 
 

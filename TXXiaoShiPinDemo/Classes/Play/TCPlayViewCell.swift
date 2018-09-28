@@ -14,15 +14,16 @@ struct Constants {
 
 public protocol TCPlayDecorateDelegate : NSObjectProtocol {
     
-    func closeVC(_ isRefresh: ObjCBool, popViewController: ObjCBool)
-    func clickScreen(_ gestureRecognizer: UITapGestureRecognizer)
-    func clickPlayVod()
-    func onSeek(_ slider: UISlider)
-    func onSeekBegin(_ slider: UISlider)
-    func onDrag(_ slider: UISlider)
-    func clickLog(_ button: UIButton)
-    func clickShare(_ button: UIButton)
-    func clickChorus(_ button: UIButton)
+//    func closeVC(_ isRefresh: ObjCBool, popViewController: ObjCBool)
+//    func clickScreen(_ gestureRecognizer: UITapGestureRecognizer)
+//    func clickPlayVod()
+//    func onSeek(_ slider: UISlider)
+//    func onSeekBegin(_ slider: UISlider)
+//    func onDrag(_ slider: UISlider)
+//    func clickLog(_ button: UIButton)
+//    func clickShare(_ button: UIButton)
+//    func clickChorus(_ button: UIButton)
+    func onloadVideoComplete(_ videoPath:String)
 }
 
 
@@ -47,6 +48,27 @@ class TCShowLiveTopView : UIView {
 
 
 final class TCPlayViewCell: UITableViewCell, TCPlayDecorateDelegate, UITextFieldDelegate, UIAlertViewDelegate {
+    
+    var playUrl: String?
+    var hud: MBProgressHUD?
+    
+    var player: AVPlayer? {
+        get {
+            return playerLayer.player
+        }
+        
+        set {
+            playerLayer.player = newValue
+        }
+    }
+    
+    private var playerLayer: AVPlayerLayer {
+        return layer as! AVPlayerLayer
+    }
+    
+    override class var layerClass: AnyClass {
+        return AVPlayerLayer.self
+    }
     
     var _liveInfo: TCLiveInfo?
     var _touchBeginLocation: CGPoint?
@@ -93,8 +115,35 @@ final class TCPlayViewCell: UITableViewCell, TCPlayDecorateDelegate, UITextField
         
     }
     
-    func clickChorus(_ button: UIButton) {
+    @IBAction func clickChorus(_ button: UIButton) {
+//        if TCLoginParam.shareInstance()!.isExpired() {
+//            AppDelegate.shared().enterLoginUI()
+//            return
+//        }
         
+        TCUtil.report(xiaoshipin_videochorus, userName: nil, code: 0, msg: "合唱事件")
+        
+        
+        hud = MBProgressHUD.showAdded(to: self.contentView, animated: true)
+        hud?.mode = MBProgressHUDMode.text
+        hud?.label.text = "正在加载视频..."
+        
+        TCUtil.downloadVideo(playUrl, process: { (process) in
+            self.onloadVideoProcess(process: process)
+        }) { (videoPath) in
+            self.onloadVideoComplete(videoPath!)
+        }
+    }
+    
+    
+    func onloadVideoProcess(process:CGFloat) {
+        hud?.label.text = String(format: "正在加载视频%d%%", (Int)(process * 100))
+    }
+    
+    func onloadVideoComplete(_ videoPath:String) {
+        player?.pause()
+        hud?.hide(animated: true)
+        self.delegate?.onloadVideoComplete(videoPath)
     }
     
     // MARK: Properties
@@ -118,7 +167,11 @@ final class TCPlayViewCell: UITableViewCell, TCPlayDecorateDelegate, UITextField
     @IBOutlet weak var closeButton: UIButton!
     
     func setLiveInfo(liveInfo: TCLiveInfo) {
-        videoCoverView.image = UIImage(named: "bg.jpg")
+//        videoCoverView.image = UIImage(named: "bg.jpg")
+        // play
+        playUrl = liveInfo.playurl
+        player = AVPlayer(url: URL(string: playUrl!)!)
+        player?.play()
     }
 
     static let reuseIdentifier = "TCPlayViewCell"
@@ -131,8 +184,8 @@ final class TCPlayViewCell: UITableViewCell, TCPlayDecorateDelegate, UITextField
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        layer.borderWidth = 1.0
-        layer.borderColor = UIColor.red.cgColor
+        layer.borderWidth = 0
+        layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
     }
 
     // MARK: Convenience

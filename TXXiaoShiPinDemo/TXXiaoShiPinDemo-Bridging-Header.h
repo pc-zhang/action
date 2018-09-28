@@ -27,3 +27,6 @@
 #import <MJExtension/MJExtension.h>
 #import <BlocksKit/BlocksKit.h>
 #import "UIColor+MLPFlatColors.h"
+#import "AppDelegate.h"
+#import "TCUtil.h"
+#import "TCNavigationController.h"

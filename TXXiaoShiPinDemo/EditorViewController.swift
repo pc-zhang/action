@@ -52,7 +52,7 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
         
         self.push(op:.nothing)
         
-        playerView.playerLayer.player = player
+        playerView.player = player
         
         if let firstVideoPath = firstVideoPath {
             addClip(URL(fileURLWithPath: firstVideoPath), trackAdded: 0)
@@ -195,10 +195,7 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
     var composition: AVMutableComposition? = nil
     var videoComposition: AVMutableVideoComposition? = nil
     var audioMix: AVMutableAudioMix? = nil
-    
-    private var playerLayer: AVPlayerLayer? {
-        return playerView.playerLayer
-    }
+
     
     /*
      A formatter for individual date components used to provide an appropriate
