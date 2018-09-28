@@ -39,22 +39,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="685" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="IVd-gr-2Um">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="685" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="IVd-gr-2Um">
                                 <rect key="frame" x="0.0" y="44" width="375" height="685"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="TCPlayViewCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TCPlayViewCell" id="sHr-nB-1d0" customClass="TCPlayViewCell" customModule="TXXiaoShiPinDemo" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleAspectFill" restorationIdentifier="TCPlayViewCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TCPlayViewCell" id="sHr-nB-1d0" customClass="TCPlayViewCell" customModule="TXXiaoShiPinDemo" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="685"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="sHr-nB-1d0" id="Rfw-uL-Vsq">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="684.66666666666663"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="685"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jKT-hi-qH9">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="684.66666666666663"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </imageView>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ALu-yD-d7T">
+                                                <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="ALu-yD-d7T">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="684.66666666666663"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="user_info" translatesAutoresizingMaskIntoConstraints="NO" id="IzK-mV-ATm">
@@ -113,10 +114,10 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="IVd-gr-2Um" firstAttribute="bottom" secondItem="3aA-UL-O6D" secondAttribute="bottom" id="08v-WQ-qUw"/>
-                            <constraint firstItem="IVd-gr-2Um" firstAttribute="leading" secondItem="3aA-UL-O6D" secondAttribute="leading" id="EGL-Sd-s5X"/>
-                            <constraint firstItem="IVd-gr-2Um" firstAttribute="top" secondItem="3aA-UL-O6D" secondAttribute="top" id="RyZ-Ug-e2U"/>
-                            <constraint firstItem="IVd-gr-2Um" firstAttribute="trailing" secondItem="3aA-UL-O6D" secondAttribute="trailing" id="dtZ-KA-uNf"/>
+                            <constraint firstItem="IVd-gr-2Um" firstAttribute="top" secondItem="3aA-UL-O6D" secondAttribute="top" id="14n-RA-iaO"/>
+                            <constraint firstItem="IVd-gr-2Um" firstAttribute="bottom" secondItem="3aA-UL-O6D" secondAttribute="bottom" id="CJ3-Ee-EWG"/>
+                            <constraint firstItem="IVd-gr-2Um" firstAttribute="trailing" secondItem="3aA-UL-O6D" secondAttribute="trailing" id="V53-8T-oZ2"/>
+                            <constraint firstItem="IVd-gr-2Um" firstAttribute="leading" secondItem="3aA-UL-O6D" secondAttribute="leading" id="g5a-Cl-Ib6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="3aA-UL-O6D"/>
                     </view>

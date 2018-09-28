@@ -58,6 +58,7 @@ final class TCPlayViewCell: UITableViewCell, TCPlayDecorateDelegate, UITextField
         }
         
         set {
+            playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
             playerLayer.player = newValue
         }
     }
@@ -81,6 +82,10 @@ final class TCPlayViewCell: UITableViewCell, TCPlayDecorateDelegate, UITextField
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.player?.currentItem, queue: .main) { _ in
+            self.player?.seek(to: kCMTimeZero)
+            self.player?.play()
+        }
     }
     
     func closeVC(_ isRefresh: ObjCBool, popViewController: ObjCBool) {
