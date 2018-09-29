@@ -347,7 +347,7 @@ class TCVideoEditViewController2: TCVideoEditViewController, UICollectionViewDel
                         UISaveVideoAtPathToSavedPhotosAlbum(exporter.outputURL!.path, self, #selector(self.video), nil)
                     }
 //                    NVActivityIndicatorPresenter.sharedInstance.setMessage("导出成功")
-                    self.videoOutputPath = exporter.outputURL!.path as NSString
+                    self.videoOutputPath = exporter.outputURL!.path
                     self.publishVideo()
                     
                     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {

@@ -35,6 +35,7 @@
 #import <AFNetworking.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "TXCVEFColorPalette.h"
+#import "TCLoginViewController.h"
 
 typedef  NS_ENUM(NSInteger,ActionType)
 {
@@ -960,8 +961,20 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     [_ugcEdit generateVideo:VIDEO_COMPRESSED_720P videoOutputPath:_videoOutputPath];
 }
 
+-(BOOL)loginCheck{
+    if([TCLoginParam shareInstance].isExpired){
+        TCLoginViewController *loginViewController = [[TCLoginViewController alloc] init];
+        [self presentViewController:loginViewController animated:YES completion:nil];
+        return FALSE;
+    }
+    else return TRUE;
+}
+
 - (void)publishVideo
 {
+    if (![self loginCheck]) {
+        return;
+    }
     [[TCLoginModel sharedInstance] getVodSign:^(int errCode, NSString *msg, NSDictionary *resultDict) {
         [TCUtil report:xiaoshipin_videosign userName:nil code:errCode msg:msg];
         if (errCode == 200 && resultDict){

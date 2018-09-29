@@ -8,11 +8,11 @@
 
 #import  "AppDelegate.h"
 //#import "TCMainTabViewController.h"
-//#import "TCLoginViewController.h"
+#import "TCLoginViewController.h"
 #import "TCLog.h"
 #import "TCConstants.h"
 #import <Bugly/Bugly.h>
-//#import "TCUserAgreementController.h"
+#import "TCUserAgreementController.h"
 #import <UMSocialCore/UMSocialCore.h>
 #import "TCLoginModel.h"
 
@@ -115,60 +115,42 @@
     
 }
 
-//- (CAAnimation *)animationFrom:(UIViewController *)sourceController to:(UIViewController *)targetController {
-//    if (sourceController == nil) {
-//        return nil;
-//    }
-//    CATransition *transition = [CATransition animation];
-//    transition.type = kCATransitionPush;
-//    if ([sourceController isKindOfClass:[UINavigationController class]]) {
-//        sourceController = [(UINavigationController *)sourceController viewControllers].firstObject;
-//    }
-//    if ([sourceController isKindOfClass:[TCUserAgreementController class]]) {
-//        transition.type = kCATransitionFade;
-//    } else if ([sourceController isKindOfClass:[TCMainTabViewController class]]) {
-//        transition.subtype = kCATransitionFromRight;
-//    } else if ([targetController isKindOfClass:[TCMainTabViewController class]]) {
-//        transition.subtype = kCATransitionFromLeft;
-//    }
-//    return transition;
-//}
 
-//- (void)enterLoginUI {
+- (void)enterLoginUI {
 //    TCLoginViewController *loginViewController = [[TCLoginViewController alloc] init];
-////  CAAnimation *transition = [self animationFrom:self.window.rootViewController to:loginViewController];
+//  CAAnimation *transition = [self animationFrom:self.window.rootViewController to:loginViewController];
 //    [self presentViewController:loginViewController animated:YES completion:nil];
-////    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController: loginViewController];
-////    [self.window makeKeyAndVisible];
-////    if (transition) {
-////        [self.window.layer addAnimation:transition forKey:@"transition"];
-////    }
-//}
+//    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController: loginViewController];
+//    [self.window makeKeyAndVisible];
+//    if (transition) {
+//        [self.window.layer addAnimation:transition forKey:@"transition"];
+//    }
+}
 
-//- (void)confirmEnterMainUI{
+- (void)confirmEnterMainUI{
 //    CAAnimation *transition = [self animationFrom:self.window.rootViewController to:_mainViewController];
 //    self.window.rootViewController = _mainViewController;
 //    [self.window makeKeyAndVisible];
 //    if (transition) {
 //        [self.window.layer addAnimation:transition forKey:@"transition"];
 //    }
-//}
+}
 
-//- (void)enterUserAgreementUI{
-//    TCUserAgreementController *agreementController = [[TCUserAgreementController alloc] init];
-//    __weak __typeof(self) weakSelf = self;
-//    agreementController.agree = ^(BOOL isAgree) {
-//        if (isAgree) {
-//            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:hasAgreeUserAgreement];
-//            [weakSelf confirmEnterMainUI];
-//        }else{
-//            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"为了营造良好的用户环境，不同意用户协议将无法正常使用本APP" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-//            [alertView show];
-//        }
-//    };
-//    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:agreementController];
-//    [self.window makeKeyAndVisible];
-//}
+- (void)enterUserAgreementUI{
+    TCUserAgreementController *agreementController = [[TCUserAgreementController alloc] init];
+    __weak __typeof(self) weakSelf = self;
+    agreementController.agree = ^(BOOL isAgree) {
+        if (isAgree) {
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:hasAgreeUserAgreement];
+            [weakSelf confirmEnterMainUI];
+        }else{
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"为了营造良好的用户环境，不同意用户协议将无法正常使用本APP" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+            [alertView show];
+        }
+    };
+    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:agreementController];
+    [self.window makeKeyAndVisible];
+}
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
