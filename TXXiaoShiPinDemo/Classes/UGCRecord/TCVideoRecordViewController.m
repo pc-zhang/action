@@ -418,17 +418,17 @@ typedef NS_ENUM(NSInteger,RecordType)
     self.title = @"";
     self.view.backgroundColor = UIColor.blackColor;
     
-    _videoPlayView = [UIView new];
-    _videoPlayView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    [self.view addSubview:_videoPlayView];
-    
     _videoRecordView = [UIView new];
     _videoRecordView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:_videoRecordView];
     
+    _videoPlayView = [UIView new];
+    _videoPlayView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    [self.view addSubview:_videoPlayView];
+    
     if (_videoPath) {
-        _videoRecordView.frame = CGRectMake(0, 0, self.view.width / 2, self.view.height);
-        _videoPlayView.frame = CGRectMake(self.view.width / 2, 0, self.view.width / 2, self.view.height);
+        _videoRecordView.frame = self.view.bounds;
+        _videoPlayView.frame = CGRectMake(0, 0, self.view.width / 3, self.view.height / 3);
         
         TXVideoInfo *info = [TXVideoInfoReader getVideoInfo:_videoPath];
         CGFloat duration = info.duration;
