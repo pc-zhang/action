@@ -40,21 +40,6 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
             selector: #selector(playError),
             name: NSNotification.Name(rawValue: kTCLivePlayError),
             object: nil)
-//        NotificationCenter.default.addObserver(
-//            self,
-//            selector: #selector(onAudioSessionEvent),
-//            name: AVAudioSessionInterruptionNotification,
-//            object: nil)
-//        NotificationCenter.default.addObserver(
-//            self,
-//            selector: #selector(onAppDidEnterBackGround),
-//            name: UIApplicationDidEnterBackgroundNotification,
-//            object: nil)
-//        NotificationCenter.default.addObserver(
-//            self,
-//            selector: #selector(onAppWillEnterForeground),
-//            name: UIApplicationWillEnterForegroundNotification,
-//            object: nil)
     }
     
     
@@ -169,34 +154,6 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
             cell.setLiveInfo(liveInfo: self.lives[indexPath.row])
         }
         
-//        let model = models[indexPath.row]
-//        let id = model.id
-//        cell.representedId = id
-//
-//        // Check if the `asyncFetcher` has already fetched data for the specified identifier.
-//        if let fetchedData = asyncFetcher.fetchedData(for: id) {
-//            // The data has already been fetched and cached; use it to configure the cell.
-//            cell.configure(with: fetchedData)
-//        } else {
-//            // There is no data available; clear the cell until we've fetched data.
-//            cell.configure(with: nil)
-//
-//            // Ask the `asyncFetcher` to fetch data for the specified identifier.
-//            asyncFetcher.fetchAsync(id) { fetchedData in
-//                DispatchQueue.main.async {
-//                    /*
-//                     The `asyncFetcher` has fetched data for the identifier. Before
-//                     updating the cell, check if it has been recycled by the
-//                     collection view to represent other data.
-//                     */
-//                    guard cell.representedId == id else { return }
-//
-//                    // Configure the cell with the fetched image.
-//                    cell.configure(with: fetchedData)
-//                }
-//            }
-//        }
-        
         return cell
     }
     
@@ -216,11 +173,6 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         if result != nil {
             result = mergeResult(result: result! as! [TCLiveInfo])
             self.lives.append(contentsOf: result! as! [TCLiveInfo])
-//            for i in range {
-//                if (labs(_liveInfoIndex - i)<=1) {
-//                //                ((TCLiveInfo*)self.lives[i]).player = [[TXVodPlayer alloc] init];
-//                }
-//            }
         } else {
             if finish.boolValue {
                 let hud = HUDHelper.sharedInstance()?.tipMessage("没有啦")
@@ -259,7 +211,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
      *
      *  @param noti
      */
-    func newDataAvailable(noti: NSNotification) {
+    @objc func newDataAvailable(noti: NSNotification) {
         self.doFetchList()
     }
     
@@ -268,7 +220,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
      *
      *  @param noti
      */
-    func listDataUpdated(noti: NSNotification) {
+    @objc func listDataUpdated(noti: NSNotification) {
     //    [self setup];
     }
     
@@ -278,7 +230,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
      *
      *  @param noti
      */
-    func svrError(noti: NSNotification) {
+    @objc func svrError(noti: NSNotification) {
         let e = noti.object
         if ((e as? NSError) != nil) {
             HUDHelper.alert(e.debugDescription)
@@ -296,7 +248,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
      *  TCPlayViewController出错，加入房间失败
      *
      */
-    func playError(noti: NSNotification) {
+    @objc func playError(noti: NSNotification) {
         DispatchQueue.main.asyncAfter(deadline: .now() + Double(0.5), execute: {
             //        [self.tableView.mj_header beginRefreshing];
             //加房间失败后，刷新列表，不需要刷新动画

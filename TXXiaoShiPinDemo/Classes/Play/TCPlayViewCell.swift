@@ -6,51 +6,76 @@ The `UICollectionViewCell` used to represent data in the collection view.
 */
 
 import UIKit
+import Foundation
+import AVFoundation
+import MobileCoreServices
+import Accelerate
 
-struct Constants {
-    static let FULL_SCREEN_PLAY_VIDEO_VIEW = 10000
-    static let BOTTOM_BTN_ICON_WIDTH = 35
-}
 
 public protocol TCPlayDecorateDelegate : NSObjectProtocol {
-    
-//    func closeVC(_ isRefresh: ObjCBool, popViewController: ObjCBool)
-//    func clickScreen(_ gestureRecognizer: UITapGestureRecognizer)
-//    func clickPlayVod()
-//    func onSeek(_ slider: UISlider)
-//    func onSeekBegin(_ slider: UISlider)
-//    func onDrag(_ slider: UISlider)
-//    func clickLog(_ button: UIButton)
-//    func clickShare(_ button: UIButton)
-//    func clickChorus(_ button: UIButton)
     func onloadVideoComplete(_ videoPath:String)
 }
 
 
-class TCShowLiveTopView : UIView {
-    var hostNickName: String
-    var hostFaceUrl: String
-    
-    init(frame: CGRect, hostNickName:String, hostFaceUrl:String) {
-        self.hostNickName = hostNickName
-        self.hostFaceUrl = hostFaceUrl
-        super.init(frame: frame)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func cancelImageLoading() {
-    
-    }
-}
-
-
-final class TCPlayViewCell: UITableViewCell, TCPlayDecorateDelegate, UITextFieldDelegate, UIAlertViewDelegate {
+final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
     
     var playUrl: String?
     var hud: MBProgressHUD?
+    var last_rgb: [UInt]? = nil
+    var last_split_time: CMTime? = nil
+    
+    var seekTimer: Timer? = nil
+    var visibleTimeRange: CGFloat = 15
+    var scaledDurationToWidth: CGFloat {
+        return backgroundTimelineView.frame.width / visibleTimeRange
+    }
+    
+    
+    // Attempt load and test these asset keys before playing.
+    static let assetKeysRequiredToPlay = [
+        "playable",
+        "hasProtectedContent"
+    ]
+    var currentTime: Double {
+        get {
+            return CMTimeGetSeconds(player!.currentTime())
+        }
+        set {
+            let newTime = CMTimeMakeWithSeconds(newValue, preferredTimescale: 600)
+            //todo: more tolerance
+            player?.seek(to: newTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+        }
+    }
+    
+    var duration: Double {
+        guard let currentItem = player?.currentItem else { return 0.0 }
+        
+        return CMTimeGetSeconds(currentItem.duration)
+    }
+    
+    var composition: AVMutableComposition? = nil
+    var videoComposition: AVMutableVideoComposition? = nil
+    var audioMix: AVMutableAudioMix? = nil
+    
+    /*
+     A token obtained from calling `player`'s `addPeriodicTimeObserverForInterval(_:queue:usingBlock:)`
+     method.
+     */
+    
+    private var playerItem: AVPlayerItem? = nil
+    
+    // MARK: - IBOutlets
+    
+    
+    @IBOutlet weak var backgroundTimelineView: UICollectionView! {
+        didSet {
+            backgroundTimelineView.delegate = self
+            backgroundTimelineView.dataSource = self
+            backgroundTimelineView.contentOffset = CGPoint(x:-backgroundTimelineView.frame.width / 2, y:0)
+            backgroundTimelineView.contentInset = UIEdgeInsets(top: 0, left: backgroundTimelineView.frame.width/2, bottom: 0, right: backgroundTimelineView.frame.width/2)
+            backgroundTimelineView.panGestureRecognizer.addTarget(self, action: #selector(TCPlayViewCell.pan))
+        }
+    }
     
     var player: AVPlayer? {
         get {
@@ -58,7 +83,7 @@ final class TCPlayViewCell: UITableViewCell, TCPlayDecorateDelegate, UITextField
         }
         
         set {
-            playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+            playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
             playerLayer.player = newValue
         }
     }
@@ -71,63 +96,27 @@ final class TCPlayViewCell: UITableViewCell, TCPlayDecorateDelegate, UITextField
         return AVPlayerLayer.self
     }
     
-    var _liveInfo: TCLiveInfo?
-    var _touchBeginLocation: CGPoint?
-    var _bulletBtnIsOn: Bool?
-    var _viewsHidden: Bool?
-    var _heartAnimationPoints: NSMutableArray?
-    var _topView: TCShowLiveTopView?
-    var _actionSheet1: UIActionSheet?
-    var _actionSheet2: UIActionSheet?
-    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.player?.currentItem, queue: .main) { _ in
-            self.player?.seek(to: kCMTimeZero)
+            self.player?.seek(to: CMTime.zero)
             self.player?.play()
+        }
+        
+        if composition==nil {
+            composition = AVMutableComposition()
+            // Add two video tracks and two audio tracks.
+            _ = composition!.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)
+            
+            _ = composition!.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)
+            
+            _ = composition!.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)
         }
     }
     
-    func closeVC(_ isRefresh: ObjCBool, popViewController: ObjCBool) {
-        
-    }
-    
-    func clickScreen(_ gestureRecognizer: UITapGestureRecognizer) {
-        
-    }
-    
-    func clickPlayVod() {
-        
-    }
-    
-    func onSeek(_ slider: UISlider) {
-        
-    }
-    
-    func onSeekBegin(_ slider: UISlider) {
-        
-    }
-    
-    func onDrag(_ slider: UISlider) {
-        
-    }
-    
-    func clickLog(_ button: UIButton) {
-        
-    }
-    
-    func clickShare(_ button: UIButton) {
-        
-    }
-    
     @IBAction func clickChorus(_ button: UIButton) {
-//        if TCLoginParam.shareInstance()!.isExpired() {
-//            AppDelegate.shared().enterLoginUI()
-//            return
-//        }
         
         TCUtil.report(xiaoshipin_videochorus, userName: nil, code: 0, msg: "合唱事件")
-        
         
         hud = MBProgressHUD.showAdded(to: self.contentView, animated: true)
         hud?.mode = MBProgressHUDMode.text
@@ -148,31 +137,16 @@ final class TCPlayViewCell: UITableViewCell, TCPlayDecorateDelegate, UITextField
     func onloadVideoComplete(_ videoPath:String) {
         player?.pause()
         hud?.hide(animated: true)
-        self.delegate?.onloadVideoComplete(videoPath)
+        addClip(try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(videoPath))
     }
     
     // MARK: Properties
     var delegate:TCPlayDecorateDelegate?
 
-    @IBOutlet weak var centerLabel: UILabel!
-    @IBOutlet weak var playDuration: UILabel!
-    @IBOutlet weak var playLabel: UILabel!
-    @IBOutlet weak var playBtn: UIButton!
-    @IBOutlet weak var btnChat: UIButton!
-    @IBOutlet weak var btnChorus: UIButton!
-    @IBOutlet weak var btnLog: UIButton!
-    @IBOutlet weak var btnShare: UIButton!
-    @IBOutlet weak var cover: UIView!
-    @IBOutlet weak var statusView: UITextView!
-    @IBOutlet weak var logViewEvt: UITextView!
     @IBOutlet weak var videoCoverView: UIImageView!
     @IBOutlet weak var videoParentView: UIView!
-    @IBOutlet weak var reviewLabel: UILabel!
-    @IBOutlet weak var playProgress: UISlider!
-    @IBOutlet weak var closeButton: UIButton!
     
     func setLiveInfo(liveInfo: TCLiveInfo) {
-//        videoCoverView.image = UIImage(named: "bg.jpg")
         // play
         playUrl = liveInfo.playurl
         player = AVPlayer(url: URL(string: playUrl!)!)
@@ -192,387 +166,358 @@ final class TCPlayViewCell: UITableViewCell, TCPlayDecorateDelegate, UITextField
         layer.borderWidth = 0
         layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
     }
+    
+    
+    func addClip(_ movieURL: URL) {
+        let newAsset = AVURLAsset(url: movieURL, options: nil)
+        
+        /*
+         Using AVAsset now runs the risk of blocking the current thread (the
+         main UI thread) whilst I/O happens to populate the properties. It's
+         prudent to defer our work until the properties we need have been loaded.
+         */
+        newAsset.loadValuesAsynchronously(forKeys: TCPlayViewCell.assetKeysRequiredToPlay) {
+            /*
+             The asset invokes its completion handler on an arbitrary queue.
+             To avoid multiple threads using our internal state at the same time
+             we'll elect to use the main thread at all times, let's dispatch
+             our handler to the main queue.
+             */
+            DispatchQueue.main.async {
+                
+                /*
+                 Test whether the values of each of the keys we need have been
+                 successfully loaded.
+                 */
+                for key in TCPlayViewCell.assetKeysRequiredToPlay {
+                    var error: NSError?
+                    
+                    if newAsset.statusOfValue(forKey: key, error: &error) == .failed {
+                        let stringFormat = NSLocalizedString("error.asset_key_%@_failed.description", comment: "Can't use this AVAsset because one of it's keys failed to load")
+                        
+                        let message = String.localizedStringWithFormat(stringFormat, key)
+                        
+                        
+                        return
+                    }
+                }
+                
+                // We can't play this asset.
+                if !newAsset.isPlayable || newAsset.hasProtectedContent {
+                    let message = NSLocalizedString("error.asset_not_playable.description", comment: "Can't use this AVAsset because it isn't playable or has protected content")
+                    
+                    
+                    return
+                }
+                
+                /*
+                 We can play this asset. Create a new `AVPlayerItem` and make
+                 it our player's current item.
+                 */
+                
+                let videoAssetTrack = newAsset.tracks(withMediaType: .video).first!
+                
+                let compositionVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first!
+                
+                compositionVideoTrack.preferredTransform = videoAssetTrack.preferredTransform
+                
+                
+                try! compositionVideoTrack.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: newAsset.duration), of: videoAssetTrack, at: CMTime.zero)
+                
+                
+                if let audioAssetTrack = newAsset.tracks(withMediaType: .audio).first {
+                    
+                    let compositionAudioTrack = self.composition!.tracks(withMediaType: .audio).first!
+                    
+                    compositionAudioTrack.removeTimeRange(compositionAudioTrack.timeRange)
+                    try! compositionAudioTrack.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: newAsset.duration), of: audioAssetTrack, at: CMTime.zero)
+                    
+                }
+                
+                
+                // update timeline
+                self.updatePlayer()
+                
+                self.backgroundTimelineView.reloadData()
 
-    // MARK: Convenience
-
-    /**
-     Configures the cell for display based on the model.
-     
-     - Parameters:
-         - data: An optional `DisplayData` object to display.
-     
-     - Tag: Cell_Config
-    */
-    func configure(with data: DisplayData?) {
-        backgroundColor = data?.color
+                var videoTrackOutput : AVAssetReaderTrackOutput?
+                var avAssetReader = try?AVAssetReader(asset: self.composition!)
+                
+                if let videoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first {
+                    videoTrackOutput = AVAssetReaderTrackOutput.init(track: videoTrack, outputSettings: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange])
+                    avAssetReader?.add(videoTrackOutput!)
+                }
+                
+                avAssetReader?.startReading()
+                
+                while avAssetReader?.status == .reading {
+                    //视频
+                    if let sampleBuffer = videoTrackOutput?.copyNextSampleBuffer() {
+                        
+                        if let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+                        {
+                            
+                            var buffer = vImage_Buffer()
+                            buffer.data = CVPixelBufferGetBaseAddress(pixelBuffer)
+                            buffer.rowBytes = CVPixelBufferGetBytesPerRow(pixelBuffer)
+                            buffer.width = vImagePixelCount(CVPixelBufferGetWidth(pixelBuffer))
+                            buffer.height = vImagePixelCount(CVPixelBufferGetHeight(pixelBuffer))
+                            
+                            let bitmapInfo = CGBitmapInfo(rawValue: CGImageByteOrderInfo.orderMask.rawValue | CGImageAlphaInfo.last.rawValue)
+                            
+                            var cgFormat = vImage_CGImageFormat(bitsPerComponent: 8,
+                                                                bitsPerPixel: 32,
+                                                                colorSpace: nil,
+                                                                bitmapInfo: bitmapInfo,
+                                                                version: 0,
+                                                                decode: nil,
+                                                                renderingIntent: .defaultIntent)
+                            
+                            
+                            let error = vImageBuffer_InitWithCVPixelBuffer(&buffer, &cgFormat, pixelBuffer, nil, nil, vImage_Flags(kvImageNoFlags))
+                            assert(kvImageNoError == error)
+                            
+                            let alpha = [UInt](repeating: 0, count: 256)
+                            let red = [UInt](repeating: 0, count: 256)
+                            let green = [UInt](repeating: 0, count: 256)
+                            let blue = [UInt](repeating: 0, count: 256)
+                            
+                            let alphaPtr = UnsafeMutablePointer<vImagePixelCount>(mutating: alpha) as UnsafeMutablePointer<vImagePixelCount>?
+                            let redPtr = UnsafeMutablePointer<vImagePixelCount>(mutating: red) as UnsafeMutablePointer<vImagePixelCount>?
+                            let greenPtr = UnsafeMutablePointer<vImagePixelCount>(mutating: green) as UnsafeMutablePointer<vImagePixelCount>?
+                            let bluePtr = UnsafeMutablePointer<vImagePixelCount>(mutating: blue) as UnsafeMutablePointer<vImagePixelCount>?
+                            
+                            let rgba = [redPtr, greenPtr, bluePtr, alphaPtr]
+                            
+                            
+                            let histogram = UnsafeMutablePointer<UnsafeMutablePointer<vImagePixelCount>?>(mutating: rgba)
+                            let err2 = vImageHistogramCalculation_ARGB8888(&buffer, histogram, UInt32(kvImageNoFlags))
+                            assert(kvImageNoError == err2)
+                            free(buffer.data)
+                            
+                            
+                            let rgb = red + green + blue
+                            if let last_rgb = self.last_rgb {
+                                let AB = zip(rgb, last_rgb).map(*).reduce(0, { (result, item) -> UInt in
+                                    result + item
+                                })
+                                let AA = zip(rgb, rgb).map(*).reduce(0, { (result, item) -> UInt in
+                                    result + item
+                                })
+                                let BB = zip(last_rgb, last_rgb).map(*).reduce(0, { (result, item) -> UInt in
+                                    result + item
+                                })
+                                let cos = Double(AB) / sqrt(Double(AA)) / sqrt(Double(BB))
+                                if cos < 0.999 {
+                                    if let last_split_time = self.last_split_time, CMTimeSubtract(CMSampleBufferGetPresentationTimeStamp(sampleBuffer), self.last_split_time!).seconds > 1 {
+                                        DispatchQueue.main.async {
+                                            var timeRangeInAsset: CMTimeRange? = nil
+                                            
+                                            let compositionVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first!
+                                            
+                                            for s in compositionVideoTrack.segments {
+                                                timeRangeInAsset = s.timeMapping.target // assumes non-scaled edit
+                                                
+                                                if !s.isEmpty && timeRangeInAsset!.containsTime(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)) {
+                                                    
+                                                    try! compositionVideoTrack.insertTimeRange(timeRangeInAsset!, of: compositionVideoTrack, at: timeRangeInAsset!.end)
+                                                    
+                                                    try! compositionVideoTrack.removeTimeRange(CMTimeRange(start:CMSampleBufferGetPresentationTimeStamp(sampleBuffer), duration:timeRangeInAsset!.duration - CMTime(value: 1, timescale: 600)))
+                                                    
+                                                    self.backgroundTimelineView.reloadData()
+                                                    
+                                                    break
+                                                }
+                                            }
+                                            
+                                        }
+                                    }
+                                    self.last_split_time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+                                }
+                            }
+                            self.last_rgb = rgb
+                            
+                        }
+                    }
+                }
+                
+            }
+        }
     }
-}
+    
+    
+    func updatePlayer() {
+        if composition == nil {
+            return
+        }
+        
+        videoComposition = AVMutableVideoComposition()
+        videoComposition!.renderSize = CGSize(width: 540, height: 960)
+        videoComposition!.frameDuration = CMTimeMake(value: 1, timescale: 30)
+        
+        let firstVideoTrack = composition!.tracks(withMediaType: .video).first!
+        
+        let secondVideoTrack = composition!.tracks(withMediaType: .video)[1]
+        
+        for segment in firstVideoTrack.segments {
+            let instruction = AVMutableVideoCompositionInstruction()
+            instruction.timeRange = segment.timeMapping.target
+            
+            if segment.isEmpty {
+                let transformer2 = AVMutableVideoCompositionLayerInstruction(assetTrack: secondVideoTrack)
+                transformer2.setTransform(CGAffineTransform.identity.scaledBy(x: videoComposition!.renderSize.width/secondVideoTrack.naturalSize.width, y: videoComposition!.renderSize.height/secondVideoTrack.naturalSize.height), at: instruction.timeRange.start)
+                instruction.layerInstructions = [transformer2]
+            } else {
+                let transformer1 = AVMutableVideoCompositionLayerInstruction(assetTrack: firstVideoTrack)
+                transformer1.setTransform(CGAffineTransform.identity.scaledBy(x: videoComposition!.renderSize.width/firstVideoTrack.naturalSize.width, y: videoComposition!.renderSize.height/firstVideoTrack.naturalSize.height), at: instruction.timeRange.start)
+                instruction.layerInstructions = [transformer1]
+            }
+            
+            videoComposition!.instructions.append(instruction)
+        }
+        
+        if secondVideoTrack.timeRange.end > firstVideoTrack.timeRange.end {
+            let instruction = AVMutableVideoCompositionInstruction()
+            instruction.timeRange = CMTimeRangeMake(start: firstVideoTrack.timeRange.end, duration: secondVideoTrack.timeRange.end)
+            
+            let transformer2 = AVMutableVideoCompositionLayerInstruction(assetTrack: secondVideoTrack)
+            transformer2.setTransform(CGAffineTransform.identity.scaledBy(x: videoComposition!.renderSize.width/secondVideoTrack.naturalSize.width, y: videoComposition!.renderSize.height/secondVideoTrack.naturalSize.height), at: instruction.timeRange.start)
+            
+            instruction.layerInstructions = [transformer2]
+            
+            videoComposition!.instructions.append(instruction)
+        }
+        
+        
+        playerItem = AVPlayerItem(asset: composition!)
+        playerItem!.videoComposition = videoComposition
+        playerItem!.audioMix = audioMix
+        player!.replaceCurrentItem(with: playerItem)
+        
+        currentTime = Double((backgroundTimelineView.contentOffset.x + backgroundTimelineView.frame.width/2) / scaledDurationToWidth)
+        
+        
+        if firstVideoTrack.segments.count != 0 {
+            backgroundTimelineView.isHidden = false
+        } else {
+            backgroundTimelineView.isHidden = true
+        }
+        
+    }
 
-//
-//- (void)awakeFromNib {
-//    [super awakeFromNib];
-//    // Initialization code
-//
-//    self.contentView.frame = [UIScreen mainScreen].bounds;
-//
-//    [self initWithFrame:self.contentView.bounds];
-//    }
-//
-//    - (void)prepareForReuse
-//        {
-//            [super prepareForReuse];
-//            [_topView cancelImageLoading];
-//}
-//
-//-(void)setLiveInfo:(TCLiveInfo *)liveInfo
-//{
-//    [_videoParentView removeAllSubViews];
-//    ReviewStatus reviewStatus = liveInfo.reviewStatus;
-//    switch (reviewStatus) {
-//    case ReviewStatus_Normal:
-//    {
-//        if (liveInfo.userinfo.frontcoverImage) {
-//            [_videoCoverView setImage:liveInfo.userinfo.frontcoverImage];
-//        }else{
-//            [_videoCoverView sd_setImageWithURL:[NSURL URLWithString:[TCUtil transImageURL2HttpsURL:liveInfo.userinfo.frontcover]] placeholderImage:[UIImage imageNamed:@"bg.jpg"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-//                liveInfo.userinfo.frontcoverImage = image;
-//                }];
-//        }
-//        _reviewLabel.text = @"";
-//        _btnChorus.hidden = NO;
-//    }
-//    break;
-//    case ReviewStatus_NotReivew:
-//    {
-//        [_videoCoverView setImage:[UIImage imageNamed:@"bg.jpg"]];
-//        _reviewLabel.text = @"视频未审核";
-//        _btnChorus.hidden = YES;
-//    }
-//    break;
-//    case ReviewStatus_Porn:
-//    {
-//        [_videoCoverView setImage:[UIImage imageNamed:@"bg.jpg"]];
-//        _reviewLabel.text = @"视频涉黄";
-//        _btnChorus.hidden = YES;
-//    }
-//    break;
-//    default:
-//        break;
-//    }
-//
-//    _liveInfo   = liveInfo;
-//    _topView.hostFaceUrl = liveInfo.userinfo.headpic;
-//    _topView.hostNickName = liveInfo.userinfo.nickname;
-//    [_playProgress setValue:0];
-//}
-//
-//-(void)setPlayLabelText:(NSString *)text
-//{
-//    [_playLabel setText:text];
-//}
-//
-//-(void)setPlayProgress:(CGFloat)progress
-//{
-//    [_playProgress setValue:progress];
-//}
-//
-//-(void)setPlayBtnImage:(UIImage *)image
-//{
-//    [_playBtn setImage:image forState:UIControlStateNormal];
-//}
-//
-//
-//-(instancetype)initWithFrame:(CGRect)frame
-//{
-//    self = [super initWithFrame:frame];
-//    if (self) {
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onLogout:) name:logoutNotification object:nil];
-//        UITapGestureRecognizer *tap =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(clickScreen:)];
-//        [self addGestureRecognizer:tap];
-//        [self initUI: NO];
-//    }
-//    return self;
-//    }
-//
-//
-//    - (void)dealloc {
-//        [[NSNotificationCenter defaultCenter] removeObserver:self];
-//        }
-//
-//        - (void)initUI:(BOOL)linkmic {
-//
-//            //topview,展示主播头像，在线人数及点赞
-//            _topView = [[TCShowLiveTopView alloc] initWithFrame:CGRectMake(5, 25, 35, 35)
-//                hostNickName:_liveInfo.userinfo.nickname == nil ? _liveInfo.userid : _liveInfo.userinfo.nickname
-//                hostFaceUrl:_liveInfo.userinfo.headpic];
-//            _topView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
-//            [self addSubview:_topView];
-//
-//            //举报
-//            UIButton *reportBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//            [reportBtn setFrame:CGRectMake(_topView.right + 15, _topView.top + 5, 150, 30)];
-//            [reportBtn setTitle:@"举报/不感兴趣/拉黑" forState:UIControlStateNormal];
-//            reportBtn.titleLabel.font = [UIFont systemFontOfSize:13];
-//            [reportBtn  setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//            [reportBtn setBackgroundColor:[UIColor blackColor]];
-//            [reportBtn addTarget:self action:@selector(onReportClick) forControlEvents:UIControlEventTouchUpInside];
-//            [reportBtn setAlpha:0.7];
-//            reportBtn.layer.cornerRadius = 15;
-//            reportBtn.layer.masksToBounds = YES;
-//            reportBtn.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
-//
-//            [self addSubview:reportBtn];
-//
-//            //合唱
-//            _btnChorus.layer.cornerRadius = _btnChorus.width / 2.0;
-//
-//            [_btnShare setImage:[UIImage imageNamed:@"share_pressed"] forState:UIControlStateHighlighted];
-//
-//            [_playProgress setThumbImage:[UIImage imageNamed:@"slider"] forState:UIControlStateNormal];
-//
-//
-//            _actionSheet1 = [[UIActionSheet alloc] init];
-//            _actionSheet2 = [[UIActionSheet alloc] init];
-//}
-//
-//-(void)onReportClick{
-//    __weak __typeof(self) ws = self;
-//    [_actionSheet1 bk_addButtonWithTitle:@"举报" handler:^{
-//        [ws reportUser];
-//        }];
-//    [_actionSheet1 bk_addButtonWithTitle:@"减少类似作品" handler:^{
-//        [ws confirmReportUser];
-//        [[HUDHelper sharedInstance] tipMessage:@"以后会减少类似作品"];
-//        }];
-//    [_actionSheet1 bk_addButtonWithTitle:@"加入黑名单" handler:^{
-//        [ws confirmReportUser];
-//        [[HUDHelper sharedInstance] tipMessage:@"已加入黑名单"];
-//        }];
-//    [_actionSheet1 bk_setCancelButtonWithTitle:@"取消" handler:nil];
-//    [_actionSheet1 showInView:self];
-//    }
-//
-//    - (void)reportUser{
-//        [_actionSheet1 setHidden:YES];
-//        __weak __typeof(self) ws = self;
-//        _actionSheet2.title = @"请选择分类，分类越准，处理越快。";
-//        [_actionSheet2 bk_addButtonWithTitle:@"违法违规" handler:^{
-//            [ws confirmReportUser];
-//            [[HUDHelper sharedInstance] tipMessage:@"举报成功，我们将在24小时内进行处理"];
-//            }];
-//        [_actionSheet2 bk_addButtonWithTitle:@"色情低俗" handler:^{
-//            [ws confirmReportUser];
-//            [[HUDHelper sharedInstance] tipMessage:@"举报成功，我们将在24小时内进行处理"];
-//            }];
-//        [_actionSheet2 bk_addButtonWithTitle:@"标题党、封面党、骗点击" handler:^{
-//            [ws confirmReportUser];
-//            [[HUDHelper sharedInstance] tipMessage:@"举报成功，我们将在24小时内进行处理"];
-//            }];
-//        [_actionSheet2 bk_addButtonWithTitle:@"未成年人不适当行为" handler:^{
-//            [ws confirmReportUser];
-//            [[HUDHelper sharedInstance] tipMessage:@"举报成功，我们将在24小时内进行处理"];
-//            }];
-//        [_actionSheet2 bk_addButtonWithTitle:@"制售假冒伪劣商品" handler:^{
-//            [ws confirmReportUser];
-//            [[HUDHelper sharedInstance] tipMessage:@"举报成功，我们将在24小时内进行处理"];
-//            }];
-//        [_actionSheet2 bk_addButtonWithTitle:@"滥用作品" handler:^{
-//            [ws confirmReportUser];
-//            [[HUDHelper sharedInstance] tipMessage:@"举报成功，我们将在24小时内进行处理"];
-//            }];
-//        [_actionSheet2 bk_addButtonWithTitle:@"泄漏我的隐私" handler:^{
-//            [ws confirmReportUser];
-//            [[HUDHelper sharedInstance] tipMessage:@"举报成功，我们将在24小时内进行处理"];
-//            }];
-//        [_actionSheet2 bk_setCancelButtonWithTitle:@"取消" handler:^{
-//            [_actionSheet1 showInView:self];
-//            }];
-//        [_actionSheet2 showInView:self];
-//        }
-//
-//        - (void)confirmReportUser{
-//            TCUserInfoData  *userInfoData = [[TCUserInfoModel sharedInstance] getUserProfile];
-//            NSDictionary* params = @{@"userid" : TC_PROTECT_STR(_liveInfo.userid), @"hostuserid" : TC_PROTECT_STR(userInfoData.identifier)};
-//            __weak __typeof(self) weakSelf = self;
-//            [TCUtil asyncSendHttpRequest:@"report_user" token:nil params:params handler:^(int resultCode, NSString *message, NSDictionary *resultDict) {
-//                [weakSelf performSelector:@selector(onLogout:) withObject:nil afterDelay:1];
-//                }];
-//            }
-//
-//            - (IBAction)clickChorus:(UIButton *)button {
-//                if (self.delegate) [self.delegate clickChorus:button];
-//                }
-//
-//                - (IBAction)clickLog:(UIButton *)button {
-//                    if (self.delegate) [self.delegate clickLog:button];
-//                    }
-//
-//                    - (IBAction)clickShare:(UIButton *)button {
-//                        if (self.delegate) [self.delegate clickShare:button];
-//                        }
-//
-//
-//                        // 监听登出消息
-//                        - (void)onLogout:(NSNotification*)notice {
-//                            [[NSNotificationCenter defaultCenter] removeObserver:self];
-//                            [self.delegate closeVC:YES popViewController:YES];
-//}
-//
-//#pragma mark TCPlayDecorateDelegate
-//-(void)closeVC{
-//    if (self.delegate && [self.delegate respondsToSelector:@selector(closeVC:popViewController:)]) {
-//        [[NSNotificationCenter defaultCenter] removeObserver:self];
-//        [self.delegate closeVC:NO popViewController:YES];
-//    }
-//    }
-//
-//    - (IBAction)closeVC2:(id)sender {
-//        [self closeVC];
-//}
-//
-//-(void)clickScreen:(UITapGestureRecognizer *)gestureRecognizer{
-//    if (self.delegate && [self.delegate respondsToSelector:@selector(clickScreen:)]) {
-//        [self.delegate clickScreen:gestureRecognizer];
-//    }
-//    }
-//
-//    - (IBAction)clickPlayVod:(id)sender {
-//        if (self.delegate && [self.delegate respondsToSelector:@selector(clickPlayVod)]) {
-//            [self.delegate clickPlayVod];
-//        }
-//        }
-//
-//        - (IBAction)onSeek:(UISlider *)slider {
-//            if (self.delegate && [self.delegate respondsToSelector:@selector(onSeek:)]) {
-//                [self.delegate onSeek:slider];
-//            }
-//            }
-//
-//
-//            - (IBAction)onSeekBegin:(UISlider *)slider {
-//                if (self.delegate && [self.delegate respondsToSelector:@selector(onSeekBegin:)]) {
-//                    [self.delegate onSeekBegin:slider];
-//                }
-//                }
-//
-//                - (IBAction)onDrag:(UISlider *)slider {
-//                    if (self.delegate && [self.delegate respondsToSelector:@selector(onDrag:)]) {
-//                        [self.delegate onDrag:slider];
-//                    }
-//}
-//
-//
-//#pragma mark - 滑动隐藏界面UI
-//-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-//    UITouch *touch = [[event allTouches] anyObject];
-//    _touchBeginLocation = [touch locationInView:self];
-//}
-//
-//-(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-//    UITouch *touch = [[event allTouches] anyObject];
-//    CGPoint location = [touch locationInView:self];
-//    [self endMove:location.x - _touchBeginLocation.x];
-//}
-//
-//
-//-(void)endMove:(CGFloat)moveX{
-//    [UIView animateWithDuration:0.2 animations:^{
-//        if(moveX > 10){
-//        for (UIView *view in self.subviews) {
-//        if (![view isEqual:_closeButton]) {
-//        CGRect rect = view.frame;
-//        if (rect.origin.x >= 0 && rect.origin.x < SCREEN_WIDTH) {
-//        rect = CGRectOffset(rect, self.width, 0);
-//        view.frame = rect;
-//        [self resetViewAlpha:view];
-//        }
-//        }
-//        }
-//        }else if(moveX < -10){
-//        for (UIView *view in self.subviews) {
-//        if (![view isEqual:_closeButton]) {
-//        CGRect rect = view.frame;
-//        if (rect.origin.x >= SCREEN_WIDTH) {
-//        rect = CGRectOffset(rect, -self.width, 0);
-//        view.frame = rect;
-//        [self resetViewAlpha:view];
-//        }
-//
-//        }
-//        }
-//        }
-//        }];
-//}
-//
-//-(void)resetViewAlpha:(UIView *)view{
-//    CGRect rect = view.frame;
-//    if (rect.origin.x  >= SCREEN_WIDTH || rect.origin.x < 0) {
-//        view.alpha = 0;
-//        _viewsHidden = YES;
-//    }else{
-//        view.alpha = 1;
-//        _viewsHidden = NO;
-//    }
-//    if (view == _cover)
-//    _cover.alpha = 0.5;
-//}
-//
-//@end
-//
-//
-//#import <UIImageView+WebCache.h>
-//#import "UIImage+Additions.h"
-//#import "UIView+CustomAutoLayout.h"
-//
-//@implementation TCShowLiveTopView
-//{
-//    UIImageView          *_hostImage;        // 主播头像
-//
-//    NSInteger            _startTime;
-//
-//    NSString             *_hostNickName;     // 主播昵称
-//    NSString             *_hostFaceUrl;      // 头像地址
-//    }
-//
-//    - (instancetype)initWithFrame:(CGRect)frame hostNickName:(NSString *)hostNickName hostFaceUrl:(NSString *)hostFaceUrl {
-//        if (self = [super initWithFrame: frame]) {
-//            _hostNickName = hostNickName;
-//            _hostFaceUrl = hostFaceUrl;
-//
-//            self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-//            self.layer.cornerRadius = frame.size.height / 2;
-//            self.layer.masksToBounds = YES;
-//            [self initUI];
-//        }
-//        return self;
-//        }
-//
-//        - (void)setHostFaceUrl:(NSString *)hostFaceUrl
-//{
-//    _hostFaceUrl = hostFaceUrl;
-//    [_hostImage sd_setImageWithURL:[NSURL URLWithString:[TCUtil transImageURL2HttpsURL:_hostFaceUrl]] placeholderImage:[UIImage imageNamed:@"default_user"]];
-//    }
-//
-//    - (void)cancelImageLoading
-//        {
-//            [_hostImage sd_setImageWithURL:nil];
-//        }
-//
-//        - (void)initUI {
-//            CGRect imageFrame = self.bounds;
-//            imageFrame.origin.x = 1;
-//            imageFrame.size.height -= 2;
-//            imageFrame.size.width = imageFrame.size.height;
-//            _hostImage = [[UIImageView alloc] initWithFrame:imageFrame];
-//            _hostImage.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-//            _hostImage.layer.cornerRadius = (imageFrame.size.height - 2) / 2;
-//            _hostImage.layer.masksToBounds = YES;
-//            _hostImage.contentMode = UIViewContentModeScaleAspectFill;
-//            [_hostImage sd_setImageWithURL:[NSURL URLWithString:[TCUtil transImageURL2HttpsURL:_hostFaceUrl]] placeholderImage:[UIImage imageNamed:@"default_user"]];
-//            [self addSubview:_hostImage];
-//
-//            // relayout
-//            //    [_hostImage sizeWith:CGSizeMake(33, 33)];
-//            //    [_hostImage layoutParentVerticalCenter];
-//            //    [_hostImage alignParentLeftWithMargin:1];
-//}
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if let player = player, player.rate == 0 {
+            let _timelineView = scrollView as! UICollectionView
+            currentTime = Double((_timelineView.contentOffset.x + _timelineView.frame.width/2) / (_timelineView.frame.width / visibleTimeRange))
+        }
+    }
+    
+    
+    @objc func pan(_ recognizer: UIPanGestureRecognizer) {
+        player!.pause()
+        seekTimer?.invalidate()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let compositionVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first!
+        
+        return CGSize(width: CGFloat(CMTimeGetSeconds((compositionVideoTrack.segments[indexPath.row].timeMapping.target.duration))) * scaledDurationToWidth, height: backgroundTimelineView.frame.height)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        let compositionVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first!
+        
+        assert(self.composition!.tracks(withMediaType: AVMediaType.video).count == 2)
+        
+        return compositionVideoTrack.segments.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let segmentView = collectionView.dequeueReusableCell(withReuseIdentifier: "segment", for: indexPath)
+        segmentView.backgroundColor = #colorLiteral(red: 1, green: 0, blue: 0, alpha: 0)
+        for view in segmentView.subviews {
+            view.removeFromSuperview()
+        }
+        
+        let compositionVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first!
+        
+        let imageGenerator = AVAssetImageGenerator.init(asset: composition!)
+        imageGenerator.maximumSize = CGSize(width: self.backgroundTimelineView.bounds.height * 2, height: self.backgroundTimelineView.bounds.height * 2)
+        imageGenerator.appliesPreferredTrackTransform = true
+        
+        if true {
+            var times = [NSValue]()
+            
+            let timerange = (compositionVideoTrack.segments[indexPath.item].timeMapping.target)
+            
+            // Generate an image at time zero.
+            let incrementTime = CMTime(seconds: Double(backgroundTimelineView.frame.height /  scaledDurationToWidth), preferredTimescale: 600)
+            
+            var iterTime = timerange.start
+            
+            while iterTime <= timerange.end {
+                times.append(iterTime as NSValue)
+                iterTime = CMTimeAdd(iterTime, incrementTime);
+            }
+            
+            // Set a videoComposition on the ImageGenerator if the underlying movie has more than 1 video track.
+            imageGenerator.generateCGImagesAsynchronously(forTimes: times as [NSValue]) { (requestedTime, image, actualTime, result, error) in
+                if (image != nil) {
+                    DispatchQueue.main.async {
+                        let nextX = CGFloat(CMTimeGetSeconds(requestedTime - timerange.start)) * self.scaledDurationToWidth
+                        let nextView = UIImageView.init(frame: CGRect(x: nextX, y: 0.0, width: self.backgroundTimelineView.bounds.height, height: self.backgroundTimelineView.bounds.height))
+                        nextView.contentMode = .scaleAspectFill
+                        nextView.clipsToBounds = true
+                        nextView.image = UIImage.init(cgImage: image!)
+                        segmentView.addSubview(nextView)
+                        
+                        if nextX == 0 {
+                            let whiteline = UIView(frame: CGRect(x:0,y:0,width:1,height:segmentView.bounds.height))
+                            whiteline.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+                            segmentView.addSubview(whiteline)
+                        }
+                    }
+                }
+            }
+        }
+        
+        return segmentView
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let compositionVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first!
+        let segment = compositionVideoTrack.segments[indexPath.item]
+    }
+    
+    @IBAction func tapPlayer(_ sender: Any) {
+        if player!.rate == 0 {
+            // Not playing forward, so play.
+            if currentTime == duration {
+                // At end, so got back to begining.
+                currentTime = 0.0
+            }
+            
+            player!.play()
+            
+            //todo: animate
+            if #available(iOS 10.0, *) {
+                seekTimer?.invalidate()
+                seekTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { (timer) in
+                    self.backgroundTimelineView.contentOffset.x = CGFloat(self.currentTime/Double(self.visibleTimeRange)*Double(self.backgroundTimelineView.frame.width)) - self.backgroundTimelineView.frame.size.width/2
+                })
+            } else {
+                // Fallback on earlier versions
+            }
+        }
+        else {
+            // Playing, so pause.
+            player!.pause()
+            seekTimer?.invalidate()
+        }
+    }
+
+}

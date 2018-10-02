@@ -305,13 +305,6 @@
 		F0365C9A215A54A700726A70 /* AsyncFetcherOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C97215A54A600726A70 /* AsyncFetcherOperation.swift */; };
 		F0365C9C215A7BBE00726A70 /* TCPlayViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C93215A549500726A70 /* TCPlayViewCell.swift */; };
 		F06E4334215CB9EF007E5E77 /* TCVodPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C912158F4DE00726A70 /* TCVodPlayViewController.swift */; };
-		F08756EA21495B36006CF4B6 /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E021495B34006CF4B6 /* EditorViewController.swift */; };
-		F08756EC21495B36006CF4B6 /* SegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E221495B34006CF4B6 /* SegmentView.swift */; };
-		F08756ED21495B36006CF4B6 /* APLCustomVideoCompositor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E421495B35006CF4B6 /* APLCustomVideoCompositor.swift */; };
-		F08756EE21495B36006CF4B6 /* APLCustomVideoCompositionInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E521495B35006CF4B6 /* APLCustomVideoCompositionInstruction.swift */; };
-		F08756EF21495B36006CF4B6 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E621495B35006CF4B6 /* TimelineView.swift */; };
-		F08756F021495B36006CF4B6 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08756E721495B36006CF4B6 /* PlayerView.swift */; };
-		F08756F221495CFF006CF4B6 /* Editor.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F08756F121495CFE006CF4B6 /* Editor.storyboard */; };
 		FE1A138C1D88FE5A00D94B62 /* UserProtocol.html in Resources */ = {isa = PBXBuildFile; fileRef = FE1A138B1D88FE5A00D94B62 /* UserProtocol.html */; };
 /* End PBXBuildFile section */
 
@@ -932,13 +925,6 @@
 		F03AF0362155F4A1007D1E60 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F03AF0382155F4A2007D1E60 /* Assets2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets2.xcassets; sourceTree = "<group>"; };
 		F08756DD21495B31006CF4B6 /* TXXiaoShiPinDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TXXiaoShiPinDemo-Bridging-Header.h"; sourceTree = "<group>"; };
-		F08756E021495B34006CF4B6 /* EditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
-		F08756E221495B34006CF4B6 /* SegmentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentView.swift; sourceTree = "<group>"; };
-		F08756E421495B35006CF4B6 /* APLCustomVideoCompositor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APLCustomVideoCompositor.swift; sourceTree = "<group>"; };
-		F08756E521495B35006CF4B6 /* APLCustomVideoCompositionInstruction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APLCustomVideoCompositionInstruction.swift; sourceTree = "<group>"; };
-		F08756E621495B35006CF4B6 /* TimelineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
-		F08756E721495B36006CF4B6 /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
-		F08756F121495CFE006CF4B6 /* Editor.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Editor.storyboard; sourceTree = "<group>"; };
 		FE1A138B1D88FE5A00D94B62 /* UserProtocol.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = UserProtocol.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1234,12 +1220,6 @@
 				CE93B72D201F4D0800CD89B7 /* TCVideoLoadingController.h */,
 				CE93B72E201F4D0900CD89B7 /* TCVideoLoadingController.m */,
 				CE93B72F201F4D0900CD89B7 /* TCVideoLoadingController.xib */,
-				F08756E321495B35006CF4B6 /* Custom Compositors */,
-				F08756E021495B34006CF4B6 /* EditorViewController.swift */,
-				F08756E721495B36006CF4B6 /* PlayerView.swift */,
-				F08756E221495B34006CF4B6 /* SegmentView.swift */,
-				F08756E621495B35006CF4B6 /* TimelineView.swift */,
-				F08756F121495CFE006CF4B6 /* Editor.storyboard */,
 				CE29EBCE1FE8BE140038C200 /* VideoJoin */,
 			);
 			name = UGCEditor;
@@ -1835,15 +1815,6 @@
 			path = Resource;
 			sourceTree = "<group>";
 		};
-		F08756E321495B35006CF4B6 /* Custom Compositors */ = {
-			isa = PBXGroup;
-			children = (
-				F08756E421495B35006CF4B6 /* APLCustomVideoCompositor.swift */,
-				F08756E521495B35006CF4B6 /* APLCustomVideoCompositionInstruction.swift */,
-			);
-			path = "Custom Compositors";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2148,7 +2119,6 @@
 				CE93B5C7201B044900CD89B7 /* e1 in Resources */,
 				CE89A5D12010A0820005B88B /* fenlie0.png in Resources */,
 				CE93B5F3201B1C7300CD89B7 /* jump_4.png in Resources */,
-				F08756F221495CFF006CF4B6 /* Editor.storyboard in Resources */,
 				CE89A5B12010A0820005B88B /* linghun23.png in Resources */,
 				CEA3F4A9207DB39A00BDE537 /* TXUgcSDK.licence in Resources */,
 				CE89A5C52010A0820005B88B /* donggan1.png in Resources */,
@@ -2391,7 +2361,6 @@
 			files = (
 				F06E4334215CB9EF007E5E77 /* TCVodPlayViewController.swift in Sources */,
 				F0365C9C215A7BBE00726A70 /* TCPlayViewCell.swift in Sources */,
-				F08756EA21495B36006CF4B6 /* EditorViewController.swift in Sources */,
 				CE870ED020B4122B0012EF30 /* TransitionView.m in Sources */,
 				91BFE82B1EB866E0008EB95C /* TCUserInfoViewController.m in Sources */,
 				CE0BE03C1FFB27F900DEBA5C /* NSString+Common.m in Sources */,
@@ -2400,7 +2369,6 @@
 				CE0BE0351FFB27F900DEBA5C /* NSObject+CommonBlock.m in Sources */,
 				F0365C98215A54A700726A70 /* AsyncFetcher.swift in Sources */,
 				91BFE82A1EB866E0008EB95C /* TCUserInfoCell.m in Sources */,
-				F08756EE21495B36006CF4B6 /* APLCustomVideoCompositionInstruction.swift in Sources */,
 				CE1C230E2080D3990002FF8C /* TXUGCPublishUtil.m in Sources */,
 				CE29EBC61FE8BDFB0038C200 /* VideoTextFiled.m in Sources */,
 				F0365C99215A54A700726A70 /* DisplayData.swift in Sources */,
@@ -2410,7 +2378,6 @@
 				91BFE7B91EB86379008EB95C /* TCUserAgreementController.m in Sources */,
 				91BFE79F1EB86288008EB95C /* AppDelegate.m in Sources */,
 				CE1C230F2080D3990002FF8C /* TVCReport.m in Sources */,
-				F08756EC21495B36006CF4B6 /* SegmentView.swift in Sources */,
 				CE29EBCB1FE8BDFB0038C200 /* EffectSelectView.m in Sources */,
 				CE29EBCD1FE8BDFB0038C200 /* BottomTabBar.m in Sources */,
 				CE0BE0401FFB27F900DEBA5C /* UIView+Additions.m in Sources */,
@@ -2424,7 +2391,6 @@
 				CE0BE03E1FFB27F900DEBA5C /* HUDHelper.m in Sources */,
 				91BFE7C41EB863AF008EB95C /* TCLiveListModel.m in Sources */,
 				91B45A501E8CE2010058E8F6 /* UIImage+MCImage.m in Sources */,
-				F08756ED21495B36006CF4B6 /* APLCustomVideoCompositor.swift in Sources */,
 				CE29EBDD1FE8BE140038C200 /* TCVideoJoinCell.m in Sources */,
 				CE29EBCC1FE8BDFB0038C200 /* VideoPreview.m in Sources */,
 				CE29EBC71FE8BDFB0038C200 /* VideoCutView.m in Sources */,
@@ -2436,7 +2402,6 @@
 				CE29EBA91FE8BCA10038C200 /* TCBGMCell.m in Sources */,
 				91BFE8361EB86BE0008EB95C /* UIPlaceHolderTextView.m in Sources */,
 				CE1C23142080D3990002FF8C /* TVCClientInner.m in Sources */,
-				F08756EF21495B36006CF4B6 /* TimelineView.swift in Sources */,
 				91BFE8061EB8657E008EB95C /* TCVideoPublishController.m in Sources */,
 				CE1C230C2080D3990002FF8C /* TVCUtils.m in Sources */,
 				CE29EBD81FE8BE140038C200 /* TCVideoJoinViewController.m in Sources */,
@@ -2461,7 +2426,6 @@
 				CE29EBA71FE8BCA10038C200 /* TCBGMHelper.m in Sources */,
 				F032238E21540F0500533AA3 /* TCLiveListCell.m in Sources */,
 				91BFE8291EB866E0008EB95C /* TCEditUserInfoViewController.m in Sources */,
-				F08756F021495B36006CF4B6 /* PlayerView.swift in Sources */,
 				CE0BE0361FFB27F900DEBA5C /* TCUploadHelper.m in Sources */,
 				91B45A531E8CE2010058E8F6 /* MCCameraDynamicView.m in Sources */,
 				91BFE7AE1EB862DF008EB95C /* TCLoginViewController.m in Sources */,
@@ -2660,7 +2624,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "TXXiaoShiPinDemo/TXXiaoShiPinDemo-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/TXXiaoShiPinDemo/Framework/QCloudUploadSDK/Headers";
 			};
@@ -2853,7 +2817,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "TXXiaoShiPinDemo/TXXiaoShiPinDemo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/TXXiaoShiPinDemo/Framework/QCloudUploadSDK/Headers";
 			};
@@ -2918,7 +2882,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "TXXiaoShiPinDemo/TXXiaoShiPinDemo-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/TXXiaoShiPinDemo/Framework/QCloudUploadSDK/Headers";
 			};
