@@ -191,7 +191,7 @@
         return [documentDirectoryURL URLByAppendingPathComponent:[response suggestedFilename]];
     } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            completeHandler([response suggestedFilename]);
+            completeHandler(filePath.path);
         });
     }];
     

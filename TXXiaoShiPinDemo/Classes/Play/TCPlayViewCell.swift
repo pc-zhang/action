@@ -111,7 +111,11 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
             _ = composition!.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)
         }
         
-        self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(TCPlayViewCell.tapPlayer(_:))))
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        videoParentView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(TCPlayViewCell.tapPlayer(_:))))
     }
     
     @IBAction func clickChorus(_ button: UIButton) {
@@ -137,13 +141,13 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
     func onloadVideoComplete(_ videoPath:String) {
         player?.pause()
         hud?.hide(animated: true)
-        addClip(try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(videoPath))
+        self.delegate?.onloadVideoComplete(videoPath)
+//        addClip(try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(videoPath))
     }
     
     // MARK: Properties
     var delegate:TCPlayDecorateDelegate?
 
-    @IBOutlet weak var videoCoverView: UIImageView!
     @IBOutlet weak var videoParentView: UIView!
     
     func setLiveInfo(liveInfo: TCLiveInfo) {
@@ -483,6 +487,7 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let compositionVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first!
         let segment = compositionVideoTrack.segments[indexPath.item]
+        self.delegate?.onloadVideoComplete("")
     }
 
     

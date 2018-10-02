@@ -51,10 +51,6 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="729"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jKT-hi-qH9">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="729"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </imageView>
                                                 <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="ALu-yD-d7T">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="729"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -107,16 +103,12 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="ALu-yD-d7T" secondAttribute="trailing" id="5W7-Ji-qrC"/>
-                                                <constraint firstItem="jKT-hi-qH9" firstAttribute="width" secondItem="ALu-yD-d7T" secondAttribute="width" id="8KQ-7g-2Zz"/>
-                                                <constraint firstItem="jKT-hi-qH9" firstAttribute="centerY" secondItem="ALu-yD-d7T" secondAttribute="centerY" id="OqB-g7-BnK"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="rsd-8o-2bt" secondAttribute="trailing" id="PoP-zl-dJk"/>
                                                 <constraint firstItem="fyc-V7-8D2" firstAttribute="top" secondItem="rsd-8o-2bt" secondAttribute="bottom" id="TfW-Qj-FMs"/>
-                                                <constraint firstItem="jKT-hi-qH9" firstAttribute="centerX" secondItem="ALu-yD-d7T" secondAttribute="centerX" id="eSP-Am-L8E"/>
                                                 <constraint firstAttribute="bottom" secondItem="fyc-V7-8D2" secondAttribute="bottom" constant="100" id="ilU-JJ-McJ"/>
                                                 <constraint firstItem="fyc-V7-8D2" firstAttribute="centerX" secondItem="ALu-yD-d7T" secondAttribute="centerX" id="inu-7C-WHo"/>
                                                 <constraint firstItem="ALu-yD-d7T" firstAttribute="leading" secondItem="Rfw-uL-Vsq" secondAttribute="leading" id="jz1-PE-yyN"/>
                                                 <constraint firstItem="fyc-V7-8D2" firstAttribute="width" secondItem="ALu-yD-d7T" secondAttribute="width" id="m6Z-Js-u9b"/>
-                                                <constraint firstItem="jKT-hi-qH9" firstAttribute="height" secondItem="ALu-yD-d7T" secondAttribute="height" id="tAq-Qc-KYE"/>
                                                 <constraint firstAttribute="bottom" secondItem="ALu-yD-d7T" secondAttribute="bottom" id="ukA-7m-ExD"/>
                                                 <constraint firstItem="ALu-yD-d7T" firstAttribute="top" secondItem="Rfw-uL-Vsq" secondAttribute="top" id="zwk-nf-TFO"/>
                                             </constraints>
@@ -124,7 +116,6 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="backgroundTimelineView" destination="fyc-V7-8D2" id="Fcy-VJ-XXL"/>
-                                            <outlet property="videoCoverView" destination="jKT-hi-qH9" id="Xn7-J2-5Sj"/>
                                             <outlet property="videoParentView" destination="ALu-yD-d7T" id="P6W-uG-DAW"/>
                                         </connections>
                                     </tableViewCell>
@@ -135,10 +126,6 @@
                                     <outlet property="prefetchDataSource" destination="TL7-xW-1fW" id="Yhn-fb-VcG"/>
                                 </connections>
                             </tableView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="top" translatesAutoresizingMaskIntoConstraints="NO" id="Fcu-Ud-jJ6">
-                                <rect key="frame" x="116" y="44" width="243" height="55"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -300,7 +287,6 @@
         <image name="explore_item" width="25" height="25"/>
         <image name="main_item" width="29" height="25"/>
         <image name="message_item" width="20" height="25"/>
-        <image name="top" width="777" height="71"/>
         <image name="user_item" width="26" height="25"/>
     </resources>
 </document>
