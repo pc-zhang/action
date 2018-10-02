@@ -17,7 +17,7 @@ public protocol TCPlayDecorateDelegate : NSObjectProtocol {
 }
 
 
-final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
+final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     var playUrl: String?
     var hud: MBProgressHUD?
@@ -69,8 +69,6 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
     
     @IBOutlet weak var backgroundTimelineView: UICollectionView! {
         didSet {
-            backgroundTimelineView.delegate = self
-            backgroundTimelineView.dataSource = self
             backgroundTimelineView.contentOffset = CGPoint(x:-backgroundTimelineView.frame.width / 2, y:0)
             backgroundTimelineView.contentInset = UIEdgeInsets(top: 0, left: backgroundTimelineView.frame.width/2, bottom: 0, right: backgroundTimelineView.frame.width/2)
             backgroundTimelineView.panGestureRecognizer.addTarget(self, action: #selector(TCPlayViewCell.pan))
@@ -112,6 +110,8 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
             
             _ = composition!.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)
         }
+        
+        self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(TCPlayViewCell.tapPlayer(_:))))
     }
     
     @IBAction func clickChorus(_ button: UIButton) {
@@ -159,14 +159,6 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
     var representedId: UUID?
 
     // MARK: UICollectionViewCell
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-
-        layer.borderWidth = 0
-        layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
-    }
-    
     
     func addClip(_ movieURL: URL) {
         let newAsset = AVURLAsset(url: movieURL, options: nil)
@@ -414,7 +406,7 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
     }
     
     
-    @objc func pan(_ recognizer: UIPanGestureRecognizer) {
+    @IBAction func pan(_ recognizer: UIPanGestureRecognizer) {
         player!.pause()
         seekTimer?.invalidate()
     }
@@ -492,6 +484,7 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
         let compositionVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first!
         let segment = compositionVideoTrack.segments[indexPath.item]
     }
+
     
     @IBAction func tapPlayer(_ sender: Any) {
         if player!.rate == 0 {
