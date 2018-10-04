@@ -234,7 +234,9 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                 
                 
                 // update timeline
+                let currentTime = self.player.currentTime()
                 self.updatePlayer()
+                self.currentTime = currentTime.seconds
                 self.backgroundTimelineView.reloadData()
                 
                 DispatchQueue.global(qos: .background).async {
