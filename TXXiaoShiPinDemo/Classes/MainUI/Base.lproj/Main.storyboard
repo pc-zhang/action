@@ -52,7 +52,55 @@
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x32-lw-Q4i" customClass="PreviewView" customModule="TXXiaoShiPinDemo" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                                                    <subviews>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sud-CG-tzY" userLabel="Record">
+                                                            <rect key="frame" x="10" y="391" width="80" height="30"/>
+                                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="30" id="CYf-mS-A62"/>
+                                                                <constraint firstAttribute="width" constant="80" id="Kas-Ay-c5j"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                            <state key="normal" title="Record">
+                                                                <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            </state>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                    <integer key="value" value="4"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                            <connections>
+                                                                <action selector="toggleMovieRecording:" destination="sHr-nB-1d0" eventType="touchUpInside" id="3yA-T0-2lz"/>
+                                                            </connections>
+                                                        </button>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fst-Y3-LCx" userLabel="Camera">
+                                                            <rect key="frame" x="285" y="391" width="80" height="30"/>
+                                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="80" id="B9N-wP-Lb7"/>
+                                                                <constraint firstAttribute="height" constant="30" id="rBi-Dk-X8r"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                            <state key="normal" title="Camera">
+                                                                <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            </state>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                    <integer key="value" value="4"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                            <connections>
+                                                                <action selector="changeCamera:" destination="sHr-nB-1d0" eventType="touchUpInside" id="e5o-4n-QYm"/>
+                                                            </connections>
+                                                        </button>
+                                                    </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="Fst-Y3-LCx" secondAttribute="trailing" constant="10" id="CZS-5U-XiR"/>
+                                                        <constraint firstItem="sud-CG-tzY" firstAttribute="centerY" secondItem="x32-lw-Q4i" secondAttribute="centerY" id="iu8-5I-Ws6"/>
+                                                        <constraint firstItem="sud-CG-tzY" firstAttribute="leading" secondItem="x32-lw-Q4i" secondAttribute="leading" constant="10" id="ypp-By-t3X"/>
+                                                        <constraint firstItem="Fst-Y3-LCx" firstAttribute="centerY" secondItem="x32-lw-Q4i" secondAttribute="centerY" id="z7f-gG-jf2"/>
+                                                    </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jwe-k0-pjt" customClass="PlayerView" customModule="TXXiaoShiPinDemo" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
@@ -122,9 +170,11 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="backgroundTimelineView" destination="fyc-V7-8D2" id="Fcy-VJ-XXL"/>
+                                            <outlet property="cameraButton" destination="Fst-Y3-LCx" id="yeV-7v-cfu"/>
                                             <outlet property="chorus" destination="rsd-8o-2bt" id="DA7-08-C3k"/>
                                             <outlet property="playerView" destination="jwe-k0-pjt" id="NjZ-tQ-nhI"/>
                                             <outlet property="previewView" destination="x32-lw-Q4i" id="fFD-l4-6Jh"/>
+                                            <outlet property="recordButton" destination="sud-CG-tzY" id="pHj-DT-qnO"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
