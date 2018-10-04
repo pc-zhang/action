@@ -3,7 +3,6 @@
 #import <UShareUI/UMSocialUIManager.h>
 #import "NSString+Common.h"
 #import "TCUserInfoModel.h"
-#import "TCVideoRecordViewController.h"
 #import "SDKHeader.h"
 #import "TXUGCPublish.h"
 #import "TCLoginModel.h"

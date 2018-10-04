@@ -14,7 +14,6 @@
 #import "HUDHelper.h"
 #import <UShareUI/UMSocialUIManager.h>
 #import <UMSocialCore/UMSocialCore.h>
-#import "TCVideoRecordViewController.h"
 #import <mach/mach.h>
 #import "TCBaseAppDelegate.h"
 #import <Accelerate/Accelerate.h>
@@ -30,3 +29,4 @@
 #import "AppDelegate.h"
 #import "TCUtil.h"
 #import "TCNavigationController.h"
+#import <TXLiteAVSDK_UGC_IJK/TXVideoEditer.h>

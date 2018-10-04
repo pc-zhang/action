@@ -10,7 +10,7 @@ import UIKit
 
 let kTCLivePlayError: String = "kTCLivePlayError"
 
-class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITableViewDataSourcePrefetching, TCPlayDecorateDelegate {
+class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITableViewDataSourcePrefetching {
     
     var liveListMgr: TCLiveListMgr?
     var isLoading: Bool = false
@@ -148,7 +148,6 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
             fatalError("Expected `\(TCPlayViewCell.self)` type for reuseIdentifier \(TCPlayViewCell.reuseIdentifier). Check the configuration in Main.storyboard.")
         }
         
-        cell.delegate = self
         
         if indexPath.row < self.lives.count {
             cell.setLiveInfo(liveInfo: self.lives[indexPath.row])
@@ -258,12 +257,6 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         })
     }
     
-    func onloadVideoComplete(_ videoPath:String) {
-        let videoRecord = TCVideoRecordViewController()
-        videoRecord.videoPath = videoPath
-        let nav = TCNavigationController(rootViewController: videoRecord)
-        self.present(nav, animated:true, completion:nil)
-    }
 }
 
 

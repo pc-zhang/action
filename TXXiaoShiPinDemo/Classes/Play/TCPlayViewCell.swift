@@ -12,17 +12,26 @@ import MobileCoreServices
 import Accelerate
 
 
-public protocol TCPlayDecorateDelegate : NSObjectProtocol {
-    func onloadVideoComplete(_ videoPath:String)
-}
-
-
 final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     var playUrl: String?
-    var hud: MBProgressHUD?
     var last_rgb: [UInt]? = nil
     var last_split_time: CMTime? = nil
+    var downloadProcess: CGFloat = 0 {
+        didSet {
+            if downloadProcess != 0 {
+                self.downloadProgressLayer?.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
+                self.downloadProgressLayer?.path = CGPath(rect: bounds, transform: nil)
+                self.downloadProgressLayer?.borderWidth = 0
+                self.downloadProgressLayer?.lineWidth = 10
+                self.downloadProgressLayer?.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+                self.downloadProgressLayer?.strokeStart = 0
+                self.downloadProgressLayer?.strokeEnd = downloadProcess
+            } else {
+                self.downloadProgressLayer?.path = nil
+            }
+        }
+    }
     
     var seekTimer: Timer? = nil
     var visibleTimeRange: CGFloat = 15
@@ -96,6 +105,9 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        
+        downloadProcess = 0
+        
         NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.player?.currentItem, queue: .main) { _ in
             self.player?.seek(to: CMTime.zero)
             self.player?.play()
@@ -113,18 +125,20 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
         
     }
     
+    var downloadProgressLayer: CAShapeLayer?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         videoParentView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(TCPlayViewCell.tapPlayer(_:))))
+        downloadProgressLayer = CAShapeLayer()
+        downloadProgressLayer!.frame = layer.bounds
+        downloadProgressLayer!.position = CGPoint(x:bounds.width/2, y:bounds.height/2)
+        self.layer.addSublayer(downloadProgressLayer!)
     }
     
     @IBAction func clickChorus(_ button: UIButton) {
         
         TCUtil.report(xiaoshipin_videochorus, userName: nil, code: 0, msg: "合唱事件")
-        
-        hud = MBProgressHUD.showAdded(to: self.contentView, animated: true)
-        hud?.mode = MBProgressHUDMode.text
-        hud?.label.text = "正在加载视频..."
         
         TCUtil.downloadVideo(playUrl, process: { (process) in
             self.onloadVideoProcess(process: process)
@@ -135,18 +149,16 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
     
     
     func onloadVideoProcess(process:CGFloat) {
-        hud?.label.text = String(format: "正在加载视频%d%%", (Int)(process * 100))
+        self.downloadProcess = process/2
     }
     
     func onloadVideoComplete(_ videoPath:String) {
         player?.pause()
-        hud?.hide(animated: true)
-        self.delegate?.onloadVideoComplete(videoPath)
-//        addClip(try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(videoPath))
+        addClip(try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(videoPath))
     }
     
+    
     // MARK: Properties
-    var delegate:TCPlayDecorateDelegate?
 
     @IBOutlet weak var videoParentView: UIView!
     
@@ -233,106 +245,109 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                 
                 // update timeline
                 self.updatePlayer()
-                
-                self.backgroundTimelineView.reloadData()
-
-                var videoTrackOutput : AVAssetReaderTrackOutput?
-                var avAssetReader = try?AVAssetReader(asset: self.composition!)
-                
-                if let videoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first {
-                    videoTrackOutput = AVAssetReaderTrackOutput.init(track: videoTrack, outputSettings: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange])
-                    avAssetReader?.add(videoTrackOutput!)
-                }
-                
-                avAssetReader?.startReading()
-                
-                while avAssetReader?.status == .reading {
-                    //视频
-                    if let sampleBuffer = videoTrackOutput?.copyNextSampleBuffer() {
-                        
-                        if let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-                        {
-                            
-                            var buffer = vImage_Buffer()
-                            buffer.data = CVPixelBufferGetBaseAddress(pixelBuffer)
-                            buffer.rowBytes = CVPixelBufferGetBytesPerRow(pixelBuffer)
-                            buffer.width = vImagePixelCount(CVPixelBufferGetWidth(pixelBuffer))
-                            buffer.height = vImagePixelCount(CVPixelBufferGetHeight(pixelBuffer))
-                            
-                            let bitmapInfo = CGBitmapInfo(rawValue: CGImageByteOrderInfo.orderMask.rawValue | CGImageAlphaInfo.last.rawValue)
-                            
-                            var cgFormat = vImage_CGImageFormat(bitsPerComponent: 8,
-                                                                bitsPerPixel: 32,
-                                                                colorSpace: nil,
-                                                                bitmapInfo: bitmapInfo,
-                                                                version: 0,
-                                                                decode: nil,
-                                                                renderingIntent: .defaultIntent)
-                            
-                            
-                            let error = vImageBuffer_InitWithCVPixelBuffer(&buffer, &cgFormat, pixelBuffer, nil, nil, vImage_Flags(kvImageNoFlags))
-                            assert(kvImageNoError == error)
-                            
-                            let alpha = [UInt](repeating: 0, count: 256)
-                            let red = [UInt](repeating: 0, count: 256)
-                            let green = [UInt](repeating: 0, count: 256)
-                            let blue = [UInt](repeating: 0, count: 256)
-                            
-                            let alphaPtr = UnsafeMutablePointer<vImagePixelCount>(mutating: alpha) as UnsafeMutablePointer<vImagePixelCount>?
-                            let redPtr = UnsafeMutablePointer<vImagePixelCount>(mutating: red) as UnsafeMutablePointer<vImagePixelCount>?
-                            let greenPtr = UnsafeMutablePointer<vImagePixelCount>(mutating: green) as UnsafeMutablePointer<vImagePixelCount>?
-                            let bluePtr = UnsafeMutablePointer<vImagePixelCount>(mutating: blue) as UnsafeMutablePointer<vImagePixelCount>?
-                            
-                            let rgba = [redPtr, greenPtr, bluePtr, alphaPtr]
-                            
-                            
-                            let histogram = UnsafeMutablePointer<UnsafeMutablePointer<vImagePixelCount>?>(mutating: rgba)
-                            let err2 = vImageHistogramCalculation_ARGB8888(&buffer, histogram, UInt32(kvImageNoFlags))
-                            assert(kvImageNoError == err2)
-                            free(buffer.data)
-                            
-                            
-                            let rgb = red + green + blue
-                            if let last_rgb = self.last_rgb {
-                                let AB = zip(rgb, last_rgb).map(*).reduce(0, { (result, item) -> UInt in
-                                    result + item
-                                })
-                                let AA = zip(rgb, rgb).map(*).reduce(0, { (result, item) -> UInt in
-                                    result + item
-                                })
-                                let BB = zip(last_rgb, last_rgb).map(*).reduce(0, { (result, item) -> UInt in
-                                    result + item
-                                })
-                                let cos = Double(AB) / sqrt(Double(AA)) / sqrt(Double(BB))
-                                if cos < 0.999 {
-                                    if let last_split_time = self.last_split_time, CMTimeSubtract(CMSampleBufferGetPresentationTimeStamp(sampleBuffer), self.last_split_time!).seconds > 1 {
-                                        DispatchQueue.main.async {
-                                            var timeRangeInAsset: CMTimeRange? = nil
-                                            
-                                            let compositionVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first!
-                                            
-                                            for s in compositionVideoTrack.segments {
-                                                timeRangeInAsset = s.timeMapping.target // assumes non-scaled edit
-                                                
-                                                if !s.isEmpty && timeRangeInAsset!.containsTime(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)) {
-                                                    
-                                                    try! compositionVideoTrack.insertTimeRange(timeRangeInAsset!, of: compositionVideoTrack, at: timeRangeInAsset!.end)
-                                                    
-                                                    try! compositionVideoTrack.removeTimeRange(CMTimeRange(start:CMSampleBufferGetPresentationTimeStamp(sampleBuffer), duration:timeRangeInAsset!.duration - CMTime(value: 1, timescale: 600)))
-                                                    
-                                                    self.backgroundTimelineView.reloadData()
-                                                    
-                                                    break
-                                                }
-                                            }
-                                            
-                                        }
-                                    }
-                                    self.last_split_time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-                                }
+                                
+                DispatchQueue.global(qos: .background).async {
+                    var videoTrackOutput : AVAssetReaderTrackOutput?
+                    var avAssetReader = try?AVAssetReader(asset: self.composition!)
+                    
+                    if let videoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first {
+                        videoTrackOutput = AVAssetReaderTrackOutput.init(track: videoTrack, outputSettings: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange])
+                        avAssetReader?.add(videoTrackOutput!)
+                    }
+                    
+                    avAssetReader?.startReading()
+                    
+                    while avAssetReader?.status == .reading {
+                        //视频
+                        if let sampleBuffer = videoTrackOutput?.copyNextSampleBuffer() {
+                            DispatchQueue.main.async {
+                                self.downloadProcess = 0.5 + CGFloat(CMSampleBufferGetPresentationTimeStamp(sampleBuffer).seconds / self.composition!.duration.seconds)
                             }
-                            self.last_rgb = rgb
                             
+                            if let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+                            {
+                                
+                                var buffer = vImage_Buffer()
+                                buffer.data = CVPixelBufferGetBaseAddress(pixelBuffer)
+                                buffer.rowBytes = CVPixelBufferGetBytesPerRow(pixelBuffer)
+                                buffer.width = vImagePixelCount(CVPixelBufferGetWidth(pixelBuffer))
+                                buffer.height = vImagePixelCount(CVPixelBufferGetHeight(pixelBuffer))
+                                
+                                let bitmapInfo = CGBitmapInfo(rawValue: CGImageByteOrderInfo.orderMask.rawValue | CGImageAlphaInfo.last.rawValue)
+                                
+                                var cgFormat = vImage_CGImageFormat(bitsPerComponent: 8,
+                                                                    bitsPerPixel: 32,
+                                                                    colorSpace: nil,
+                                                                    bitmapInfo: bitmapInfo,
+                                                                    version: 0,
+                                                                    decode: nil,
+                                                                    renderingIntent: .defaultIntent)
+                                
+                                
+                                let error = vImageBuffer_InitWithCVPixelBuffer(&buffer, &cgFormat, pixelBuffer, nil, nil, vImage_Flags(kvImageNoFlags))
+                                assert(kvImageNoError == error)
+                                
+                                let alpha = [UInt](repeating: 0, count: 256)
+                                let red = [UInt](repeating: 0, count: 256)
+                                let green = [UInt](repeating: 0, count: 256)
+                                let blue = [UInt](repeating: 0, count: 256)
+                                
+                                let alphaPtr = UnsafeMutablePointer<vImagePixelCount>(mutating: alpha) as UnsafeMutablePointer<vImagePixelCount>?
+                                let redPtr = UnsafeMutablePointer<vImagePixelCount>(mutating: red) as UnsafeMutablePointer<vImagePixelCount>?
+                                let greenPtr = UnsafeMutablePointer<vImagePixelCount>(mutating: green) as UnsafeMutablePointer<vImagePixelCount>?
+                                let bluePtr = UnsafeMutablePointer<vImagePixelCount>(mutating: blue) as UnsafeMutablePointer<vImagePixelCount>?
+                                
+                                let rgba = [redPtr, greenPtr, bluePtr, alphaPtr]
+                                
+                                
+                                let histogram = UnsafeMutablePointer<UnsafeMutablePointer<vImagePixelCount>?>(mutating: rgba)
+                                let err2 = vImageHistogramCalculation_ARGB8888(&buffer, histogram, UInt32(kvImageNoFlags))
+                                assert(kvImageNoError == err2)
+                                free(buffer.data)
+                                
+                                
+                                let rgb = red + green + blue
+                                if let last_rgb = self.last_rgb {
+                                    let AB = zip(rgb, last_rgb).map(*).reduce(0, { (result, item) -> UInt in
+                                        result + item
+                                    })
+                                    let AA = zip(rgb, rgb).map(*).reduce(0, { (result, item) -> UInt in
+                                        result + item
+                                    })
+                                    let BB = zip(last_rgb, last_rgb).map(*).reduce(0, { (result, item) -> UInt in
+                                        result + item
+                                    })
+                                    let cos = Double(AB) / sqrt(Double(AA)) / sqrt(Double(BB))
+                                    if cos < 0.999 {
+                                        if let last_split_time = self.last_split_time, CMTimeSubtract(CMSampleBufferGetPresentationTimeStamp(sampleBuffer), self.last_split_time!).seconds > 1 {
+                                            DispatchQueue.main.async {
+                                                var timeRangeInAsset: CMTimeRange? = nil
+                                                
+                                                let compositionVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first!
+                                                
+                                                for s in compositionVideoTrack.segments {
+                                                    timeRangeInAsset = s.timeMapping.target // assumes non-scaled edit
+                                                    
+                                                    if !s.isEmpty && timeRangeInAsset!.containsTime(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)) {
+                                                        
+                                                        try! compositionVideoTrack.insertTimeRange(timeRangeInAsset!, of: compositionVideoTrack, at: timeRangeInAsset!.end)
+                                                        
+                                                        try! compositionVideoTrack.removeTimeRange(CMTimeRange(start:CMSampleBufferGetPresentationTimeStamp(sampleBuffer), duration:timeRangeInAsset!.duration - CMTime(value: 1, timescale: 600)))
+                                                        
+                                                        self.backgroundTimelineView.reloadData()
+                                                        
+                                                        break
+                                                    }
+                                                }
+                                                
+                                            }
+                                        }
+                                        self.last_split_time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+                                    }
+                                }
+                                self.last_rgb = rgb
+                                
+                            }
                         }
                     }
                 }
@@ -487,7 +502,6 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let compositionVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first!
         let segment = compositionVideoTrack.segments[indexPath.item]
-        self.delegate?.onloadVideoComplete("")
     }
 
     

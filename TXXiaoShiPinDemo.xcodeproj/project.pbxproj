@@ -50,7 +50,6 @@
 		91BFE7B11EB862DF008EB95C /* TCRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7AB1EB862DF008EB95C /* TCRegisterViewController.m */; };
 		91BFE7B91EB86379008EB95C /* TCUserAgreementController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7B71EB86379008EB95C /* TCUserAgreementController.m */; };
 		91BFE7C41EB863AF008EB95C /* TCLiveListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE7BF1EB863AF008EB95C /* TCLiveListModel.m */; };
-		91BFE8031EB86543008EB95C /* TCVideoRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE8001EB86543008EB95C /* TCVideoRecordViewController.m */; };
 		91BFE8061EB8657E008EB95C /* TCVideoPublishController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE8051EB8657E008EB95C /* TCVideoPublishController.m */; };
 		91BFE81D1EB8669F008EB95C /* TCVideoEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE8171EB8669F008EB95C /* TCVideoEditViewController.m */; };
 		91BFE8291EB866E0008EB95C /* TCEditUserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91BFE8221EB866E0008EB95C /* TCEditUserInfoViewController.m */; };
@@ -132,7 +131,6 @@
 		CE2CAE2C1F97A0CB0040ED54 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE2CAE141F97A0CA0040ED54 /* VideoToolbox.framework */; };
 		CE2CAE2E1F97A0CB0040ED54 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE2CAE161F97A0CA0040ED54 /* Accelerate.framework */; };
 		CE2CAE301F97A0CB0040ED54 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE2CAE181F97A0CB0040ED54 /* CoreTelephony.framework */; };
-		CE357FB81F9D8977006DD088 /* TCVideoRecordProcessView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE357FB61F9D8977006DD088 /* TCVideoRecordProcessView.m */; };
 		CE3F3C7320FED8F700CE9374 /* TXLiteAVSDK_UGC_IJK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE3F3C7220FED8F700CE9374 /* TXLiteAVSDK_UGC_IJK.framework */; };
 		CE4827351FDA6CCE009C5862 /* Paster.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CE4827321FDA6CCD009C5862 /* Paster.bundle */; };
 		CE4827361FDA6CCE009C5862 /* bubbleText.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CE4827331FDA6CCE009C5862 /* bubbleText.bundle */; };
@@ -235,8 +233,6 @@
 		CE89A5DF2010A0820005B88B /* fenlie9.png in Resources */ = {isa = PBXBuildFile; fileRef = CE89A57F2010A0810005B88B /* fenlie9.png */; };
 		CE89A5E02010A0820005B88B /* fenlie19.png in Resources */ = {isa = PBXBuildFile; fileRef = CE89A5802010A0810005B88B /* fenlie19.png */; };
 		CE89A5E12010A0820005B88B /* fenlie18.png in Resources */ = {isa = PBXBuildFile; fileRef = CE89A5812010A0810005B88B /* fenlie18.png */; };
-		CE93B550201959A000CD89B7 /* BeautySettingPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = CE93B54F201959A000CD89B7 /* BeautySettingPanel.m */; };
-		CE93B55720196B5400CD89B7 /* TextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE93B55520196B5300CD89B7 /* TextCell.m */; };
 		CE93B5BC201B044900CD89B7 /* ufa.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CE93B5AC201B044800CD89B7 /* ufa.bundle */; };
 		CE93B5BD201B044900CD89B7 /* FilterEngine.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CE93B5AD201B044800CD89B7 /* FilterEngine.bundle */; };
 		CE93B5BE201B044900CD89B7 /* RPNSegmenter.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CE93B5AE201B044800CD89B7 /* RPNSegmenter.bundle */; };
@@ -585,8 +581,6 @@
 		91BFE7BF1EB863AF008EB95C /* TCLiveListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCLiveListModel.m; path = TXXiaoShiPinDemo/Classes/List/TCLiveListModel.m; sourceTree = SOURCE_ROOT; };
 		91BFE7C01EB863AF008EB95C /* TCLiveListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCLiveListViewController.h; path = TXXiaoShiPinDemo/Classes/List/TCLiveListViewController.h; sourceTree = SOURCE_ROOT; };
 		91BFE7C11EB863AF008EB95C /* TCLiveListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCLiveListViewController.m; path = TXXiaoShiPinDemo/Classes/List/TCLiveListViewController.m; sourceTree = SOURCE_ROOT; };
-		91BFE7FF1EB86543008EB95C /* TCVideoRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCVideoRecordViewController.h; path = TXXiaoShiPinDemo/Classes/UGCRecord/TCVideoRecordViewController.h; sourceTree = SOURCE_ROOT; };
-		91BFE8001EB86543008EB95C /* TCVideoRecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCVideoRecordViewController.m; path = TXXiaoShiPinDemo/Classes/UGCRecord/TCVideoRecordViewController.m; sourceTree = SOURCE_ROOT; };
 		91BFE8041EB8657E008EB95C /* TCVideoPublishController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCVideoPublishController.h; path = TXXiaoShiPinDemo/Classes/UGCPublish/TCVideoPublishController.h; sourceTree = SOURCE_ROOT; };
 		91BFE8051EB8657E008EB95C /* TCVideoPublishController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCVideoPublishController.m; path = TXXiaoShiPinDemo/Classes/UGCPublish/TCVideoPublishController.m; sourceTree = SOURCE_ROOT; };
 		91BFE8161EB8669F008EB95C /* TCVideoEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCVideoEditViewController.h; path = TXXiaoShiPinDemo/Classes/UGCEditor/TCVideoEditViewController.h; sourceTree = SOURCE_ROOT; };
@@ -731,8 +725,6 @@
 		CE2CAE161F97A0CA0040ED54 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		CE2CAE171F97A0CA0040ED54 /* libstdc++.6.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.tbd"; path = "usr/lib/libstdc++.6.tbd"; sourceTree = SDKROOT; };
 		CE2CAE181F97A0CB0040ED54 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
-		CE357FB61F9D8977006DD088 /* TCVideoRecordProcessView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCVideoRecordProcessView.m; sourceTree = "<group>"; };
-		CE357FB71F9D8977006DD088 /* TCVideoRecordProcessView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCVideoRecordProcessView.h; sourceTree = "<group>"; };
 		CE3F3C7220FED8F700CE9374 /* TXLiteAVSDK_UGC_IJK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TXLiteAVSDK_UGC_IJK.framework; sourceTree = "<group>"; };
 		CE4827321FDA6CCD009C5862 /* Paster.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Paster.bundle; sourceTree = "<group>"; };
 		CE4827331FDA6CCE009C5862 /* bubbleText.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = bubbleText.bundle; sourceTree = "<group>"; };
@@ -836,11 +828,6 @@
 		CE89A57F2010A0810005B88B /* fenlie9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fenlie9.png; sourceTree = "<group>"; };
 		CE89A5802010A0810005B88B /* fenlie19.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fenlie19.png; sourceTree = "<group>"; };
 		CE89A5812010A0810005B88B /* fenlie18.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fenlie18.png; sourceTree = "<group>"; };
-		CE93B54E201959A000CD89B7 /* BeautySettingPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BeautySettingPanel.h; sourceTree = "<group>"; };
-		CE93B54F201959A000CD89B7 /* BeautySettingPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BeautySettingPanel.m; sourceTree = "<group>"; };
-		CE93B551201959C100CD89B7 /* PituMotionAddress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PituMotionAddress.h; sourceTree = "<group>"; };
-		CE93B55320196B5300CD89B7 /* TextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextCell.h; sourceTree = "<group>"; };
-		CE93B55520196B5300CD89B7 /* TextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextCell.m; sourceTree = "<group>"; };
 		CE93B5AC201B044800CD89B7 /* ufa.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ufa.bundle; sourceTree = "<group>"; };
 		CE93B5AD201B044800CD89B7 /* FilterEngine.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FilterEngine.bundle; sourceTree = "<group>"; };
 		CE93B5AE201B044800CD89B7 /* RPNSegmenter.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = RPNSegmenter.bundle; sourceTree = "<group>"; };
@@ -1011,19 +998,6 @@
 				91BFE82E1EB86BAB008EB95C /* TCNavigationController.m */,
 			);
 			name = NavigationController;
-			sourceTree = "<group>";
-		};
-		9105C2B21EB18E8700DB85F3 /* UGCRecord */ = {
-			isa = PBXGroup;
-			children = (
-				CE93B54D201958FF00CD89B7 /* Views */,
-				91BFE7FF1EB86543008EB95C /* TCVideoRecordViewController.h */,
-				91BFE8001EB86543008EB95C /* TCVideoRecordViewController.m */,
-				CE357FB71F9D8977006DD088 /* TCVideoRecordProcessView.h */,
-				CE357FB61F9D8977006DD088 /* TCVideoRecordProcessView.m */,
-			);
-			name = UGCRecord;
-			path = Classes/UGCRecord;
 			sourceTree = "<group>";
 		};
 		9105C2B41EB1916100DB85F3 /* UserInfo */ = {
@@ -1574,18 +1548,6 @@
 			path = fenlie;
 			sourceTree = "<group>";
 		};
-		CE93B54D201958FF00CD89B7 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				CE93B55320196B5300CD89B7 /* TextCell.h */,
-				CE93B55520196B5300CD89B7 /* TextCell.m */,
-				CE93B54E201959A000CD89B7 /* BeautySettingPanel.h */,
-				CE93B54F201959A000CD89B7 /* BeautySettingPanel.m */,
-				CE93B551201959C100CD89B7 /* PituMotionAddress.h */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
 		CE93B5B1201B044800CD89B7 /* 3DFace */ = {
 			isa = PBXGroup;
 			children = (
@@ -1759,7 +1721,6 @@
 				9105C2AD1EB1898C00DB85F3 /* MainUI */,
 				B70080B81D7588EA0073897E /* List */,
 				9105C2B51EB193FD00DB85F3 /* Play */,
-				9105C2B21EB18E8700DB85F3 /* UGCRecord */,
 				91C097151EA49CA1003370AA /* UGCEditor */,
 				9105C2BD1EB2E9DA00DB85F3 /* UGCPublish */,
 				CE1C22F62080D3980002FF8C /* VideoUpload */,
@@ -2377,9 +2338,7 @@
 				CE29EBCB1FE8BDFB0038C200 /* EffectSelectView.m in Sources */,
 				CE29EBCD1FE8BDFB0038C200 /* BottomTabBar.m in Sources */,
 				CE0BE0401FFB27F900DEBA5C /* UIView+Additions.m in Sources */,
-				CE93B550201959A000CD89B7 /* BeautySettingPanel.m in Sources */,
 				CE1C23102080D3990002FF8C /* TVCCommon.m in Sources */,
-				91BFE8031EB86543008EB95C /* TCVideoRecordViewController.m in Sources */,
 				CE0BE03F1FFB27F900DEBA5C /* NSData+Common.m in Sources */,
 				91BFE7AD1EB862DF008EB95C /* TCLoginParam.m in Sources */,
 				CE0BE0381FFB27F900DEBA5C /* UIButton+Additions.m in Sources */,
@@ -2428,10 +2387,8 @@
 				91B45A521E8CE2010058E8F6 /* MaterialManager.m in Sources */,
 				CE29EBAC1FE8BCE70038C200 /* TCBGMListViewController.m in Sources */,
 				CE29EBC91FE8BDFB0038C200 /* VideoPasterView.m in Sources */,
-				CE93B55720196B5400CD89B7 /* TextCell.m in Sources */,
 				CE29EBDB1FE8BE140038C200 /* TCVideoEditPrevViewController.m in Sources */,
 				91BFE7AC1EB862DF008EB95C /* TCLoginModel.m in Sources */,
-				CE357FB81F9D8977006DD088 /* TCVideoRecordProcessView.m in Sources */,
 				91BFE82F1EB86BAB008EB95C /* TCNavigationController.m in Sources */,
 				CE0BE0331FFB27F900DEBA5C /* UIView+CustomAutoLayout.m in Sources */,
 				CE1C230D2080D3990002FF8C /* TXUGCPublish.m in Sources */,
