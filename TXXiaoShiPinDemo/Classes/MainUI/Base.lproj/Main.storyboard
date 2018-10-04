@@ -51,20 +51,23 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="729"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="ALu-yD-d7T">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x32-lw-Q4i" customClass="PreviewView" customModule="TXXiaoShiPinDemo" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="729"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <gestureRecognizers/>
+                                                </view>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jwe-k0-pjt" customClass="PlayerView" customModule="TXXiaoShiPinDemo" customModuleProvider="target">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="729"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </view>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rsd-8o-2bt">
-                                                    <rect key="frame" x="310" y="529" width="50" height="50"/>
+                                                    <rect key="frame" x="310" y="579" width="50" height="50"/>
                                                     <color key="backgroundColor" red="1" green="0.4082706156" blue="0.4243272387" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="50" id="Asb-cM-jEG"/>
-                                                        <constraint firstAttribute="height" constant="50" id="fzh-zU-ZJe"/>
+                                                        <constraint firstAttribute="width" constant="50" id="aG5-a4-QSh"/>
+                                                        <constraint firstAttribute="height" constant="50" id="vYO-0Y-s2C"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                    <state key="normal" title="合唱">
+                                                    <state key="normal" title="入戏">
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </state>
                                                     <connections>
@@ -75,7 +78,7 @@
                                                     <rect key="frame" x="0.0" y="579" width="375" height="50"/>
                                                     <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="50" id="O9E-wy-xkv"/>
+                                                        <constraint firstAttribute="height" constant="50" id="pyP-p5-syd"/>
                                                     </constraints>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="hqr-rY-6SH">
                                                         <size key="itemSize" width="50" height="50"/>
@@ -102,21 +105,27 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="ALu-yD-d7T" secondAttribute="trailing" id="5W7-Ji-qrC"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="rsd-8o-2bt" secondAttribute="trailing" id="PoP-zl-dJk"/>
-                                                <constraint firstItem="fyc-V7-8D2" firstAttribute="top" secondItem="rsd-8o-2bt" secondAttribute="bottom" id="TfW-Qj-FMs"/>
-                                                <constraint firstAttribute="bottom" secondItem="fyc-V7-8D2" secondAttribute="bottom" constant="100" id="ilU-JJ-McJ"/>
-                                                <constraint firstItem="fyc-V7-8D2" firstAttribute="centerX" secondItem="ALu-yD-d7T" secondAttribute="centerX" id="inu-7C-WHo"/>
-                                                <constraint firstItem="ALu-yD-d7T" firstAttribute="leading" secondItem="Rfw-uL-Vsq" secondAttribute="leading" id="jz1-PE-yyN"/>
-                                                <constraint firstItem="fyc-V7-8D2" firstAttribute="width" secondItem="ALu-yD-d7T" secondAttribute="width" id="m6Z-Js-u9b"/>
-                                                <constraint firstAttribute="bottom" secondItem="ALu-yD-d7T" secondAttribute="bottom" id="ukA-7m-ExD"/>
-                                                <constraint firstItem="ALu-yD-d7T" firstAttribute="top" secondItem="Rfw-uL-Vsq" secondAttribute="top" id="zwk-nf-TFO"/>
+                                                <constraint firstItem="jwe-k0-pjt" firstAttribute="width" secondItem="Rfw-uL-Vsq" secondAttribute="width" id="0n9-eZ-40c"/>
+                                                <constraint firstItem="fyc-V7-8D2" firstAttribute="centerX" secondItem="Rfw-uL-Vsq" secondAttribute="centerX" id="3iB-iM-scF"/>
+                                                <constraint firstAttribute="bottom" secondItem="fyc-V7-8D2" secondAttribute="bottom" constant="100" id="Bv8-jA-tRQ"/>
+                                                <constraint firstItem="rsd-8o-2bt" firstAttribute="centerY" secondItem="fyc-V7-8D2" secondAttribute="centerY" id="EEA-ZW-Ylv"/>
+                                                <constraint firstItem="rsd-8o-2bt" firstAttribute="trailing" secondItem="Rfw-uL-Vsq" secondAttribute="trailingMargin" id="G25-5e-ZBw"/>
+                                                <constraint firstItem="x32-lw-Q4i" firstAttribute="height" secondItem="Rfw-uL-Vsq" secondAttribute="height" id="Goc-z9-FaC"/>
+                                                <constraint firstItem="fyc-V7-8D2" firstAttribute="width" secondItem="Rfw-uL-Vsq" secondAttribute="width" id="TjI-M2-BVU"/>
+                                                <constraint firstItem="jwe-k0-pjt" firstAttribute="centerX" secondItem="Rfw-uL-Vsq" secondAttribute="centerX" id="YWe-Tu-bpP"/>
+                                                <constraint firstItem="jwe-k0-pjt" firstAttribute="height" secondItem="Rfw-uL-Vsq" secondAttribute="height" id="qFs-1y-QGa"/>
+                                                <constraint firstItem="x32-lw-Q4i" firstAttribute="centerY" secondItem="Rfw-uL-Vsq" secondAttribute="centerY" id="qG6-DB-BME"/>
+                                                <constraint firstItem="x32-lw-Q4i" firstAttribute="centerX" secondItem="Rfw-uL-Vsq" secondAttribute="centerX" id="qcY-9K-30H"/>
+                                                <constraint firstItem="jwe-k0-pjt" firstAttribute="centerY" secondItem="Rfw-uL-Vsq" secondAttribute="centerY" id="txI-lp-myt"/>
+                                                <constraint firstItem="x32-lw-Q4i" firstAttribute="width" secondItem="Rfw-uL-Vsq" secondAttribute="width" id="wpZ-ha-vwL"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="backgroundTimelineView" destination="fyc-V7-8D2" id="Fcy-VJ-XXL"/>
-                                            <outlet property="videoParentView" destination="ALu-yD-d7T" id="P6W-uG-DAW"/>
+                                            <outlet property="chorus" destination="rsd-8o-2bt" id="DA7-08-C3k"/>
+                                            <outlet property="playerView" destination="jwe-k0-pjt" id="NjZ-tQ-nhI"/>
+                                            <outlet property="previewView" destination="x32-lw-Q4i" id="fFD-l4-6Jh"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -143,7 +152,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6EJ-uV-nwo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2841" y="739"/>
+            <point key="canvasLocation" x="-2842.4000000000001" y="738.91625615763553"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="E4t-KD-tXl">

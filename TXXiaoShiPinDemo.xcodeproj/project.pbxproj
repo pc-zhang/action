@@ -301,6 +301,8 @@
 		F0365C9A215A54A700726A70 /* AsyncFetcherOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C97215A54A600726A70 /* AsyncFetcherOperation.swift */; };
 		F0365C9C215A7BBE00726A70 /* TCPlayViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C93215A549500726A70 /* TCPlayViewCell.swift */; };
 		F06E4334215CB9EF007E5E77 /* TCVodPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C912158F4DE00726A70 /* TCVodPlayViewController.swift */; };
+		F06E43522166075B007E5E77 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06E43502166075B007E5E77 /* PreviewView.swift */; };
+		F06E43532166075B007E5E77 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06E43512166075B007E5E77 /* PlayerView.swift */; };
 		FE1A138C1D88FE5A00D94B62 /* UserProtocol.html in Resources */ = {isa = PBXBuildFile; fileRef = FE1A138B1D88FE5A00D94B62 /* UserProtocol.html */; };
 /* End PBXBuildFile section */
 
@@ -909,6 +911,8 @@
 		F0365C97215A54A600726A70 /* AsyncFetcherOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncFetcherOperation.swift; sourceTree = "<group>"; };
 		F03AF0362155F4A1007D1E60 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F03AF0382155F4A2007D1E60 /* Assets2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets2.xcassets; sourceTree = "<group>"; };
+		F06E43502166075B007E5E77 /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
+		F06E43512166075B007E5E77 /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		F08756DD21495B31006CF4B6 /* TXXiaoShiPinDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TXXiaoShiPinDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		FE1A138B1D88FE5A00D94B62 /* UserProtocol.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = UserProtocol.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1019,6 +1023,8 @@
 		9105C2B51EB193FD00DB85F3 /* Play */ = {
 			isa = PBXGroup;
 			children = (
+				F06E43512166075B007E5E77 /* PlayerView.swift */,
+				F06E43502166075B007E5E77 /* PreviewView.swift */,
 				F0365C912158F4DE00726A70 /* TCVodPlayViewController.swift */,
 				F0365C93215A549500726A70 /* TCPlayViewCell.swift */,
 				F0365C95215A54A600726A70 /* AsyncFetcher.swift */,
@@ -2319,6 +2325,7 @@
 				F06E4334215CB9EF007E5E77 /* TCVodPlayViewController.swift in Sources */,
 				F0365C9C215A7BBE00726A70 /* TCPlayViewCell.swift in Sources */,
 				CE870ED020B4122B0012EF30 /* TransitionView.m in Sources */,
+				F06E43532166075B007E5E77 /* PlayerView.swift in Sources */,
 				91BFE82B1EB866E0008EB95C /* TCUserInfoViewController.m in Sources */,
 				CE0BE03C1FFB27F900DEBA5C /* NSString+Common.m in Sources */,
 				CE29EBA51FE8BCA10038C200 /* TCBGMSliderCutView.m in Sources */,
@@ -2384,6 +2391,7 @@
 				CE0BE0361FFB27F900DEBA5C /* TCUploadHelper.m in Sources */,
 				91B45A531E8CE2010058E8F6 /* MCCameraDynamicView.m in Sources */,
 				91BFE7AE1EB862DF008EB95C /* TCLoginViewController.m in Sources */,
+				F06E43522166075B007E5E77 /* PreviewView.swift in Sources */,
 				91B45A521E8CE2010058E8F6 /* MaterialManager.m in Sources */,
 				CE29EBAC1FE8BCE70038C200 /* TCBGMListViewController.m in Sources */,
 				CE29EBC91FE8BDFB0038C200 /* VideoPasterView.m in Sources */,

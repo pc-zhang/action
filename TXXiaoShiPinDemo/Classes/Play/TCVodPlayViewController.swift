@@ -140,7 +140,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let playViewCell = cell as! TCPlayViewCell
-        playViewCell.player?.pause()
+        playViewCell.player.pause()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

@@ -14,6 +14,10 @@ import Accelerate
 
 final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
+    @IBOutlet weak var previewView: PreviewView!
+    @IBOutlet weak var playerView: PlayerView!
+    
+    let player = AVPlayer()
     var playUrl: String?
     var last_rgb: [UInt]? = nil
     var last_split_time: CMTime? = nil
@@ -24,7 +28,7 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                 self.downloadProgressLayer?.path = CGPath(rect: bounds, transform: nil)
                 self.downloadProgressLayer?.borderWidth = 0
                 self.downloadProgressLayer?.lineWidth = 10
-                self.downloadProgressLayer?.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+                self.downloadProgressLayer?.strokeColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
                 self.downloadProgressLayer?.strokeStart = 0
                 self.downloadProgressLayer?.strokeEnd = downloadProcess
             } else {
@@ -47,17 +51,17 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
     ]
     var currentTime: Double {
         get {
-            return CMTimeGetSeconds(player!.currentTime())
+            return CMTimeGetSeconds(player.currentTime())
         }
         set {
             let newTime = CMTimeMakeWithSeconds(newValue, preferredTimescale: 600)
             //todo: more tolerance
-            player?.seek(to: newTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+            player.seek(to: newTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
         }
     }
     
     var duration: Double {
-        guard let currentItem = player?.currentItem else { return 0.0 }
+        guard let currentItem = player.currentItem else { return 0.0 }
         
         return CMTimeGetSeconds(currentItem.duration)
     }
@@ -84,33 +88,15 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
         }
     }
     
-    var player: AVPlayer? {
-        get {
-            return playerLayer.player
-        }
-        
-        set {
-            playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-            playerLayer.player = newValue
-        }
-    }
-    
-    private var playerLayer: AVPlayerLayer {
-        return layer as! AVPlayerLayer
-    }
-    
-    override class var layerClass: AnyClass {
-        return AVPlayerLayer.self
-    }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
         downloadProcess = 0
         
-        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.player?.currentItem, queue: .main) { _ in
-            self.player?.seek(to: CMTime.zero)
-            self.player?.play()
+        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.player.currentItem, queue: .main) { _ in
+            self.player.seek(to: CMTime.zero)
+            self.player.play()
         }
         
         if composition==nil {
@@ -129,14 +115,19 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        videoParentView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(TCPlayViewCell.tapPlayer(_:))))
+        self.playerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(TCPlayViewCell.tapPlayer(_:))))
         downloadProgressLayer = CAShapeLayer()
         downloadProgressLayer!.frame = layer.bounds
         downloadProgressLayer!.position = CGPoint(x:bounds.width/2, y:bounds.height/2)
         self.layer.addSublayer(downloadProgressLayer!)
     }
     
+    
+    @IBOutlet weak var chorus: UIButton!
+    
     @IBAction func clickChorus(_ button: UIButton) {
+        
+        chorus.isHidden = true
         
         TCUtil.report(xiaoshipin_videochorus, userName: nil, code: 0, msg: "合唱事件")
         
@@ -149,24 +140,23 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
     
     
     func onloadVideoProcess(process:CGFloat) {
-        self.downloadProcess = process/2
+        self.downloadProcess = sqrt(process)/2
     }
     
     func onloadVideoComplete(_ videoPath:String) {
-        player?.pause()
         addClip(try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(videoPath))
     }
     
     
     // MARK: Properties
 
-    @IBOutlet weak var videoParentView: UIView!
     
     func setLiveInfo(liveInfo: TCLiveInfo) {
         // play
         playUrl = liveInfo.playurl
-        player = AVPlayer(url: URL(string: playUrl!)!)
-        player?.play()
+        player.replaceCurrentItem(with: AVPlayerItem(url: URL(string: playUrl!)!))
+        playerView.player = player
+        player.play()
     }
 
     static let reuseIdentifier = "TCPlayViewCell"
@@ -245,7 +235,8 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                 
                 // update timeline
                 self.updatePlayer()
-                                
+                self.backgroundTimelineView.reloadData()
+                
                 DispatchQueue.global(qos: .background).async {
                     var videoTrackOutput : AVAssetReaderTrackOutput?
                     var avAssetReader = try?AVAssetReader(asset: self.composition!)
@@ -403,7 +394,7 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
         playerItem = AVPlayerItem(asset: composition!)
         playerItem!.videoComposition = videoComposition
         playerItem!.audioMix = audioMix
-        player!.replaceCurrentItem(with: playerItem)
+        player.replaceCurrentItem(with: playerItem)
         
         currentTime = Double((backgroundTimelineView.contentOffset.x + backgroundTimelineView.frame.width/2) / scaledDurationToWidth)
         
@@ -418,7 +409,7 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
 
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if let player = player, player.rate == 0 {
+        if player.rate == 0 {
             let _timelineView = scrollView as! UICollectionView
             currentTime = Double((_timelineView.contentOffset.x + _timelineView.frame.width/2) / (_timelineView.frame.width / visibleTimeRange))
         }
@@ -426,7 +417,7 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
     
     
     @IBAction func pan(_ recognizer: UIPanGestureRecognizer) {
-        player!.pause()
+        player.pause()
         seekTimer?.invalidate()
     }
     
@@ -502,18 +493,19 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let compositionVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first!
         let segment = compositionVideoTrack.segments[indexPath.item]
+        playerView.frame = CGRect(x: 0, y: 0, width: bounds.width/3, height: bounds.height/3)
     }
 
     
     @IBAction func tapPlayer(_ sender: Any) {
-        if player!.rate == 0 {
+        if player.rate == 0 {
             // Not playing forward, so play.
             if currentTime == duration {
                 // At end, so got back to begining.
                 currentTime = 0.0
             }
             
-            player!.play()
+            player.play()
             
             //todo: animate
             if #available(iOS 10.0, *) {
@@ -527,7 +519,7 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
         }
         else {
             // Playing, so pause.
-            player!.pause()
+            player.pause()
             seekTimer?.invalidate()
         }
     }
