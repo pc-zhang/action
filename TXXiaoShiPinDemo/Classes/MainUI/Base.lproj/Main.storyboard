@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="TL7-xW-1fW">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -21,7 +21,6 @@
                         <color key="barTintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="TL7-xW-1fW" kind="relationship" relationship="viewControllers" id="BYB-9e-RT8"/>
                         <segue destination="6xr-Bh-LJD" kind="relationship" relationship="viewControllers" id="UxJ-8v-4Fc"/>
                         <segue destination="9Ke-0X-uYY" kind="relationship" relationship="viewControllers" id="zCk-dF-R9Z"/>
                         <segue destination="19W-KH-Vws" kind="relationship" relationship="viewControllers" id="1JJ-11-dYf"/>
@@ -39,28 +38,28 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="729" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="IVd-gr-2Um">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="729"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="812" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="IVd-gr-2Um">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleAspectFill" restorationIdentifier="TCPlayViewCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TCPlayViewCell" id="sHr-nB-1d0" customClass="TCPlayViewCell" customModule="TXXiaoShiPinDemo" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="729"/>
+                                        <rect key="frame" x="0.0" y="28" width="375" height="812"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="sHr-nB-1d0" id="Rfw-uL-Vsq">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="729"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x32-lw-Q4i" customClass="PreviewView" customModule="TXXiaoShiPinDemo" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="729"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jwe-k0-pjt" customClass="PlayerView" customModule="TXXiaoShiPinDemo" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="729"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </view>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rsd-8o-2bt">
-                                                    <rect key="frame" x="310" y="579" width="50" height="50"/>
+                                                    <rect key="frame" x="310" y="599.66666666666663" width="50" height="50"/>
                                                     <color key="backgroundColor" red="1" green="0.4082706156" blue="0.4243272387" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="aG5-a4-QSh"/>
@@ -75,23 +74,23 @@
                                                     </connections>
                                                 </button>
                                                 <collectionView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" minimumZoomScale="0.25" maximumZoomScale="2" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="fyc-V7-8D2" userLabel="Timeline2">
-                                                    <rect key="frame" x="0.0" y="579" width="375" height="50"/>
+                                                    <rect key="frame" x="0.0" y="587" width="375" height="75"/>
                                                     <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="50" id="pyP-p5-syd"/>
+                                                        <constraint firstAttribute="height" constant="75" id="pyP-p5-syd"/>
                                                     </constraints>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="hqr-rY-6SH">
-                                                        <size key="itemSize" width="50" height="50"/>
+                                                        <size key="itemSize" width="75" height="75"/>
                                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="segment" id="Qc4-Lc-axo">
-                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="75" height="75"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="75" height="75"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                             </view>
                                                             <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
@@ -107,7 +106,7 @@
                                             <constraints>
                                                 <constraint firstItem="jwe-k0-pjt" firstAttribute="width" secondItem="Rfw-uL-Vsq" secondAttribute="width" id="0n9-eZ-40c"/>
                                                 <constraint firstItem="fyc-V7-8D2" firstAttribute="centerX" secondItem="Rfw-uL-Vsq" secondAttribute="centerX" id="3iB-iM-scF"/>
-                                                <constraint firstAttribute="bottom" secondItem="fyc-V7-8D2" secondAttribute="bottom" constant="100" id="Bv8-jA-tRQ"/>
+                                                <constraint firstAttribute="bottom" secondItem="fyc-V7-8D2" secondAttribute="bottom" constant="150" id="Bv8-jA-tRQ"/>
                                                 <constraint firstItem="rsd-8o-2bt" firstAttribute="centerY" secondItem="fyc-V7-8D2" secondAttribute="centerY" id="EEA-ZW-Ylv"/>
                                                 <constraint firstItem="rsd-8o-2bt" firstAttribute="trailing" secondItem="Rfw-uL-Vsq" secondAttribute="trailingMargin" id="G25-5e-ZBw"/>
                                                 <constraint firstItem="x32-lw-Q4i" firstAttribute="height" secondItem="Rfw-uL-Vsq" secondAttribute="height" id="Goc-z9-FaC"/>
@@ -139,7 +138,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="IVd-gr-2Um" firstAttribute="top" secondItem="jgg-kK-13Z" secondAttribute="top" id="14n-RA-iaO"/>
-                            <constraint firstItem="IVd-gr-2Um" firstAttribute="bottom" secondItem="3aA-UL-O6D" secondAttribute="bottom" id="CJ3-Ee-EWG"/>
+                            <constraint firstAttribute="bottom" secondItem="IVd-gr-2Um" secondAttribute="bottom" id="516-lz-1Zb"/>
                             <constraint firstItem="IVd-gr-2Um" firstAttribute="trailing" secondItem="3aA-UL-O6D" secondAttribute="trailing" id="V53-8T-oZ2"/>
                             <constraint firstItem="IVd-gr-2Um" firstAttribute="leading" secondItem="3aA-UL-O6D" secondAttribute="leading" id="g5a-Cl-Ib6"/>
                         </constraints>
