@@ -620,13 +620,19 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
         return segmentView
     }
     
+    var isRecording = false
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        playerView.frame = CGRect(x: 0, y: 0, width: bounds.width/3, height: bounds.height/3)
         let compositionVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first!
         let segment = compositionVideoTrack.segments[indexPath.item]
         self.backgroundTimelineView.contentOffset.x = CGFloat(segment.timeMapping.target.start.seconds/Double(self.visibleTimeRange)*Double(self.backgroundTimelineView.frame.width)) - self.backgroundTimelineView.frame.size.width/2
         
         self.recordTime = segment.timeMapping.target.duration.seconds
+        
+        DispatchQueue.main.async {
+            self.isRecording = true
+            self.setNeedsLayout()
+        }
     }
 
     var recordTime: Double = 0
@@ -959,8 +965,8 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
          
          See the AVCaptureFileOutputRecordingDelegate methods.
          */
-        cameraButton.isEnabled = false
-        recordButton.isEnabled = false
+//        cameraButton.isEnabled = false
+//        recordButton.isEnabled = false
         
         /*
          Retrieve the video preview layer's video orientation on the main queue
@@ -998,24 +1004,32 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                 let outputFilePath = (NSTemporaryDirectory() as NSString).appendingPathComponent((outputFileName as NSString).appendingPathExtension("mov")!)
                 movieFileOutput.startRecording(to: URL(fileURLWithPath: outputFilePath), recordingDelegate: self)
                 DispatchQueue.main.async {
-                    self.player.play()
-                    self.recordTimer = Timer.scheduledTimer(withTimeInterval: self.recordTime, repeats: false, block: { (timer) in
-                        self.toggleMovieRecording(UIButton())
+                    self.tapPlayer(0)
+                    Timer.scheduledTimer(withTimeInterval: self.recordTime, repeats: false, block: { (timer) in
+                        movieFileOutput.stopRecording()
+                        self.tapPlayer(0)
                     })
                 }
             } else {
                 movieFileOutput.stopRecording()
-                self.player.pause()
-                
             }
         }
     }
     
+    override func layoutSubviews() {
+        if isRecording == true {
+            playerView.frame = CGRect(x: 0, y: 0, width: bounds.width/3, height: bounds.height/3)
+        } else {
+            playerView.frame = bounds
+        }
+    }
+    
+    
     func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
         // Enable the Record button to let the user stop the recording.
         DispatchQueue.main.async {
-            self.recordButton.isEnabled = true
-            self.recordButton.setTitle(NSLocalizedString("Stop", comment: "Recording button stop title"), for: [])
+//            self.recordButton.isEnabled = true
+//            self.recordButton.setTitle(NSLocalizedString("Stop", comment: "Recording button stop title"), for: [])
         }
     }
     
@@ -1084,9 +1098,9 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
         // Enable the Camera and Record buttons to let the user switch camera and start another recording.
         DispatchQueue.main.async {
             // Only enable the ability to change camera if the device has more than one camera.
-            self.cameraButton.isEnabled = self.videoDeviceDiscoverySession.uniqueDevicePositionsCount > 1
-            self.recordButton.isEnabled = true
-            self.recordButton.setTitle(NSLocalizedString("Record", comment: "Recording button record title"), for: [])
+//            self.cameraButton.isEnabled = self.videoDeviceDiscoverySession.uniqueDevicePositionsCount > 1
+//            self.recordButton.isEnabled = true
+//            self.recordButton.setTitle(NSLocalizedString("Record", comment: "Recording button record title"), for: [])
         }
     }
     
