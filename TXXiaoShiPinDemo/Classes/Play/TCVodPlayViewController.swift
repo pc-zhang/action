@@ -138,6 +138,11 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         return models.count
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let playViewCell = cell as! TCPlayViewCell
+        playViewCell.backgroundTimelineView.reloadData()
+    }
+    
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let playViewCell = cell as! TCPlayViewCell
         playViewCell.player.pause()

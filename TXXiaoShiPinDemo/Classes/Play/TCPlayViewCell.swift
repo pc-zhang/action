@@ -69,7 +69,6 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
     
     var composition: AVMutableComposition? = nil
     var videoComposition: AVMutableVideoComposition? = nil
-    var audioMix: AVMutableAudioMix? = nil
     
     /*
      A token obtained from calling `player`'s `addPeriodicTimeObserverForInterval(_:queue:usingBlock:)`
@@ -354,7 +353,8 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                     
                 }
                 
-                
+                self.backgroundTimelineView.isHidden = false
+
                 // update timeline
                 let currentTime = self.player.currentTime()
                 self.updatePlayer()
@@ -436,12 +436,13 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                                     if cos < 0.999 {
                                         if let last_split_time = self.last_split_time, CMTimeSubtract(sampleBufferTime, self.last_split_time!).seconds > 1 {
                                             DispatchQueue.main.async {
-                                                let firstVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first!
+                                                let firstVideoTrack = self.composition!.tracks(withMediaType: .video).first!
                                                 
                                                 if let segment = firstVideoTrack.segment(forTrackTime: sampleBufferTime), segment.timeMapping.target.containsTime(sampleBufferTime) {
                                                     try! firstVideoTrack.insertTimeRange(segment.timeMapping.target, of: firstVideoTrack, at: segment.timeMapping.target.end)
                                                     firstVideoTrack.removeTimeRange(CMTimeRange(start:sampleBufferTime, duration:segment.timeMapping.target.duration + CMTime(value: 1, timescale: 600)))
                                                 }
+                                                
                                                 
                                                 self.backgroundTimelineView.reloadData()
                                                 
@@ -488,20 +489,24 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                 instruction.layerInstructions = [transformer1]
             }
             
+            if let lastInstruction = self.videoComposition!.instructions.last {
+                assert(lastInstruction.timeRange.end == instruction.timeRange.start)
+            }
             self.videoComposition!.instructions.append(instruction)
+        }
+        
+        if let lastInstruction = self.videoComposition!.instructions.last {
+            assert(lastInstruction.timeRange.end == firstVideoTrack.timeRange.end)
+        }
+        
+        if let audioTrack = self.composition!.tracks(withMediaType: .audio).first {
+            audioTrack.removeTimeRange(CMTimeRange(start: firstVideoTrack.timeRange.end, end: audioTrack.timeRange.end))
         }
         
         let playerItem = AVPlayerItem(asset: self.composition!)
         playerItem.videoComposition = self.videoComposition
-        playerItem.audioMix = nil
         
         self.player.replaceCurrentItem(with: playerItem)
-        
-        if firstVideoTrack.segments.count != 0 {
-            backgroundTimelineView.isHidden = false
-        } else {
-            backgroundTimelineView.isHidden = true
-        }
         
         self.backgroundTimelineView.reloadData()
     }
@@ -1075,7 +1080,6 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                         try! secondVideoTrack.insertTimeRange(CMTimeRangeMake(start: .zero, duration: self.recordTimeRange.duration), of: videoAssetTrack, at: self.recordTimeRange.start)
                                 
                         self.updatePlayer()
-                        
                     }
                 }
             }
