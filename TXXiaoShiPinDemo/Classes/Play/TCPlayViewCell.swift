@@ -1077,6 +1077,10 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                         
                         secondVideoTrack.preferredTransform = videoAssetTrack.preferredTransform
                         
+                        if let recordedSegment = secondVideoTrack.segment(forTrackTime: self.recordTimeRange.start), recordedSegment.timeMapping.target == self.recordTimeRange {
+                            secondVideoTrack.removeTimeRange(self.recordTimeRange)
+                        }
+                        
                         try! secondVideoTrack.insertTimeRange(CMTimeRangeMake(start: .zero, duration: self.recordTimeRange.duration), of: videoAssetTrack, at: self.recordTimeRange.start)
                                 
                         self.updatePlayer()
