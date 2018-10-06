@@ -647,15 +647,14 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
         let segment = compositionVideoTrack.segments[indexPath.item]
         self.backgroundTimelineView.contentOffset.x = CGFloat(segment.timeMapping.target.start.seconds/Double(self.visibleTimeRange)*Double(self.backgroundTimelineView.frame.width)) - self.backgroundTimelineView.frame.size.width/2
         
-        self.recordTime = segment.timeMapping.target.duration.seconds
-        
         DispatchQueue.main.async {
+            self.recordTimeRange = segment.timeMapping.target
             self.isRecording = true
             self.setNeedsLayout()
         }
     }
 
-    var recordTime: Double = 0
+    var recordTimeRange = CMTimeRange.zero
     
     @IBAction func tapPlayer(_ sender: Any) {
         if player.rate == 0 {
@@ -1021,7 +1020,7 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                 movieFileOutput.startRecording(to: URL(fileURLWithPath: outputFilePath), recordingDelegate: self)
                 DispatchQueue.main.async {
                     self.tapPlayer(0)
-                    Timer.scheduledTimer(withTimeInterval: self.recordTime, repeats: false, block: { (timer) in
+                    Timer.scheduledTimer(withTimeInterval: self.recordTimeRange.duration.seconds+0.5, repeats: false, block: { (timer) in
                         movieFileOutput.stopRecording()
                         self.tapPlayer(0)
                     })
@@ -1119,16 +1118,46 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                         
                         let videoAssetTrack = newAsset.tracks(withMediaType: .video).first!
                         
-                        let compositionVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video)[1]
+                        let firstVideoTrack = self.composition!.tracks(withMediaType: .video)[0]
                         
-                        compositionVideoTrack.preferredTransform = videoAssetTrack.preferredTransform
+                        let secondVideoTrack = self.composition!.tracks(withMediaType: .video)[1]
+                        
+                        secondVideoTrack.preferredTransform = videoAssetTrack.preferredTransform
                         
                         
-                        try! compositionVideoTrack.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: newAsset.duration), of: videoAssetTrack, at: CMTime.zero)
+                        try! secondVideoTrack.insertTimeRange(CMTimeRangeMake(start: .zero, duration: self.recordTimeRange.duration), of: videoAssetTrack, at: self.recordTimeRange.start)
+                                
+                        let videoComposition = AVMutableVideoComposition()
+                        videoComposition.renderSize = firstVideoTrack.naturalSize
+                        videoComposition.frameDuration = CMTimeMake(value: 1, timescale: 30)
                         
+                        for segment in firstVideoTrack.segments {
+                            let instruction = AVMutableVideoCompositionInstruction()
+                            instruction.timeRange = segment.timeMapping.target
+                            
+                            
+                            if let segment2 = secondVideoTrack.segment(forTrackTime: segment.timeMapping.target.start),!segment2.isEmpty, segment2.timeMapping.target ==  segment.timeMapping.target {
+                                let transformer2 = AVMutableVideoCompositionLayerInstruction(assetTrack: secondVideoTrack)
+                                transformer2.setTransform(secondVideoTrack.getTransform(renderSize: videoComposition.renderSize), at: instruction.timeRange.start)
+                                instruction.layerInstructions = [transformer2]
+                            } else {
+                                let transformer1 = AVMutableVideoCompositionLayerInstruction(assetTrack: firstVideoTrack)
+                                transformer1.setTransform(firstVideoTrack.getTransform(renderSize: videoComposition.renderSize), at: instruction.timeRange.start)
+                                instruction.layerInstructions = [transformer1]
+                            }
+                            
+                            videoComposition.instructions.append(instruction)
+                        }
+                            
                         
-                        // update timeline
-                        self.updatePlayer()
+                        let playerItem = AVPlayerItem(asset: self.composition!)
+                        playerItem.videoComposition = videoComposition
+                        playerItem.audioMix = nil
+                        
+                        self.player.replaceCurrentItem(with: playerItem)
+                        
+                        self.currentTime = Double((self.backgroundTimelineView.contentOffset.x + self.backgroundTimelineView.frame.width/2) / self.scaledDurationToWidth)
+                        
                         self.backgroundTimelineView.reloadData()
                         
                     }
