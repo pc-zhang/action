@@ -17,10 +17,10 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
     @IBOutlet weak var previewView: PreviewView!
     @IBOutlet weak var playerView: PlayerView!
     
+    var histograms = [(time: CMTime, histogram: [[vImagePixelCount]])]()
+    
     let player = AVPlayer()
     var playUrl: String?
-    var last_rgb: [UInt]? = nil
-    var last_split_time: CMTime? = nil
     var downloadProcess: CGFloat = 0 {
         didSet {
             if downloadProcess != 0 {
@@ -399,60 +399,46 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                                                                     renderingIntent: .defaultIntent)
                                 
                                 
-                                let error = vImageBuffer_InitWithCVPixelBuffer(&buffer, &cgFormat, pixelBuffer, nil, nil, vImage_Flags(kvImageNoFlags))
+                                var error = vImageBuffer_InitWithCVPixelBuffer(&buffer, &cgFormat, pixelBuffer, nil, nil, vImage_Flags(kvImageNoFlags))
+                                assert(kvImageNoError == error)
+                                defer {
+                                    free(buffer.data)
+                                }
+                                
+                                let histogramBins = (0...3).map { _ in
+                                    return [vImagePixelCount](repeating: 0, count: 256)
+                                }
+                                var mutableHistogram: [UnsafeMutablePointer<vImagePixelCount>?] = histogramBins.map {
+                                    return UnsafeMutablePointer<vImagePixelCount>(mutating: $0)
+                                }
+                                error = vImageHistogramCalculation_ARGB8888(&buffer,
+                                                                            &mutableHistogram,
+                                                                            vImage_Flags(kvImageNoFlags))
                                 assert(kvImageNoError == error)
                                 
-                                let alpha = [UInt](repeating: 0, count: 256)
-                                let red = [UInt](repeating: 0, count: 256)
-                                let green = [UInt](repeating: 0, count: 256)
-                                let blue = [UInt](repeating: 0, count: 256)
                                 
-                                let alphaPtr = UnsafeMutablePointer<vImagePixelCount>(mutating: alpha) as UnsafeMutablePointer<vImagePixelCount>?
-                                let redPtr = UnsafeMutablePointer<vImagePixelCount>(mutating: red) as UnsafeMutablePointer<vImagePixelCount>?
-                                let greenPtr = UnsafeMutablePointer<vImagePixelCount>(mutating: green) as UnsafeMutablePointer<vImagePixelCount>?
-                                let bluePtr = UnsafeMutablePointer<vImagePixelCount>(mutating: blue) as UnsafeMutablePointer<vImagePixelCount>?
-                                
-                                let rgba = [redPtr, greenPtr, bluePtr, alphaPtr]
-                                
-                                
-                                let histogram = UnsafeMutablePointer<UnsafeMutablePointer<vImagePixelCount>?>(mutating: rgba)
-                                let err2 = vImageHistogramCalculation_ARGB8888(&buffer, histogram, UInt32(kvImageNoFlags))
-                                assert(kvImageNoError == err2)
-                                free(buffer.data)
-                                
-                                
-                                let rgb = red + green + blue
-                                if let last_rgb = self.last_rgb {
-                                    let AB = zip(rgb, last_rgb).map(*).reduce(0, { (result, item) -> UInt in
-                                        result + item
-                                    })
-                                    let AA = zip(rgb, rgb).map(*).reduce(0, { (result, item) -> UInt in
-                                        result + item
-                                    })
-                                    let BB = zip(last_rgb, last_rgb).map(*).reduce(0, { (result, item) -> UInt in
-                                        result + item
-                                    })
-                                    let cos = Double(AB) / sqrt(Double(AA)) / sqrt(Double(BB))
-                                    if cos < 0.999 {
-                                        if let last_split_time = self.last_split_time, CMTimeSubtract(sampleBufferTime, self.last_split_time!).seconds > 1 {
-                                            DispatchQueue.main.async {
-                                                let firstVideoTrack = self.composition!.tracks(withMediaType: .video).first!
-                                                
-                                                if let segment = firstVideoTrack.segment(forTrackTime: sampleBufferTime), segment.timeMapping.target.containsTime(sampleBufferTime) {
-                                                    try! firstVideoTrack.insertTimeRange(segment.timeMapping.target, of: firstVideoTrack, at: segment.timeMapping.target.end)
-                                                    firstVideoTrack.removeTimeRange(CMTimeRange(start:sampleBufferTime, duration:segment.timeMapping.target.duration + CMTime(value: 1, timescale: 600)))
-                                                }
-                                                
-                                                
-                                                self.backgroundTimelineView.reloadData()
-                                                
+                                if let last_split_time = self.histograms.last?.time, let last_histogramBins = self.histograms.last?.histogram {
+
+                                    if self.costheta(histogramBins, last_histogramBins) < 0.9995, CMTimeSubtract(sampleBufferTime, last_split_time).seconds > 1 {
+                                        
+                                        self.histograms.append((time: sampleBufferTime, histogram: histogramBins))
+
+                                        DispatchQueue.main.async {
+                                            let firstVideoTrack = self.composition!.tracks(withMediaType: .video).first!
+                                            
+                                            if let segment = firstVideoTrack.segment(forTrackTime: sampleBufferTime), segment.timeMapping.target.containsTime(sampleBufferTime) {
+                                                try! firstVideoTrack.insertTimeRange(segment.timeMapping.target, of: firstVideoTrack, at: segment.timeMapping.target.end)
+                                                firstVideoTrack.removeTimeRange(CMTimeRange(start:sampleBufferTime, duration:segment.timeMapping.target.duration + CMTime(value: 1, timescale: 600)))
                                             }
+                                            
+                                            self.backgroundTimelineView.reloadData()
+                                            
                                         }
-                                        self.last_split_time = sampleBufferTime
+                                        
                                     }
+                                } else {
+                                    self.histograms.append((time: sampleBufferTime, histogram: histogramBins))
                                 }
-                                self.last_rgb = rgb
-                                
                             }
                         }
                     }
@@ -460,6 +446,21 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                 
             }
         }
+    }
+    
+    func costheta(_ histogram1: [[vImagePixelCount]], _ histogram2: [[vImagePixelCount]]) -> Double {
+        let rgba1 = histogram1[0] + histogram1[1] + histogram1[2] + histogram1[3]
+        let rgba2 = histogram2[0] + histogram2[1] + histogram2[2] + histogram2[3]
+        let AB = zip(rgba1, rgba2).map(*).reduce(0, { (result, item) -> UInt in
+            result + item
+        })
+        let AA = zip(rgba1, rgba1).map(*).reduce(0, { (result, item) -> UInt in
+            result + item
+        })
+        let BB = zip(rgba2, rgba2).map(*).reduce(0, { (result, item) -> UInt in
+            result + item
+        })
+        return Double(AB) / sqrt(Double(AA)) / sqrt(Double(BB))
     }
     
     
