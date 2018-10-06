@@ -347,15 +347,9 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                 
                 compositionVideoTrack.preferredTransform = videoAssetTrack.preferredTransform
                 
-                
                 try! compositionVideoTrack.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: newAsset.duration), of: videoAssetTrack, at: CMTime.zero)
                 
-                
-                if let audioAssetTrack = newAsset.tracks(withMediaType: .audio).first {
-                    
-                    let compositionAudioTrack = self.composition!.tracks(withMediaType: .audio).first!
-                    
-                    compositionAudioTrack.removeTimeRange(compositionAudioTrack.timeRange)
+                if let audioAssetTrack = newAsset.tracks(withMediaType: .audio).first, let compositionAudioTrack = self.composition!.tracks(withMediaType: .audio).first {
                     try! compositionAudioTrack.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: newAsset.duration), of: audioAssetTrack, at: CMTime.zero)
                     
                 }
@@ -365,7 +359,6 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                 let currentTime = self.player.currentTime()
                 self.updatePlayer()
                 self.currentTime = currentTime.seconds
-                self.backgroundTimelineView.reloadData()
                 
                 DispatchQueue.global(qos: .background).async {
                     var videoTrackOutput : AVAssetReaderTrackOutput?
@@ -381,8 +374,9 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                     while avAssetReader?.status == .reading {
                         //视频
                         if let sampleBuffer = videoTrackOutput?.copyNextSampleBuffer() {
+                            let sampleBufferTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
                             DispatchQueue.main.async {
-                                self.downloadProcess = 0.5 + CGFloat(CMSampleBufferGetPresentationTimeStamp(sampleBuffer).seconds / self.composition!.duration.seconds)
+                                self.downloadProcess = 0.5 + CGFloat(sampleBufferTime.seconds / self.composition!.duration.seconds)
                             }
                             
                             if let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
@@ -440,30 +434,20 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                                     })
                                     let cos = Double(AB) / sqrt(Double(AA)) / sqrt(Double(BB))
                                     if cos < 0.999 {
-                                        if let last_split_time = self.last_split_time, CMTimeSubtract(CMSampleBufferGetPresentationTimeStamp(sampleBuffer), self.last_split_time!).seconds > 1 {
+                                        if let last_split_time = self.last_split_time, CMTimeSubtract(sampleBufferTime, self.last_split_time!).seconds > 1 {
                                             DispatchQueue.main.async {
-                                                var timeRangeInAsset: CMTimeRange? = nil
+                                                let firstVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first!
                                                 
-                                                let compositionVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first!
-                                                
-                                                for s in compositionVideoTrack.segments {
-                                                    timeRangeInAsset = s.timeMapping.target // assumes non-scaled edit
-                                                    
-                                                    if !s.isEmpty && timeRangeInAsset!.containsTime(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)) {
-                                                        
-                                                        try! compositionVideoTrack.insertTimeRange(timeRangeInAsset!, of: compositionVideoTrack, at: timeRangeInAsset!.end)
-                                                        
-                                                        try! compositionVideoTrack.removeTimeRange(CMTimeRange(start:CMSampleBufferGetPresentationTimeStamp(sampleBuffer), duration:timeRangeInAsset!.duration - CMTime(value: 1, timescale: 600)))
-                                                        
-                                                        self.backgroundTimelineView.reloadData()
-                                                        
-                                                        break
-                                                    }
+                                                if let segment = firstVideoTrack.segment(forTrackTime: sampleBufferTime), segment.timeMapping.target.containsTime(sampleBufferTime) {
+                                                    try! firstVideoTrack.insertTimeRange(segment.timeMapping.target, of: firstVideoTrack, at: segment.timeMapping.target.end)
+                                                    firstVideoTrack.removeTimeRange(CMTimeRange(start:sampleBufferTime, duration:segment.timeMapping.target.duration + CMTime(value: 1, timescale: 600)))
                                                 }
+                                                
+                                                self.backgroundTimelineView.reloadData()
                                                 
                                             }
                                         }
-                                        self.last_split_time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+                                        self.last_split_time = sampleBufferTime
                                     }
                                 }
                                 self.last_rgb = rgb
@@ -484,7 +468,6 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
         }
         
         let firstVideoTrack = self.composition!.tracks(withMediaType: .video)[0]
-        
         let secondVideoTrack = self.composition!.tracks(withMediaType: .video)[1]
         
         self.videoComposition = AVMutableVideoComposition()
@@ -509,12 +492,10 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
         }
         
         let playerItem = AVPlayerItem(asset: self.composition!)
-        playerItem.videoComposition = self.videoComposition!
+        playerItem.videoComposition = self.videoComposition
         playerItem.audioMix = nil
         
         self.player.replaceCurrentItem(with: playerItem)
-        
-        self.currentTime = Double((self.backgroundTimelineView.contentOffset.x + self.backgroundTimelineView.frame.width/2) / self.scaledDurationToWidth)
         
         if firstVideoTrack.segments.count != 0 {
             backgroundTimelineView.isHidden = false
