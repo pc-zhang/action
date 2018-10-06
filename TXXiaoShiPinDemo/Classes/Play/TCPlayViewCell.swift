@@ -483,51 +483,70 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
             return
         }
         
-        videoComposition = AVMutableVideoComposition()
-        videoComposition!.renderSize = CGSize(width: 540, height: 960)
-        videoComposition!.frameDuration = CMTimeMake(value: 1, timescale: 30)
-        
         let firstVideoTrack = composition!.tracks(withMediaType: .video).first!
+        
+        videoComposition = AVMutableVideoComposition()
+        videoComposition!.renderSize = firstVideoTrack.naturalSize
+        videoComposition!.frameDuration = CMTimeMake(value: 1, timescale: 30)
         
         let secondVideoTrack = composition!.tracks(withMediaType: .video)[1]
         
-        for segment in firstVideoTrack.segments {
-            let instruction = AVMutableVideoCompositionInstruction()
-            instruction.timeRange = segment.timeMapping.target
-            
-            if segment.isEmpty {
-                let transformer2 = AVMutableVideoCompositionLayerInstruction(assetTrack: secondVideoTrack)
-                transformer2.setTransform(CGAffineTransform.identity.scaledBy(x: videoComposition!.renderSize.width/secondVideoTrack.naturalSize.width, y: videoComposition!.renderSize.height/secondVideoTrack.naturalSize.height), at: instruction.timeRange.start)
-                instruction.layerInstructions = [transformer2]
-            } else {
-                let transformer1 = AVMutableVideoCompositionLayerInstruction(assetTrack: firstVideoTrack)
-                transformer1.setTransform(CGAffineTransform.identity.scaledBy(x: videoComposition!.renderSize.width/firstVideoTrack.naturalSize.width, y: videoComposition!.renderSize.height/firstVideoTrack.naturalSize.height), at: instruction.timeRange.start)
-                instruction.layerInstructions = [transformer1]
+        if !secondVideoTrack.segments.isEmpty {
+            for segment in secondVideoTrack.segments {
+                let instruction = AVMutableVideoCompositionInstruction()
+                instruction.timeRange = segment.timeMapping.target
+                
+                if segment.isEmpty {
+                    let transformer1 = AVMutableVideoCompositionLayerInstruction(assetTrack: firstVideoTrack)
+                    transformer1.setTransform(firstVideoTrack.getTransform(renderSize: videoComposition!.renderSize), at: instruction.timeRange.start)
+                    instruction.layerInstructions = [transformer1]
+                } else {
+                    let transformer2 = AVMutableVideoCompositionLayerInstruction(assetTrack: secondVideoTrack)
+                    transformer2.setTransform(secondVideoTrack.getTransform(renderSize: videoComposition!.renderSize), at: instruction.timeRange.start)
+                    instruction.layerInstructions = [transformer2]
+                }
+                
+                videoComposition!.instructions.append(instruction)
             }
             
-            videoComposition!.instructions.append(instruction)
-        }
-        
-        if secondVideoTrack.timeRange.end > firstVideoTrack.timeRange.end {
+            if secondVideoTrack.timeRange.duration > firstVideoTrack.timeRange.duration {
+                let instruction = AVMutableVideoCompositionInstruction()
+                instruction.timeRange = CMTimeRangeMake(start: firstVideoTrack.timeRange.end, duration: secondVideoTrack.timeRange.end-firstVideoTrack.timeRange.end)
+                
+                let transformer2 = AVMutableVideoCompositionLayerInstruction(assetTrack: secondVideoTrack)
+                transformer2.setTransform(secondVideoTrack.getTransform(renderSize: videoComposition!.renderSize), at: instruction.timeRange.start)
+
+                instruction.layerInstructions = [transformer2]
+                
+                videoComposition!.instructions.append(instruction)
+            } else {
+                let instruction = AVMutableVideoCompositionInstruction()
+                instruction.timeRange = CMTimeRangeMake(start: secondVideoTrack.timeRange.end, duration: firstVideoTrack.timeRange.end-secondVideoTrack.timeRange.end)
+                let transformer1 = AVMutableVideoCompositionLayerInstruction(assetTrack: firstVideoTrack)
+                transformer1.setTransform(firstVideoTrack.getTransform(renderSize: videoComposition!.renderSize), at: secondVideoTrack.timeRange.end)
+                
+                instruction.layerInstructions = [transformer1]
+                
+                videoComposition!.instructions.append(instruction)
+            }
+        } else {
             let instruction = AVMutableVideoCompositionInstruction()
-            instruction.timeRange = CMTimeRangeMake(start: firstVideoTrack.timeRange.end, duration: secondVideoTrack.timeRange.end)
+            instruction.timeRange = CMTimeRangeMake(start: .zero, duration: composition!.duration)
+            let transformer1 = AVMutableVideoCompositionLayerInstruction(assetTrack: firstVideoTrack)
+            transformer1.setTransform(firstVideoTrack.getTransform(renderSize: videoComposition!.renderSize), at: .zero)
             
-            let transformer2 = AVMutableVideoCompositionLayerInstruction(assetTrack: secondVideoTrack)
-            transformer2.setTransform(CGAffineTransform.identity.scaledBy(x: videoComposition!.renderSize.width/secondVideoTrack.naturalSize.width, y: videoComposition!.renderSize.height/secondVideoTrack.naturalSize.height), at: instruction.timeRange.start)
-            
-            instruction.layerInstructions = [transformer2]
+            instruction.layerInstructions = [transformer1]
             
             videoComposition!.instructions.append(instruction)
         }
-        
         
         playerItem = AVPlayerItem(asset: composition!)
         playerItem!.videoComposition = videoComposition
         playerItem!.audioMix = audioMix
+        
         player.replaceCurrentItem(with: playerItem)
         
         currentTime = Double((backgroundTimelineView.contentOffset.x + backgroundTimelineView.frame.width/2) / scaledDurationToWidth)
-        
         
         if firstVideoTrack.segments.count != 0 {
             backgroundTimelineView.isHidden = false
@@ -580,6 +599,7 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
         let imageGenerator = AVAssetImageGenerator.init(asset: composition!)
         imageGenerator.maximumSize = CGSize(width: self.backgroundTimelineView.bounds.height * 2, height: self.backgroundTimelineView.bounds.height * 2)
         imageGenerator.appliesPreferredTrackTransform = true
+        imageGenerator.videoComposition = videoComposition
         
         if true {
             var times = [NSValue]()
@@ -817,9 +837,7 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
 //                    self.present(alertController, animated: true, completion: nil)
                 }
             } else {
-                DispatchQueue.main.async {
-                    self.resumeButton.isHidden = true
-                }
+                
             }
         }
     }
@@ -952,8 +970,6 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
     
     @IBOutlet private weak var recordButton: UIButton!
     
-    @IBOutlet private weak var resumeButton: UIButton!
-    
     @IBAction private func toggleMovieRecording(_ recordButton: UIButton) {
         guard let movieFileOutput = self.movieFileOutput else {
             return
@@ -1044,13 +1060,78 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
          Note: Since we use a unique file path for each recording, a new recording will
          not overwrite a recording currently being saved.
          */
-        func cleanUp() {
+        
+        var success = true
+        
+        if error != nil {
+            print("Movie file finishing error: \(String(describing: error))")
+            success = (((error! as NSError).userInfo[AVErrorRecordingSuccessfullyFinishedKey] as AnyObject).boolValue)!
+        }
+        
+        if success {
             let path = outputFileURL.path
             if FileManager.default.fileExists(atPath: path) {
-                do {
-                    try FileManager.default.removeItem(atPath: path)
-                } catch {
-                    print("Could not remove file at url: \(outputFileURL)")
+                let newAsset = AVURLAsset(url: outputFileURL, options: nil)
+                
+                /*
+                 Using AVAsset now runs the risk of blocking the current thread (the
+                 main UI thread) whilst I/O happens to populate the properties. It's
+                 prudent to defer our work until the properties we need have been loaded.
+                 */
+                newAsset.loadValuesAsynchronously(forKeys: TCPlayViewCell.assetKeysRequiredToPlay) {
+                    /*
+                     The asset invokes its completion handler on an arbitrary queue.
+                     To avoid multiple threads using our internal state at the same time
+                     we'll elect to use the main thread at all times, let's dispatch
+                     our handler to the main queue.
+                     */
+                    DispatchQueue.main.async {
+                        
+                        /*
+                         Test whether the values of each of the keys we need have been
+                         successfully loaded.
+                         */
+                        for key in TCPlayViewCell.assetKeysRequiredToPlay {
+                            var error: NSError?
+                            
+                            if newAsset.statusOfValue(forKey: key, error: &error) == .failed {
+                                let stringFormat = NSLocalizedString("error.asset_key_%@_failed.description", comment: "Can't use this AVAsset because one of it's keys failed to load")
+                                
+                                let message = String.localizedStringWithFormat(stringFormat, key)
+                                
+                                
+                                return
+                            }
+                        }
+                        
+                        // We can't play this asset.
+                        if !newAsset.isPlayable || newAsset.hasProtectedContent {
+                            let message = NSLocalizedString("error.asset_not_playable.description", comment: "Can't use this AVAsset because it isn't playable or has protected content")
+                            
+                            
+                            return
+                        }
+                        
+                        /*
+                         We can play this asset. Create a new `AVPlayerItem` and make
+                         it our player's current item.
+                         */
+                        
+                        let videoAssetTrack = newAsset.tracks(withMediaType: .video).first!
+                        
+                        let compositionVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video)[1]
+                        
+                        compositionVideoTrack.preferredTransform = videoAssetTrack.preferredTransform
+                        
+                        
+                        try! compositionVideoTrack.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: newAsset.duration), of: videoAssetTrack, at: CMTime.zero)
+                        
+                        
+                        // update timeline
+                        self.updatePlayer()
+                        self.backgroundTimelineView.reloadData()
+                        
+                    }
                 }
             }
             
@@ -1063,45 +1144,6 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
             }
         }
         
-        var success = true
-        
-        if error != nil {
-            print("Movie file finishing error: \(String(describing: error))")
-            success = (((error! as NSError).userInfo[AVErrorRecordingSuccessfullyFinishedKey] as AnyObject).boolValue)!
-        }
-        
-        if success {
-            // Check authorization status.
-            PHPhotoLibrary.requestAuthorization { status in
-                if status == .authorized {
-                    // Save the movie file to the photo library and cleanup.
-                    PHPhotoLibrary.shared().performChanges({
-                        let options = PHAssetResourceCreationOptions()
-                        options.shouldMoveFile = true
-                        let creationRequest = PHAssetCreationRequest.forAsset()
-                        creationRequest.addResource(with: .video, fileURL: outputFileURL, options: options)
-                    }, completionHandler: { success, error in
-                        if !success {
-                            print("Could not save movie to photo library: \(String(describing: error))")
-                        }
-                        cleanUp()
-                    }
-                    )
-                } else {
-                    cleanUp()
-                }
-            }
-        } else {
-            cleanUp()
-        }
-        
-        // Enable the Camera and Record buttons to let the user switch camera and start another recording.
-        DispatchQueue.main.async {
-            // Only enable the ability to change camera if the device has more than one camera.
-//            self.cameraButton.isEnabled = self.videoDeviceDiscoverySession.uniqueDevicePositionsCount > 1
-//            self.recordButton.isEnabled = true
-//            self.recordButton.setTitle(NSLocalizedString("Record", comment: "Recording button record title"), for: [])
-        }
     }
     
     // MARK: KVO and Notifications
@@ -1166,13 +1208,9 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                     self.session.startRunning()
                     self.isSessionRunning = self.session.isRunning
                 } else {
-                    DispatchQueue.main.async {
-                        self.resumeButton.isHidden = false
-                    }
+                    
                 }
             }
-        } else {
-            resumeButton.isHidden = false
         }
     }
     
@@ -1204,14 +1242,6 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
                 }
             }
             
-            if showResumeButton {
-                // Simply fade-in a button to enable the user to try to resume the session running.
-                resumeButton.alpha = 0
-                resumeButton.isHidden = false
-                UIView.animate(withDuration: 0.25) {
-                    self.resumeButton.alpha = 1
-                }
-            }
         }
     }
     
@@ -1219,24 +1249,6 @@ final class TCPlayViewCell: UITableViewCell, UITextFieldDelegate, UIAlertViewDel
     func sessionInterruptionEnded(notification: NSNotification) {
         print("Capture session interruption ended")
         
-        if !resumeButton.isHidden {
-            UIView.animate(withDuration: 0.25,
-                           animations: {
-                            self.resumeButton.alpha = 0
-            }, completion: { _ in
-                self.resumeButton.isHidden = true
-            }
-            )
-        }
-        if !cameraUnavailableLabel.isHidden {
-            UIView.animate(withDuration: 0.25,
-                           animations: {
-                            self.cameraUnavailableLabel.alpha = 0
-            }, completion: { _ in
-                self.cameraUnavailableLabel.isHidden = true
-            }
-            )
-        }
     }
 
 }
@@ -1276,5 +1288,59 @@ extension AVCaptureDevice.DiscoverySession {
         }
         
         return uniqueDevicePositions.count
+    }
+}
+
+
+extension AVAssetTrack {
+    func getTransform(cropRect: CGRect) -> CGAffineTransform {
+        let renderSize = cropRect.size
+        let renderScale = renderSize.width / cropRect.width
+        let offset = CGPoint(x: -cropRect.origin.x, y: -cropRect.origin.y)
+        let rotation = atan2(self.preferredTransform.b, self.preferredTransform.a)
+        
+        var rotationOffset = CGPoint(x: 0, y: 0)
+        
+        if self.preferredTransform.b == -1.0 {
+            rotationOffset.y = self.naturalSize.width
+        } else if self.preferredTransform.c == -1.0 {
+            rotationOffset.x = self.naturalSize.height
+        } else if self.preferredTransform.a == -1.0 {
+            rotationOffset.x = self.naturalSize.width
+            rotationOffset.y = self.naturalSize.height
+        }
+        
+        var transform = CGAffineTransform.identity
+        transform = transform.scaledBy(x: renderScale, y: renderScale)
+        transform = transform.translatedBy(x: offset.x + rotationOffset.x, y: offset.y + rotationOffset.y)
+        transform = transform.rotated(by: rotation)
+        return transform
+    }
+    
+    func getTransform(renderSize: CGSize) -> CGAffineTransform {
+        let offset = CGPoint.zero
+        let rotation = atan2(self.preferredTransform.b, self.preferredTransform.a)
+        var rotationOffset = CGPoint.zero
+        var renderScale: CGFloat = 1
+
+        if self.preferredTransform.b == -1.0 {
+            rotationOffset.y = self.naturalSize.width
+            renderScale = renderSize.width / self.naturalSize.height
+        } else if self.preferredTransform.c == -1.0 {
+            rotationOffset.x = self.naturalSize.height
+            renderScale = renderSize.width / self.naturalSize.height
+        } else if self.preferredTransform.a == -1.0 {
+            rotationOffset.x = self.naturalSize.width
+            rotationOffset.y = self.naturalSize.height
+            renderScale = renderSize.width / self.naturalSize.width
+        } else {
+            renderScale = renderSize.width / self.naturalSize.width
+        }
+        
+        var transform = CGAffineTransform.identity
+        transform = transform.scaledBy(x: renderScale, y: renderScale)
+        transform = transform.translatedBy(x: offset.x + rotationOffset.x, y: offset.y + rotationOffset.y)
+        transform = transform.rotated(by: rotation)
+        return transform
     }
 }
