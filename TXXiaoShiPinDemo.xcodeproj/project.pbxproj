@@ -300,6 +300,19 @@
 		F0365C99215A54A700726A70 /* DisplayData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C96215A54A600726A70 /* DisplayData.swift */; };
 		F0365C9A215A54A700726A70 /* AsyncFetcherOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C97215A54A600726A70 /* AsyncFetcherOperation.swift */; };
 		F0365C9C215A7BBE00726A70 /* TCPlayViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C93215A549500726A70 /* TCPlayViewCell.swift */; };
+		F04797642168F6AB00DBFFB3 /* OpenGLPixelBufferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04797422168F6AA00DBFFB3 /* OpenGLPixelBufferView.swift */; };
+		F04797672168F6AB00DBFFB3 /* ShaderUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04797472168F6AA00DBFFB3 /* ShaderUtilities.swift */; };
+		F047976B2168F6AB00DBFFB3 /* ObjC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F047974F2168F6AA00DBFFB3 /* ObjC.swift */; };
+		F047976C2168F6AB00DBFFB3 /* NumTypes+Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04797502168F6AA00DBFFB3 /* NumTypes+Conversion.swift */; };
+		F047976D2168F6AB00DBFFB3 /* FourCharCode+StringLiteralConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04797512168F6AA00DBFFB3 /* FourCharCode+StringLiteralConvertible.swift */; };
+		F047977B2168F82500DBFFB3 /* RosyWriterCPURenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04797762168F82500DBFFB3 /* RosyWriterCPURenderer.swift */; };
+		F047977C2168F82500DBFFB3 /* RosyWriterRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04797772168F82500DBFFB3 /* RosyWriterRenderer.swift */; };
+		F047977D2168F82500DBFFB3 /* RosyWriterOpenCVRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04797782168F82500DBFFB3 /* RosyWriterOpenCVRenderer.swift */; };
+		F047977E2168F82500DBFFB3 /* RosyWriterCIFilterRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04797792168F82500DBFFB3 /* RosyWriterCIFilterRenderer.swift */; };
+		F047977F2168F82500DBFFB3 /* RosyWriterOpenGLRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F047977A2168F82500DBFFB3 /* RosyWriterOpenGLRenderer.swift */; };
+		F04797812168F8A200DBFFB3 /* MovieRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04797802168F8A200DBFFB3 /* MovieRecorder.swift */; };
+		F04797832168F8E800DBFFB3 /* RosyWriterCapturePipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04797822168F8E800DBFFB3 /* RosyWriterCapturePipeline.swift */; };
+		F04797852168F9DD00DBFFB3 /* RosyWriterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04797842168F9DD00DBFFB3 /* RosyWriterViewController.swift */; };
 		F06E4334215CB9EF007E5E77 /* TCVodPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C912158F4DE00726A70 /* TCVodPlayViewController.swift */; };
 		F06E43522166075B007E5E77 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06E43502166075B007E5E77 /* PreviewView.swift */; };
 		F06E43532166075B007E5E77 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06E43512166075B007E5E77 /* PlayerView.swift */; };
@@ -911,6 +924,19 @@
 		F0365C97215A54A600726A70 /* AsyncFetcherOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncFetcherOperation.swift; sourceTree = "<group>"; };
 		F03AF0362155F4A1007D1E60 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F03AF0382155F4A2007D1E60 /* Assets2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets2.xcassets; sourceTree = "<group>"; };
+		F04797422168F6AA00DBFFB3 /* OpenGLPixelBufferView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenGLPixelBufferView.swift; sourceTree = "<group>"; };
+		F04797472168F6AA00DBFFB3 /* ShaderUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShaderUtilities.swift; sourceTree = "<group>"; };
+		F047974F2168F6AA00DBFFB3 /* ObjC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjC.swift; sourceTree = "<group>"; };
+		F04797502168F6AA00DBFFB3 /* NumTypes+Conversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NumTypes+Conversion.swift"; sourceTree = "<group>"; };
+		F04797512168F6AA00DBFFB3 /* FourCharCode+StringLiteralConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FourCharCode+StringLiteralConvertible.swift"; sourceTree = "<group>"; };
+		F04797762168F82500DBFFB3 /* RosyWriterCPURenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RosyWriterCPURenderer.swift; sourceTree = "<group>"; };
+		F04797772168F82500DBFFB3 /* RosyWriterRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RosyWriterRenderer.swift; sourceTree = "<group>"; };
+		F04797782168F82500DBFFB3 /* RosyWriterOpenCVRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RosyWriterOpenCVRenderer.swift; sourceTree = "<group>"; };
+		F04797792168F82500DBFFB3 /* RosyWriterCIFilterRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RosyWriterCIFilterRenderer.swift; sourceTree = "<group>"; };
+		F047977A2168F82500DBFFB3 /* RosyWriterOpenGLRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RosyWriterOpenGLRenderer.swift; sourceTree = "<group>"; };
+		F04797802168F8A200DBFFB3 /* MovieRecorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieRecorder.swift; sourceTree = "<group>"; };
+		F04797822168F8E800DBFFB3 /* RosyWriterCapturePipeline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RosyWriterCapturePipeline.swift; sourceTree = "<group>"; };
+		F04797842168F9DD00DBFFB3 /* RosyWriterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RosyWriterViewController.swift; sourceTree = "<group>"; };
 		F06E43502166075B007E5E77 /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		F06E43512166075B007E5E77 /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		F08756DD21495B31006CF4B6 /* TXXiaoShiPinDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TXXiaoShiPinDemo-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -1727,6 +1753,7 @@
 				9105C2AD1EB1898C00DB85F3 /* MainUI */,
 				B70080B81D7588EA0073897E /* List */,
 				9105C2B51EB193FD00DB85F3 /* Play */,
+				F04797322168F6AA00DBFFB3 /* Recorder */,
 				91C097151EA49CA1003370AA /* UGCEditor */,
 				9105C2BD1EB2E9DA00DB85F3 /* UGCPublish */,
 				CE1C22F62080D3980002FF8C /* VideoUpload */,
@@ -1776,6 +1803,58 @@
 				A00916BB20B3B718003EBAA5 /* Launch Screen.storyboard */,
 			);
 			path = Resource;
+			sourceTree = "<group>";
+		};
+		F04797322168F6AA00DBFFB3 /* Recorder */ = {
+			isa = PBXGroup;
+			children = (
+				F04797842168F9DD00DBFFB3 /* RosyWriterViewController.swift */,
+				F04797822168F8E800DBFFB3 /* RosyWriterCapturePipeline.swift */,
+				F04797752168F82500DBFFB3 /* Renderer */,
+				F04797402168F6AA00DBFFB3 /* Utilities */,
+				F047974E2168F6AA00DBFFB3 /* OOPUtils */,
+			);
+			path = Recorder;
+			sourceTree = "<group>";
+		};
+		F04797402168F6AA00DBFFB3 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				F04797802168F8A200DBFFB3 /* MovieRecorder.swift */,
+				F04797422168F6AA00DBFFB3 /* OpenGLPixelBufferView.swift */,
+				F04797462168F6AA00DBFFB3 /* GL */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		F04797462168F6AA00DBFFB3 /* GL */ = {
+			isa = PBXGroup;
+			children = (
+				F04797472168F6AA00DBFFB3 /* ShaderUtilities.swift */,
+			);
+			path = GL;
+			sourceTree = "<group>";
+		};
+		F047974E2168F6AA00DBFFB3 /* OOPUtils */ = {
+			isa = PBXGroup;
+			children = (
+				F047974F2168F6AA00DBFFB3 /* ObjC.swift */,
+				F04797502168F6AA00DBFFB3 /* NumTypes+Conversion.swift */,
+				F04797512168F6AA00DBFFB3 /* FourCharCode+StringLiteralConvertible.swift */,
+			);
+			path = OOPUtils;
+			sourceTree = "<group>";
+		};
+		F04797752168F82500DBFFB3 /* Renderer */ = {
+			isa = PBXGroup;
+			children = (
+				F04797762168F82500DBFFB3 /* RosyWriterCPURenderer.swift */,
+				F04797772168F82500DBFFB3 /* RosyWriterRenderer.swift */,
+				F04797782168F82500DBFFB3 /* RosyWriterOpenCVRenderer.swift */,
+				F04797792168F82500DBFFB3 /* RosyWriterCIFilterRenderer.swift */,
+				F047977A2168F82500DBFFB3 /* RosyWriterOpenGLRenderer.swift */,
+			);
+			path = Renderer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2324,7 +2403,9 @@
 			files = (
 				F06E4334215CB9EF007E5E77 /* TCVodPlayViewController.swift in Sources */,
 				F0365C9C215A7BBE00726A70 /* TCPlayViewCell.swift in Sources */,
+				F04797832168F8E800DBFFB3 /* RosyWriterCapturePipeline.swift in Sources */,
 				CE870ED020B4122B0012EF30 /* TransitionView.m in Sources */,
+				F04797642168F6AB00DBFFB3 /* OpenGLPixelBufferView.swift in Sources */,
 				F06E43532166075B007E5E77 /* PlayerView.swift in Sources */,
 				91BFE82B1EB866E0008EB95C /* TCUserInfoViewController.m in Sources */,
 				CE0BE03C1FFB27F900DEBA5C /* NSString+Common.m in Sources */,
@@ -2334,6 +2415,7 @@
 				F0365C98215A54A700726A70 /* AsyncFetcher.swift in Sources */,
 				91BFE82A1EB866E0008EB95C /* TCUserInfoCell.m in Sources */,
 				CE1C230E2080D3990002FF8C /* TXUGCPublishUtil.m in Sources */,
+				F04797672168F6AB00DBFFB3 /* ShaderUtilities.swift in Sources */,
 				CE29EBC61FE8BDFB0038C200 /* VideoTextFiled.m in Sources */,
 				F0365C99215A54A700726A70 /* DisplayData.swift in Sources */,
 				CE0BE0371FFB27F900DEBA5C /* TCLog.m in Sources */,
@@ -2345,6 +2427,7 @@
 				CE29EBCB1FE8BDFB0038C200 /* EffectSelectView.m in Sources */,
 				CE29EBCD1FE8BDFB0038C200 /* BottomTabBar.m in Sources */,
 				CE0BE0401FFB27F900DEBA5C /* UIView+Additions.m in Sources */,
+				F047977B2168F82500DBFFB3 /* RosyWriterCPURenderer.swift in Sources */,
 				CE1C23102080D3990002FF8C /* TVCCommon.m in Sources */,
 				CE0BE03F1FFB27F900DEBA5C /* NSData+Common.m in Sources */,
 				91BFE7AD1EB862DF008EB95C /* TCLoginParam.m in Sources */,
@@ -2354,6 +2437,7 @@
 				91BFE7C41EB863AF008EB95C /* TCLiveListModel.m in Sources */,
 				91B45A501E8CE2010058E8F6 /* UIImage+MCImage.m in Sources */,
 				CE29EBDD1FE8BE140038C200 /* TCVideoJoinCell.m in Sources */,
+				F047977F2168F82500DBFFB3 /* RosyWriterOpenGLRenderer.swift in Sources */,
 				CE29EBCC1FE8BDFB0038C200 /* VideoPreview.m in Sources */,
 				CE29EBC71FE8BDFB0038C200 /* VideoCutView.m in Sources */,
 				F0365C9A215A54A700726A70 /* AsyncFetcherOperation.swift in Sources */,
@@ -2363,6 +2447,7 @@
 				EF47CE2D1D4B03FC0028B598 /* main.m in Sources */,
 				CE29EBA91FE8BCA10038C200 /* TCBGMCell.m in Sources */,
 				91BFE8361EB86BE0008EB95C /* UIPlaceHolderTextView.m in Sources */,
+				F047977E2168F82500DBFFB3 /* RosyWriterCIFilterRenderer.swift in Sources */,
 				CE1C23142080D3990002FF8C /* TVCClientInner.m in Sources */,
 				91BFE8061EB8657E008EB95C /* TCVideoPublishController.m in Sources */,
 				CE1C230C2080D3990002FF8C /* TVCUtils.m in Sources */,
@@ -2372,7 +2457,9 @@
 				91BFE81D1EB8669F008EB95C /* TCVideoEditViewController.m in Sources */,
 				91BFE82C1EB866E0008EB95C /* TCUserInfoModel.m in Sources */,
 				CE0BE03D1FFB27F900DEBA5C /* QCloudAuthentationHeadV5Creator.m in Sources */,
+				F047977D2168F82500DBFFB3 /* RosyWriterOpenCVRenderer.swift in Sources */,
 				CE0BE0341FFB27F900DEBA5C /* UIColor+MLPFlatColors.m in Sources */,
+				F047976C2168F6AB00DBFFB3 /* NumTypes+Conversion.swift in Sources */,
 				CE29EBCA1FE8BDFB0038C200 /* PasterAddView.m in Sources */,
 				CE29EBEA1FE8BF180038C200 /* VideoRangeSlider.m in Sources */,
 				91B45A551E8CE2010058E8F6 /* MCTip.m in Sources */,
@@ -2382,7 +2469,9 @@
 				91BFE7B11EB862DF008EB95C /* TCRegisterViewController.m in Sources */,
 				CE29EBED1FE8C0010038C200 /* VideoInfo.m in Sources */,
 				910C5CF31D4B607C003B31FE /* TCBaseAppDelegate.m in Sources */,
+				F047976B2168F6AB00DBFFB3 /* ObjC.swift in Sources */,
 				A009172220B43670003EBAA5 /* TXCVEFColorPalette.m in Sources */,
+				F04797852168F9DD00DBFFB3 /* RosyWriterViewController.swift in Sources */,
 				CE29EBA41FE8BCA10038C200 /* TCCircleProgressView.m in Sources */,
 				A0AEBC3420CFB36D00F41117 /* SmallButton.m in Sources */,
 				CE29EBA71FE8BCA10038C200 /* TCBGMHelper.m in Sources */,
@@ -2392,6 +2481,7 @@
 				91B45A531E8CE2010058E8F6 /* MCCameraDynamicView.m in Sources */,
 				91BFE7AE1EB862DF008EB95C /* TCLoginViewController.m in Sources */,
 				F06E43522166075B007E5E77 /* PreviewView.swift in Sources */,
+				F047977C2168F82500DBFFB3 /* RosyWriterRenderer.swift in Sources */,
 				91B45A521E8CE2010058E8F6 /* MaterialManager.m in Sources */,
 				CE29EBAC1FE8BCE70038C200 /* TCBGMListViewController.m in Sources */,
 				CE29EBC91FE8BDFB0038C200 /* VideoPasterView.m in Sources */,
@@ -2401,7 +2491,9 @@
 				CE0BE0331FFB27F900DEBA5C /* UIView+CustomAutoLayout.m in Sources */,
 				CE1C230D2080D3990002FF8C /* TXUGCPublish.m in Sources */,
 				CE29EBE21FE8BE470038C200 /* V8HorizontalPickerView.m in Sources */,
+				F04797812168F8A200DBFFB3 /* MovieRecorder.swift in Sources */,
 				CE0BE0391FFB27F900DEBA5C /* UIButton+Glossy.m in Sources */,
+				F047976D2168F6AB00DBFFB3 /* FourCharCode+StringLiteralConvertible.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
