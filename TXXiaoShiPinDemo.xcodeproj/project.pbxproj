@@ -295,7 +295,6 @@
 		F032238B21540B1000533AA3 /* TCLiveListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F032238921540B1000533AA3 /* TCLiveListCell.xib */; };
 		F032238E21540F0500533AA3 /* TCLiveListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F032238C21540F0400533AA3 /* TCLiveListCell.m */; };
 		F0365C8B2156C22F00726A70 /* Assets2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F03AF0382155F4A2007D1E60 /* Assets2.xcassets */; };
-		F0365C902157CC8400726A70 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F03AF0352155F4A1007D1E60 /* Main.storyboard */; };
 		F0365C98215A54A700726A70 /* AsyncFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C95215A54A600726A70 /* AsyncFetcher.swift */; };
 		F0365C99215A54A700726A70 /* DisplayData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C96215A54A600726A70 /* DisplayData.swift */; };
 		F0365C9A215A54A700726A70 /* AsyncFetcherOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C97215A54A600726A70 /* AsyncFetcherOperation.swift */; };
@@ -313,6 +312,7 @@
 		F04797812168F8A200DBFFB3 /* MovieRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04797802168F8A200DBFFB3 /* MovieRecorder.swift */; };
 		F04797832168F8E800DBFFB3 /* RosyWriterCapturePipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04797822168F8E800DBFFB3 /* RosyWriterCapturePipeline.swift */; };
 		F04797852168F9DD00DBFFB3 /* RosyWriterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04797842168F9DD00DBFFB3 /* RosyWriterViewController.swift */; };
+		F04797882168FCEB00DBFFB3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F03AF0352155F4A1007D1E60 /* Main.storyboard */; };
 		F06E4334215CB9EF007E5E77 /* TCVodPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C912158F4DE00726A70 /* TCVodPlayViewController.swift */; };
 		F06E43522166075B007E5E77 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06E43502166075B007E5E77 /* PreviewView.swift */; };
 		F06E43532166075B007E5E77 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06E43512166075B007E5E77 /* PlayerView.swift */; };
@@ -2148,7 +2148,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F0365C902157CC8400726A70 /* Main.storyboard in Resources */,
+				F04797882168FCEB00DBFFB3 /* Main.storyboard in Resources */,
 				F0365C8B2156C22F00726A70 /* Assets2.xcassets in Resources */,
 				D64734DD1F2734AD00A02463 /* QBImagePicker.storyboard in Resources */,
 				D64734DB1F2734A500A02463 /* QBImagePicker.strings in Resources */,
