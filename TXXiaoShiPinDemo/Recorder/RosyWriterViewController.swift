@@ -123,18 +123,20 @@ class RosyWriterViewController: UIViewController, RosyWriterCapturePipelineDeleg
         switch swipeGesture.direction {
         case .left:
             _currentIdx = (_currentIdx + 1) % avaliableFilters.count
-            _capturePipeline.changeFilter(_currentIdx)
         case .right:
             _currentIdx = _currentIdx - 1
             if _currentIdx < 0 {
                 _currentIdx += avaliableFilters.count
             }
-            _capturePipeline.changeFilter(_currentIdx)
         default:
-            break
+            assert(false)
         }
         
-        self.dimensionsLabel.text = "\(_currentIdx):\(avaliableFilters[_currentIdx])"
+        if _currentIdx != 33, _currentIdx != 108, _currentIdx != 112 {
+            _capturePipeline.changeFilter(_currentIdx)
+            self.dimensionsLabel.text = "\(_currentIdx):\(avaliableFilters[_currentIdx])"
+        }
+        
     }
     
     @IBAction func toggleRecording(_: Any) {
