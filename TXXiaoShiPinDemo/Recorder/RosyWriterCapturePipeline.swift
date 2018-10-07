@@ -238,7 +238,7 @@ class RosyWriterCapturePipeline: NSObject, AVCaptureAudioDataOutputSampleBufferD
         #endif // RECORD_AUDIO
         
         /* Video */
-        guard let videoDevice = AVCaptureDevice.default(for: AVMediaType.video) else {
+        guard let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) else {
             fatalError("AVCaptureDevice of type AVMediaTypeVideo unavailable!")
         }
         do {
@@ -559,6 +559,10 @@ class RosyWriterCapturePipeline: NSObject, AVCaptureAudioDataOutputSampleBufferD
                 self._delegate?.capturePipeline(self, previewPixelBufferReadyForDisplay: currentPreviewPixelBuffer!)
             }
         }
+    }
+    
+    func changeFilter(_ index: Int) {
+        _renderer.changeFilter(index)
     }
     
     //MARK: Recording

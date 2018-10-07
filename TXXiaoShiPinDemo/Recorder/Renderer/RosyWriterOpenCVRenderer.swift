@@ -88,6 +88,10 @@ class RosyWriterOpenCVRenderer: NSObject, RosyWriterRenderer {
     
     let inputPixelFormat: FourCharCode = kCVPixelFormatType_32BGRA
     
+    func changeFilter(_ direction: Int) {
+        _ = 1
+    }
+    
     func prepareForInputWithFormatDescription(_ inputFormatDescription: CMFormatDescription!, outputRetainedBufferCountHint: Int) {
         // nothing to do, we are stateless
     }

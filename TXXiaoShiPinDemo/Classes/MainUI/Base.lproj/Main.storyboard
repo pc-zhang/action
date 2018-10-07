@@ -374,7 +374,12 @@
                             </toolbar>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <gestureRecognizers/>
                         <viewLayoutGuide key="safeArea" id="oyy-wA-7t6"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="cxr-Ev-x9r" appends="YES" id="8WP-Hm-OXg"/>
+                            <outletCollection property="gestureRecognizers" destination="WIE-qO-Sci" appends="YES" id="btF-LZ-KXF"/>
+                        </connections>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <connections>
@@ -385,6 +390,16 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ddq-MA-bTT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" id="cxr-Ev-x9r">
+                    <connections>
+                        <action selector="swipeChangeFilter:" destination="SZK-oA-ROx" id="k79-l3-DZe"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="left" id="WIE-qO-Sci">
+                    <connections>
+                        <action selector="swipeChangeFilter:" destination="SZK-oA-ROx" id="ejy-vB-BJK"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-2842" y="34"/>
         </scene>

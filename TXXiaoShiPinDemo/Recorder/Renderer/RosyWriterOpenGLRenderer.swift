@@ -59,6 +59,10 @@ class RosyWriterOpenGLRenderer: NSObject, RosyWriterRenderer {
         return FourCharCode(kCVPixelFormatType_32BGRA)
     }
     
+    func changeFilter(_ direction: Int) {
+        _ = 1
+    }
+    
     func prepareForInputWithFormatDescription(_ inputFormatDescription: CMFormatDescription!, outputRetainedBufferCountHint: Int) {
         // The input and output dimensions are the same. This renderer doesn't do any scaling.
         let dimensions = CMVideoFormatDescriptionGetDimensions(inputFormatDescription)

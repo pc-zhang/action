@@ -20,7 +20,8 @@ import CoreVideo
 
 @objc(RosyWriterCIFilterRenderer)
 class RosyWriterCIFilterRenderer: NSObject, RosyWriterRenderer {
-    
+    let avaliableFilters = CoreImageFilters.avaliableFilters()
+
     private var _ciContext: CIContext!
     private var _rosyFilter: CIFilter!
     private var _rgbColorSpace: CGColorSpace!
@@ -39,6 +40,12 @@ class RosyWriterCIFilterRenderer: NSObject, RosyWriterRenderer {
     let operatesInPlace: Bool = false
     
     let inputPixelFormat: FourCharCode = kCVPixelFormatType_32BGRA
+        
+    func changeFilter(_ index: Int) {
+        if let newFilter = CIFilter(name: avaliableFilters[index]) {
+            _rosyFilter = newFilter
+        }
+    }
     
     func prepareForInputWithFormatDescription(_ inputFormatDescription: CMFormatDescription!, outputRetainedBufferCountHint: Int) {
         // The input and output dimensions are the same. This renderer doesn't do any scaling.
@@ -76,7 +83,9 @@ class RosyWriterCIFilterRenderer: NSObject, RosyWriterRenderer {
         } else {
             
             // render the filtered image out to a pixel buffer (no locking needed as CIContext's render method will do that)
+            if filteredImage != nil {
             _ciContext.render(filteredImage!, to: renderedOutputPixelBuffer!, bounds: filteredImage!.extent, colorSpace: _rgbColorSpace)
+            }
         }
         
         return renderedOutputPixelBuffer

@@ -32,6 +32,7 @@ protocol RosyWriterRenderer: NSObjectProtocol {
     // This can be used by the renderer to size and preallocate their pools.
     func prepareForInputWithFormatDescription(_ inputFormatDescription: CMFormatDescription!, outputRetainedBufferCountHint: Int)
     func reset()
+    func changeFilter(_ direction: Int)
     
     /* Rendering */
     // Renderers which operate in place should return the input pixel buffer with a +1 retain count.

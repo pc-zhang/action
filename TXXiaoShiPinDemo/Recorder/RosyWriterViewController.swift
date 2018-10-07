@@ -19,8 +19,7 @@ import UIKit
 import AVFoundation
 
 @objc(RosyWriterViewController)
-class RosyWriterViewController: UIViewController, RosyWriterCapturePipelineDelegate {
-    
+class RosyWriterViewController: UIViewController, RosyWriterCapturePipelineDelegate {    
     private var _addedObservers: Bool = false
     private var _recording: Bool = false
     private var _backgroundRecordingID: UIBackgroundTaskIdentifier = UIBackgroundTaskIdentifier(rawValue: 0)
@@ -115,7 +114,28 @@ class RosyWriterViewController: UIViewController, RosyWriterCapturePipelineDeleg
         return true
     }
     
+    var _currentIdx = 0
+    
+    let avaliableFilters = CoreImageFilters.avaliableFilters()
+    
     //MARK: - UI
+    @IBAction func swipeChangeFilter(_ swipeGesture: UISwipeGestureRecognizer) {
+        switch swipeGesture.direction {
+        case .left:
+            _currentIdx = (_currentIdx + 1) % avaliableFilters.count
+            _capturePipeline.changeFilter(_currentIdx)
+        case .right:
+            _currentIdx = _currentIdx - 1
+            if _currentIdx < 0 {
+                _currentIdx += avaliableFilters.count
+            }
+            _capturePipeline.changeFilter(_currentIdx)
+        default:
+            break
+        }
+        
+        self.dimensionsLabel.text = "\(_currentIdx):\(avaliableFilters[_currentIdx])"
+    }
     
     @IBAction func toggleRecording(_: Any) {
         if _recording {
@@ -178,7 +198,7 @@ class RosyWriterViewController: UIViewController, RosyWriterCapturePipelineDeleg
         self.framerateLabel.text = frameRateString
         
         let dimensionsString = "\(_capturePipeline.videoDimensions.width) x \(_capturePipeline.videoDimensions.height)"
-        self.dimensionsLabel.text = dimensionsString
+//        self.dimensionsLabel.text = dimensionsString
     }
     
     private func showError(_ error: Error) {

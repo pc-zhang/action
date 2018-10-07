@@ -316,6 +316,7 @@
 		F06E4334215CB9EF007E5E77 /* TCVodPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C912158F4DE00726A70 /* TCVodPlayViewController.swift */; };
 		F06E43522166075B007E5E77 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06E43502166075B007E5E77 /* PreviewView.swift */; };
 		F06E43532166075B007E5E77 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06E43512166075B007E5E77 /* PlayerView.swift */; };
+		F0A53C8A2169D9E700571139 /* CoreImageFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A53C892169D9E700571139 /* CoreImageFilters.swift */; };
 		FE1A138C1D88FE5A00D94B62 /* UserProtocol.html in Resources */ = {isa = PBXBuildFile; fileRef = FE1A138B1D88FE5A00D94B62 /* UserProtocol.html */; };
 /* End PBXBuildFile section */
 
@@ -940,6 +941,7 @@
 		F06E43502166075B007E5E77 /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		F06E43512166075B007E5E77 /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		F08756DD21495B31006CF4B6 /* TXXiaoShiPinDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TXXiaoShiPinDemo-Bridging-Header.h"; sourceTree = "<group>"; };
+		F0A53C892169D9E700571139 /* CoreImageFilters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreImageFilters.swift; sourceTree = "<group>"; };
 		FE1A138B1D88FE5A00D94B62 /* UserProtocol.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = UserProtocol.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1848,6 +1850,7 @@
 		F04797752168F82500DBFFB3 /* Renderer */ = {
 			isa = PBXGroup;
 			children = (
+				F0A53C892169D9E700571139 /* CoreImageFilters.swift */,
 				F04797762168F82500DBFFB3 /* RosyWriterCPURenderer.swift */,
 				F04797772168F82500DBFFB3 /* RosyWriterRenderer.swift */,
 				F04797782168F82500DBFFB3 /* RosyWriterOpenCVRenderer.swift */,
@@ -2423,6 +2426,7 @@
 				CE93B730201F4D0900CD89B7 /* TCVideoLoadingController.m in Sources */,
 				91BFE7B91EB86379008EB95C /* TCUserAgreementController.m in Sources */,
 				91BFE79F1EB86288008EB95C /* AppDelegate.m in Sources */,
+				F0A53C8A2169D9E700571139 /* CoreImageFilters.swift in Sources */,
 				CE1C230F2080D3990002FF8C /* TVCReport.m in Sources */,
 				CE29EBCB1FE8BDFB0038C200 /* EffectSelectView.m in Sources */,
 				CE29EBCD1FE8BDFB0038C200 /* BottomTabBar.m in Sources */,
