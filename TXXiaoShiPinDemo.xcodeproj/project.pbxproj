@@ -311,7 +311,6 @@
 		F047977F2168F82500DBFFB3 /* RosyWriterOpenGLRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F047977A2168F82500DBFFB3 /* RosyWriterOpenGLRenderer.swift */; };
 		F04797812168F8A200DBFFB3 /* MovieRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04797802168F8A200DBFFB3 /* MovieRecorder.swift */; };
 		F04797832168F8E800DBFFB3 /* RosyWriterCapturePipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04797822168F8E800DBFFB3 /* RosyWriterCapturePipeline.swift */; };
-		F04797852168F9DD00DBFFB3 /* RosyWriterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F04797842168F9DD00DBFFB3 /* RosyWriterViewController.swift */; };
 		F04797882168FCEB00DBFFB3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F03AF0352155F4A1007D1E60 /* Main.storyboard */; };
 		F06E4334215CB9EF007E5E77 /* TCVodPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0365C912158F4DE00726A70 /* TCVodPlayViewController.swift */; };
 		F06E43522166075B007E5E77 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06E43502166075B007E5E77 /* PreviewView.swift */; };
@@ -937,7 +936,6 @@
 		F047977A2168F82500DBFFB3 /* RosyWriterOpenGLRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RosyWriterOpenGLRenderer.swift; sourceTree = "<group>"; };
 		F04797802168F8A200DBFFB3 /* MovieRecorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieRecorder.swift; sourceTree = "<group>"; };
 		F04797822168F8E800DBFFB3 /* RosyWriterCapturePipeline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RosyWriterCapturePipeline.swift; sourceTree = "<group>"; };
-		F04797842168F9DD00DBFFB3 /* RosyWriterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RosyWriterViewController.swift; sourceTree = "<group>"; };
 		F06E43502166075B007E5E77 /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		F06E43512166075B007E5E77 /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		F08756DD21495B31006CF4B6 /* TXXiaoShiPinDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TXXiaoShiPinDemo-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -1810,7 +1808,6 @@
 		F04797322168F6AA00DBFFB3 /* Recorder */ = {
 			isa = PBXGroup;
 			children = (
-				F04797842168F9DD00DBFFB3 /* RosyWriterViewController.swift */,
 				F04797822168F8E800DBFFB3 /* RosyWriterCapturePipeline.swift */,
 				F04797752168F82500DBFFB3 /* Renderer */,
 				F04797402168F6AA00DBFFB3 /* Utilities */,
@@ -2475,7 +2472,6 @@
 				910C5CF31D4B607C003B31FE /* TCBaseAppDelegate.m in Sources */,
 				F047976B2168F6AB00DBFFB3 /* ObjC.swift in Sources */,
 				A009172220B43670003EBAA5 /* TXCVEFColorPalette.m in Sources */,
-				F04797852168F9DD00DBFFB3 /* RosyWriterViewController.swift in Sources */,
 				CE29EBA41FE8BCA10038C200 /* TCCircleProgressView.m in Sources */,
 				A0AEBC3420CFB36D00F41117 /* SmallButton.m in Sources */,
 				CE29EBA71FE8BCA10038C200 /* TCBGMHelper.m in Sources */,

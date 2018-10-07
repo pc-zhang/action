@@ -111,7 +111,7 @@ class RosyWriterCapturePipeline: NSObject, AVCaptureAudioDataOutputSampleBufferD
     // client can set the orientation for the recorded movie
     var /*atomic*/ recordingOrientation: AVCaptureVideoOrientation = .portrait
     
-    private var _recordingURL: URL
+    var _recordingURL: URL
     private var _recordingStatus: RosyWriterRecordingStatus = .idle
     
     private var _pipelineRunningTask: UIBackgroundTaskIdentifier = UIBackgroundTaskIdentifier(rawValue: 0)
@@ -636,25 +636,26 @@ class RosyWriterCapturePipeline: NSObject, AVCaptureAudioDataOutputSampleBufferD
             
             // No state transition, we are still in the process of stopping.
             // We will be stopped once we save to the assets library.
+            self.transitionToRecordingStatus(.idle, error: nil)
         }
         
         _recorder = nil
         
-        let library = ALAssetsLibrary()
-        library.writeVideoAtPath(toSavedPhotosAlbum: _recordingURL) {assetURL, error in
-            
-            do {
-                try FileManager.default.removeItem(at: self._recordingURL)
-            } catch _ {
-            }
-            
-            synchronized(self) {
-                if self._recordingStatus != .stoppingRecording {
-                    fatalError("Expected to be in StoppingRecording state")
-                }
-                self.transitionToRecordingStatus(.idle, error: error)
-            }
-        }
+//        let library = ALAssetsLibrary()
+//        library.writeVideoAtPath(toSavedPhotosAlbum: _recordingURL) {assetURL, error in
+//
+//            do {
+//                try FileManager.default.removeItem(at: self._recordingURL)
+//            } catch _ {
+//            }
+//
+//            synchronized(self) {
+//                if self._recordingStatus != .stoppingRecording {
+//                    fatalError("Expected to be in StoppingRecording state")
+//                }
+//                self.transitionToRecordingStatus(.idle, error: error)
+//            }
+//        }
     }
     
     //MARK: Recording State Machine
