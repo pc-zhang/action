@@ -87,7 +87,7 @@
                                                             </connections>
                                                         </button>
                                                     </subviews>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="bottom" secondItem="rsd-8o-2bt" secondAttribute="bottom" constant="315" id="9dp-d0-jFo"/>
                                                         <constraint firstItem="rsd-8o-2bt" firstAttribute="trailing" secondItem="jwe-k0-pjt" secondAttribute="trailingMargin" id="a7g-tB-2BJ"/>
@@ -155,6 +155,13 @@
                                     <outlet property="delegate" destination="TL7-xW-1fW" id="hVs-uM-FSY"/>
                                 </connections>
                             </collectionView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hcm-sz-u8x">
+                                <rect key="frame" x="186.66666666666666" y="553" width="2" height="75"/>
+                                <color key="backgroundColor" red="1" green="0.4082706156" blue="0.4243272387" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="2" id="qS6-PX-nfW"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="0.66304603039999999" blue="0.1650658763" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -164,11 +171,14 @@
                             <constraint firstItem="GTN-9l-2fm" firstAttribute="top" secondItem="3JX-PL-fIE" secondAttribute="bottom" constant="5" id="Cae-WN-dgN"/>
                             <constraint firstItem="3aA-UL-O6D" firstAttribute="bottom" secondItem="fyc-V7-8D2" secondAttribute="bottom" constant="150" id="Fzc-or-3aU"/>
                             <constraint firstItem="fZG-Ba-K1q" firstAttribute="centerX" secondItem="3aA-UL-O6D" secondAttribute="centerX" id="Jbo-Yb-phu"/>
+                            <constraint firstItem="hcm-sz-u8x" firstAttribute="centerY" secondItem="fyc-V7-8D2" secondAttribute="centerY" id="Kdw-wQ-Tpw"/>
+                            <constraint firstItem="hcm-sz-u8x" firstAttribute="height" secondItem="fyc-V7-8D2" secondAttribute="height" id="OPj-VH-0bg"/>
                             <constraint firstItem="3aA-UL-O6D" firstAttribute="bottom" secondItem="fZG-Ba-K1q" secondAttribute="bottom" constant="50" id="RMV-Id-LEM"/>
                             <constraint firstItem="IVd-gr-2Um" firstAttribute="trailing" secondItem="3aA-UL-O6D" secondAttribute="trailing" id="V53-8T-oZ2"/>
                             <constraint firstItem="GTN-9l-2fm" firstAttribute="leading" secondItem="3aA-UL-O6D" secondAttribute="leading" constant="20" id="VrW-gG-YKp"/>
                             <constraint firstItem="3JX-PL-fIE" firstAttribute="top" secondItem="3aA-UL-O6D" secondAttribute="top" constant="20" id="X1L-eK-Yy6"/>
                             <constraint firstItem="IVd-gr-2Um" firstAttribute="leading" secondItem="3aA-UL-O6D" secondAttribute="leading" id="g5a-Cl-Ib6"/>
+                            <constraint firstItem="hcm-sz-u8x" firstAttribute="centerX" secondItem="fyc-V7-8D2" secondAttribute="centerX" id="gRo-HT-UXT"/>
                             <constraint firstItem="3aA-UL-O6D" firstAttribute="trailing" secondItem="GTN-9l-2fm" secondAttribute="trailing" constant="20" id="n0k-k0-NFq"/>
                             <constraint firstItem="fyc-V7-8D2" firstAttribute="centerX" secondItem="3aA-UL-O6D" secondAttribute="centerX" id="sEh-fD-b32"/>
                             <constraint firstItem="3aA-UL-O6D" firstAttribute="trailing" secondItem="3JX-PL-fIE" secondAttribute="trailing" constant="20" id="xil-rt-dYh"/>
@@ -180,6 +190,7 @@
                         <outlet property="backgroundTimelineView" destination="fyc-V7-8D2" id="7xc-OS-dwo"/>
                         <outlet property="dimensionsLabel" destination="GTN-9l-2fm" id="lOC-31-q4U"/>
                         <outlet property="framerateLabel" destination="3JX-PL-fIE" id="jvK-bq-XlT"/>
+                        <outlet property="middleLine" destination="hcm-sz-u8x" id="wBv-Xl-WZW"/>
                         <outlet property="recordButton" destination="fZG-Ba-K1q" id="VIe-eN-TFq"/>
                         <outlet property="tableView" destination="IVd-gr-2Um" id="sfS-Ue-sgW"/>
                     </connections>

@@ -80,8 +80,10 @@ final class TCPlayViewCell: UITableViewCell {
     override func layoutSubviews() {
         if delegate?.funcIsRecording() ?? false {
             playerView.frame = CGRect(x: 0, y: 0, width: bounds.width/3, height: bounds.height/3)
+            playerView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
         } else {
             playerView.frame = bounds
+            playerView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         }
     }
 

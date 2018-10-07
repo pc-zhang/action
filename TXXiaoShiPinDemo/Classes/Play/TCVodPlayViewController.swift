@@ -15,7 +15,9 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     // MARK: - UI Controls
     
     @IBOutlet weak var tableView: UITableView!
-
+    
+    @IBOutlet weak var middleLine: UIView!
+    
     @IBOutlet weak var backgroundTimelineView: UICollectionView! {
         didSet {
             backgroundTimelineView.contentOffset = CGPoint(x:-backgroundTimelineView.frame.width / 2, y:0)
@@ -59,7 +61,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
             }
             
             self.recordButton.isEnabled = false; // re-enabled once recording has finished starting
-            //            self.recordButton.title = "Stop"
+            self.recordButton.setTitle("Stop", for: .normal)
             
             _capturePipeline.startRecording()
             
@@ -171,8 +173,6 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        _capturePipeline.startRunning()
-        
         _labelTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.updateLabels), userInfo: nil, repeats: true)
     }
 
@@ -274,6 +274,8 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         recordTimeRange = segment.timeMapping.target
         isRecording = true
         tableView.visibleCells.first?.setNeedsLayout()
+        
+        _capturePipeline.startRunning()
     }
     
     // MARK: - UICollectionViewDataSource
@@ -357,6 +359,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func chorus(process processHandler: ((CGFloat) -> Void)!) {
+        self.tableView.isScrollEnabled = false
         TCUtil.report(xiaoshipin_videochorus, userName: nil, code: 0, msg: "合唱事件")
         if let index = tableView.indexPathsForVisibleRows?.first?.row {
             TCUtil.downloadVideo(self.lives[index].playurl, process: processHandler) { (videoPath) in
@@ -667,6 +670,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
                 }
                 
                 self.backgroundTimelineView.isHidden = false
+                self.middleLine.isHidden = false
                 
                 // update timeline
                 let currentTime = self.player.currentTime()
@@ -691,7 +695,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
                             DispatchQueue.main.async {
                                 if let cell = self.tableView.visibleCells.first as? TCPlayViewCell
                                 {
-                                    cell.downloadProcess = 0.5 + CGFloat(sampleBufferTime.seconds / self.composition!.duration.seconds)
+                                    cell.downloadProcess = 0.5 + CGFloat(sampleBufferTime.seconds / self.composition!.duration.seconds)/2
                                 }
                             }
                             
@@ -1065,3 +1069,4 @@ extension AVAssetTrack {
         return transform
     }
 }
+
