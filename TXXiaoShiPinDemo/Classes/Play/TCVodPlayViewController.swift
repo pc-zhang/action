@@ -288,7 +288,10 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         isRecording = true
         tableView.visibleCells.first?.setNeedsLayout()
         
-        _capturePipeline.startRunning()
+        if let indexOfHistogram = histograms.index(where: {$0.time == recordTimeRange.start}) {
+            _capturePipeline._renderer = HistogramRenderer(histograms[indexOfHistogram].histogram)
+            _capturePipeline.startRunning()
+        }
     }
     
     // MARK: - UICollectionViewDataSource

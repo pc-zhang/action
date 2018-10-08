@@ -316,6 +316,7 @@
 		F06E43522166075B007E5E77 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06E43502166075B007E5E77 /* PreviewView.swift */; };
 		F06E43532166075B007E5E77 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06E43512166075B007E5E77 /* PlayerView.swift */; };
 		F0A53C8A2169D9E700571139 /* CoreImageFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A53C892169D9E700571139 /* CoreImageFilters.swift */; };
+		F0A53C8E216B12ED00571139 /* HistogramRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A53C8D216B12EC00571139 /* HistogramRenderer.swift */; };
 		FE1A138C1D88FE5A00D94B62 /* UserProtocol.html in Resources */ = {isa = PBXBuildFile; fileRef = FE1A138B1D88FE5A00D94B62 /* UserProtocol.html */; };
 /* End PBXBuildFile section */
 
@@ -940,6 +941,7 @@
 		F06E43512166075B007E5E77 /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		F08756DD21495B31006CF4B6 /* TXXiaoShiPinDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TXXiaoShiPinDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		F0A53C892169D9E700571139 /* CoreImageFilters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreImageFilters.swift; sourceTree = "<group>"; };
+		F0A53C8D216B12EC00571139 /* HistogramRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistogramRenderer.swift; sourceTree = "<group>"; };
 		FE1A138B1D88FE5A00D94B62 /* UserProtocol.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = UserProtocol.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1847,6 +1849,7 @@
 		F04797752168F82500DBFFB3 /* Renderer */ = {
 			isa = PBXGroup;
 			children = (
+				F0A53C8D216B12EC00571139 /* HistogramRenderer.swift */,
 				F0A53C892169D9E700571139 /* CoreImageFilters.swift */,
 				F04797762168F82500DBFFB3 /* RosyWriterCPURenderer.swift */,
 				F04797772168F82500DBFFB3 /* RosyWriterRenderer.swift */,
@@ -2446,6 +2449,7 @@
 				CEBE18B01FD8E63A00A22F3F /* TCVideoCutViewController.m in Sources */,
 				CE0BE03B1FFB27F900DEBA5C /* UIImage+Additions.m in Sources */,
 				EF47CE2D1D4B03FC0028B598 /* main.m in Sources */,
+				F0A53C8E216B12ED00571139 /* HistogramRenderer.swift in Sources */,
 				CE29EBA91FE8BCA10038C200 /* TCBGMCell.m in Sources */,
 				91BFE8361EB86BE0008EB95C /* UIPlaceHolderTextView.m in Sources */,
 				F047977E2168F82500DBFFB3 /* RosyWriterCIFilterRenderer.swift in Sources */,
