@@ -195,14 +195,28 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     
     // MARK: - UITableViewDelegate
     
-//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        let playViewCell = cell as! TCPlayViewCell
-//        backgroundTimelineView.reloadData()
-//    }
-//
-//    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        let playViewCell = cell as! TCPlayViewCell
-//    }
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let playViewCell = cell as! TCPlayViewCell
+        playViewCell.playerView.isHidden = true
+    }
+
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        self.player.pause()
+        
+        DispatchQueue.main.async {
+            guard let cell = tableView.visibleCells.first as? TCPlayViewCell else {
+                return
+            }
+            
+            if let visibleIndex = tableView.indexPath(for: cell), visibleIndex.row < self.lives.count {
+                let liveInfo = self.lives[visibleIndex.row]
+                self.player.replaceCurrentItem(with: AVPlayerItem(url: URL(string: liveInfo.playurl!)!))
+                self.player.play()
+                cell.playerView.isHidden = false
+            }
+        }
+    }
     
     // MARK: - UITableViewDataSource
     
@@ -222,13 +236,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         
         cell.delegate = self
-        
-        if indexPath.row < self.lives.count {
-            let liveInfo = self.lives[indexPath.row]
-            player.replaceCurrentItem(with: AVPlayerItem(url: URL(string: liveInfo.playurl!)!))
-            cell.playerView.playerLayer.player = player
-            player.play()
-        }
+        cell.playerView.playerLayer.player = player
         
         return cell
     }
@@ -239,6 +247,9 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         // Begin asynchronously fetching data for the requested index paths.
         for indexPath in indexPaths {
+            if let playViewCell = tableView.cellForRow(at: indexPath) as? TCPlayViewCell {
+//                playViewCell.setBackgroundImage(UIImage(ur))
+            }
             let model = models[indexPath.row]
             asyncFetcher.fetchAsync(model.id)
         }
@@ -264,6 +275,8 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBAction func pan(_ recognizer: UIPanGestureRecognizer) {
         player.pause()
         seekTimer?.invalidate()
+        isRecording = false
+        tableView.visibleCells.first?.setNeedsLayout()
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -436,6 +449,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     func capturePipelineRecordingDidStop(_ capturePipeline: RosyWriterCapturePipeline) {
         
         self.recordingStopped()
+        capturePipeline.stopRunning()
 
         let newAsset = AVAsset(url: capturePipeline._recordingURL)
         
@@ -496,6 +510,10 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
                 try! secondVideoTrack.insertTimeRange(CMTimeRangeMake(start: .zero, duration: self.recordTimeRange.duration), of: videoAssetTrack, at: self.recordTimeRange.start)
                 
                 self.updatePlayer()
+                self.currentTime = self.recordTimeRange.start.seconds
+                
+                self.isRecording = false
+                self.tableView.visibleCells.first?.setNeedsLayout()
             }
         }
     }
@@ -907,7 +925,11 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     
     let avaliableFilters = CoreImageFilters.avaliableFilters()
     
-    var isRecording = false
+    var isRecording: Bool = false {
+        didSet {
+            self.recordButton.isHidden = !isRecording
+        }
+    }
     
     var liveListMgr: TCLiveListMgr?
     var isLoading: Bool = false
