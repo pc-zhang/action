@@ -132,7 +132,7 @@ class RosyWriterCapturePipeline: NSObject, AVCaptureAudioDataOutputSampleBufferD
     init(delegate: RosyWriterCapturePipelineDelegate, callbackQueue queue: DispatchQueue) {
         recordingOrientation = .portrait
         
-        _recordingURL = URL(fileURLWithPath: NSString.path(withComponents: [NSTemporaryDirectory(), "Movie.MOV"]) as String)
+        _recordingURL = URL(fileURLWithPath: NSString.path(withComponents: [NSTemporaryDirectory(), UUID().uuidString]) as String).appendingPathExtension("mov")
         
         _sessionQueue = DispatchQueue(label: "com.apple.sample.capturepipeline.session", attributes: [])
         
@@ -579,6 +579,9 @@ class RosyWriterCapturePipeline: NSObject, AVCaptureAudioDataOutputSampleBufferD
         }
         
         let callbackQueue = DispatchQueue(label: "com.apple.sample.capturepipeline.recordercallback", attributes: []); // guarantee ordering of callbacks with a serial queue
+        
+        _recordingURL = URL(fileURLWithPath: NSString.path(withComponents: [NSTemporaryDirectory(), UUID().uuidString]) as String).appendingPathExtension("mov")
+
         let recorder = MovieRecorder(url: _recordingURL, delegate: self, callbackQueue: callbackQueue)
         
         #if RECORD_AUDIO
