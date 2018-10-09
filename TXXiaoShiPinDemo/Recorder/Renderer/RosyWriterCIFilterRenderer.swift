@@ -60,9 +60,8 @@ class RosyWriterCIFilterRenderer: NSObject, RosyWriterRenderer {
         let eaglContext = EAGLContext(api: .openGLES2)
         _ciContext = CIContext(eaglContext: eaglContext!, options: [CIContextOption.workingColorSpace : NSNull()])
         
-        _rosyFilter = CIFilter(name: "CIColorMatrix")
-        let greenCoefficients: [CGFloat] = [0, 0, 0, 0]
-        _rosyFilter.setValue(CIVector(values: greenCoefficients, count: 4), forKey: "inputGVector")
+        changeFilter(0)
+
     }
     
     func reset() {

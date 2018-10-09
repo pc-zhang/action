@@ -16,27 +16,14 @@ struct CoreImageFilters {
     */
     static func avaliableFilters() -> [String] {
         
-        let filterCategories = [
-            kCICategoryBlur,
-            kCICategoryColorAdjustment,
-            kCICategoryColorEffect,
-            kCICategoryCompositeOperation,
-            kCICategoryDistortionEffect,
-            kCICategoryGradient,
-            kCICategoryHalftoneEffect,
-            kCICategoryReduction,
-            kCICategorySharpen,
-            kCICategoryStylize,
-            kCICategoryTileEffect,
-            kCICategoryTransition
-        ]
-        
-        var avaliableFilters = [String]()
-        
-        for categoryName in filterCategories {
-            avaliableFilters.append(categoryName)
-            avaliableFilters.append(contentsOf: CIFilter.filterNames(inCategory: categoryName))
-        }
+        var avaliableFilters = ["CIPhotoEffectChrome",
+                                "CIPhotoEffectFade",
+                                "CIPhotoEffectInstant",
+                                "CIPhotoEffectMono",
+                                "CIPhotoEffectNoir",
+                                "CIPhotoEffectProcess",
+                                "CIPhotoEffectTonal",
+                                "CIPhotoEffectTransfer"]
         
         return avaliableFilters
     }

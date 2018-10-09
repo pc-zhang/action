@@ -41,10 +41,8 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
             assert(false)
         }
         
-        if _currentIdx != 33, _currentIdx != 108, _currentIdx != 112 {
-            _capturePipeline.changeFilter(_currentIdx)
-            self.dimensionsLabel.text = "\(_currentIdx):\(avaliableFilters[_currentIdx])"
-        }
+        _capturePipeline.changeFilter(_currentIdx)
+        self.dimensionsLabel.text = "\(_currentIdx):\(avaliableFilters[_currentIdx])"
         
     }
     
@@ -289,8 +287,15 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         tableView.visibleCells.first?.setNeedsLayout()
         
         if let indexOfHistogram = histograms.index(where: {$0.time == recordTimeRange.start}) {
-            _capturePipeline._renderer = HistogramRenderer(histograms[indexOfHistogram].histogram)
             _capturePipeline.startRunning()
+            
+            let leftSwipe = UISwipeGestureRecognizer(target: self, action: "swipeChangeFilter:")
+            leftSwipe.direction = .left
+            let rightSwipe = UISwipeGestureRecognizer(target: self, action: "swipeChangeFilter:")
+            leftSwipe.direction = .right
+            
+            tableView.visibleCells.first?.addGestureRecognizer(leftSwipe)
+            tableView.visibleCells.first?.addGestureRecognizer(rightSwipe)
         }
     }
     
