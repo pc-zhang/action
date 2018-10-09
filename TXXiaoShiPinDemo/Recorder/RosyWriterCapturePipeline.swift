@@ -586,7 +586,7 @@ class RosyWriterCapturePipeline: NSObject, AVCaptureAudioDataOutputSampleBufferD
         #endif // RECORD_AUDIO
         
         // Front camera recording shouldn't be mirrored
-        let videoTransform = self.transformFromVideoBufferOrientationToOrientation(self.recordingOrientation, withAutoMirroring: false)
+        let videoTransform = self.transformFromVideoBufferOrientationToOrientation(self.recordingOrientation, withAutoMirroring: true)
         
         recorder.addVideoTrackWithSourceFormatDescription(self.outputVideoFormatDescription!, transform: videoTransform, settings: _videoCompressionSettings)
         

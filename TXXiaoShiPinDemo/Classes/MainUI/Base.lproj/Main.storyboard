@@ -163,10 +163,22 @@
                                     <constraint firstAttribute="width" constant="2" id="qS6-PX-nfW"/>
                                 </constraints>
                             </view>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kKx-Zh-do5">
+                                <rect key="frame" x="305" y="129" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="0qZ-gC-zzI"/>
+                                    <constraint firstAttribute="width" constant="50" id="HZh-MN-szB"/>
+                                </constraints>
+                                <state key="normal" title="Button" image="export"/>
+                                <connections>
+                                    <action selector="export:" destination="TL7-xW-1fW" eventType="touchUpInside" id="GX6-ZZ-BEQ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="0.66304603039999999" blue="0.1650658763" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="IVd-gr-2Um" firstAttribute="top" secondItem="jgg-kK-13Z" secondAttribute="top" id="14n-RA-iaO"/>
+                            <constraint firstItem="kKx-Zh-do5" firstAttribute="top" secondItem="GTN-9l-2fm" secondAttribute="bottom" constant="20" id="2RE-H8-t66"/>
                             <constraint firstAttribute="bottom" secondItem="IVd-gr-2Um" secondAttribute="bottom" id="516-lz-1Zb"/>
                             <constraint firstItem="3JX-PL-fIE" firstAttribute="leading" secondItem="3aA-UL-O6D" secondAttribute="leading" constant="20" id="5HR-wS-Vsd"/>
                             <constraint firstItem="GTN-9l-2fm" firstAttribute="top" secondItem="3JX-PL-fIE" secondAttribute="bottom" constant="5" id="Cae-WN-dgN"/>
@@ -178,6 +190,7 @@
                             <constraint firstItem="IVd-gr-2Um" firstAttribute="trailing" secondItem="3aA-UL-O6D" secondAttribute="trailing" id="V53-8T-oZ2"/>
                             <constraint firstItem="GTN-9l-2fm" firstAttribute="leading" secondItem="3aA-UL-O6D" secondAttribute="leading" constant="20" id="VrW-gG-YKp"/>
                             <constraint firstItem="3JX-PL-fIE" firstAttribute="top" secondItem="3aA-UL-O6D" secondAttribute="top" constant="20" id="X1L-eK-Yy6"/>
+                            <constraint firstItem="3aA-UL-O6D" firstAttribute="trailing" secondItem="kKx-Zh-do5" secondAttribute="trailing" constant="20" id="aDJ-qg-y9G"/>
                             <constraint firstItem="IVd-gr-2Um" firstAttribute="leading" secondItem="3aA-UL-O6D" secondAttribute="leading" id="g5a-Cl-Ib6"/>
                             <constraint firstItem="hcm-sz-u8x" firstAttribute="centerX" secondItem="fyc-V7-8D2" secondAttribute="centerX" id="gRo-HT-UXT"/>
                             <constraint firstItem="3aA-UL-O6D" firstAttribute="trailing" secondItem="GTN-9l-2fm" secondAttribute="trailing" constant="20" id="n0k-k0-NFq"/>
@@ -190,6 +203,7 @@
                     <connections>
                         <outlet property="backgroundTimelineView" destination="fyc-V7-8D2" id="7xc-OS-dwo"/>
                         <outlet property="dimensionsLabel" destination="GTN-9l-2fm" id="lOC-31-q4U"/>
+                        <outlet property="exportButton" destination="kKx-Zh-do5" id="SZr-el-VGs"/>
                         <outlet property="framerateLabel" destination="3JX-PL-fIE" id="jvK-bq-XlT"/>
                         <outlet property="middleLine" destination="hcm-sz-u8x" id="wBv-Xl-WZW"/>
                         <outlet property="recordButton" destination="fZG-Ba-K1q" id="VIe-eN-TFq"/>
@@ -340,6 +354,7 @@
         <image name="IMG_3135" width="1125" height="2436"/>
         <image name="IMG_3137" width="1125" height="2436"/>
         <image name="explore_item" width="25" height="25"/>
+        <image name="export" width="58" height="58"/>
         <image name="main_item" width="29" height="25"/>
         <image name="message_item" width="20" height="25"/>
         <image name="user_item" width="26" height="25"/>

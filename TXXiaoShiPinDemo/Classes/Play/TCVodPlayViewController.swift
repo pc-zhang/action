@@ -14,6 +14,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     
     // MARK: - UI Controls
     
+    @IBOutlet weak var exportButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var middleLine: UIView!
@@ -28,6 +29,39 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     
     
     //MARK: - UI Actions
+    
+    
+    @IBAction func export(_ sender: Any) {
+        // Create the export session with the composition and set the preset to the highest quality.
+        let compatiblePresets = AVAssetExportSession.exportPresets(compatibleWith: composition!)
+        let exporter = AVAssetExportSession(asset: composition!, presetName: AVAssetExportPreset960x540)!
+        // Set the desired output URL for the file created by the export process.
+        exporter.outputURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent(UUID().uuidString).appendingPathExtension("mov")
+        // Set the output file type to be a QuickTime movie.
+        exporter.outputFileType = AVFileType.mov
+        exporter.shouldOptimizeForNetworkUse = true
+        exporter.videoComposition = videoComposition
+        exporter.audioMix = audioMix
+        let firstVideoTrack = self.composition!.tracks(withMediaType: .video).first!
+        exporter.timeRange = firstVideoTrack.timeRange
+        // Asynchronously export the composition to a video file and save this file to the camera roll once export completes.
+        
+        exporter.exportAsynchronously {
+            DispatchQueue.main.async {
+                if (exporter.status == .completed) {
+                    if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(exporter.outputURL!.path)){
+                        UISaveVideoAtPathToSavedPhotosAlbum(exporter.outputURL!.path, self, #selector(self.video), nil)
+                    }
+                } else {
+                    _ = 1
+                }
+            }
+        }
+    }
+    
+    @objc func video(videoPath: NSString, didFinishSavingWithError error:NSError, contextInfo contextInfo:Any) -> Void {
+    }
+    
     @IBAction func swipeChangeFilter(_ swipeGesture: UISwipeGestureRecognizer) {
         switch swipeGesture.direction {
         case .left:
@@ -693,10 +727,13 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
                 if let audioAssetTrack = newAsset.tracks(withMediaType: .audio).first, let compositionAudioTrack = self.composition!.tracks(withMediaType: .audio).first {
                     try! compositionAudioTrack.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: newAsset.duration), of: audioAssetTrack, at: CMTime.zero)
                     
+                    assert(compositionAudioTrack.timeRange == compositionVideoTrack.timeRange)
+                    
                 }
                 
                 self.backgroundTimelineView.isHidden = false
                 self.middleLine.isHidden = false
+                self.exportButton.isHidden = false
                 
                 // update timeline
                 let currentTime = self.player.currentTime()
@@ -775,6 +812,11 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
                                             if let segment = firstVideoTrack.segment(forTrackTime: sampleBufferTime), segment.timeMapping.target.containsTime(sampleBufferTime) {
                                                 try! firstVideoTrack.insertTimeRange(segment.timeMapping.target, of: firstVideoTrack, at: segment.timeMapping.target.end)
                                                 firstVideoTrack.removeTimeRange(CMTimeRange(start:sampleBufferTime, duration:segment.timeMapping.target.duration + CMTime(value: 1, timescale: 600)))
+                                                
+                                                if let audioTrack = self.composition!.tracks(withMediaType: .audio).first {
+                                                    try! audioTrack.insertTimeRange(segment.timeMapping.target, of: audioTrack, at: segment.timeMapping.target.end)
+                                                    audioTrack.removeTimeRange(CMTimeRange(start:sampleBufferTime, duration:segment.timeMapping.target.duration + CMTime(value: 1, timescale: 600)))
+                                                }
                                             }
                                             
                                             self.backgroundTimelineView.reloadData()
@@ -844,14 +886,23 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         
         if let lastInstruction = self.videoComposition!.instructions.last {
             assert(lastInstruction.timeRange.end == firstVideoTrack.timeRange.end)
+//            assert(lastInstruction.timeRange.end >= secondVideoTrack.timeRange.end)
         }
         
         if let audioTrack = self.composition!.tracks(withMediaType: .audio).first {
-            audioTrack.removeTimeRange(CMTimeRange(start: firstVideoTrack.timeRange.end, end: audioTrack.timeRange.end))
+            audioMix = AVMutableAudioMix()
+            // Create the audio mix input parameters object.
+            let mixParameters = AVMutableAudioMixInputParameters(track: audioTrack)
+            // Set the volume ramp to slowly fade the audio out over the duration of the composition.
+            mixParameters.setVolume(1.f, at: .zero)
+            // Attach the input parameters to the audio mix.
+            audioMix?.inputParameters = [mixParameters]
         }
+    
         
         let playerItem = AVPlayerItem(asset: self.composition!)
-        playerItem.videoComposition = self.videoComposition
+        playerItem.videoComposition = videoComposition
+        playerItem.audioMix = audioMix
         
         self.player.replaceCurrentItem(with: playerItem)
         
@@ -1020,6 +1071,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     
     var composition: AVMutableComposition? = nil
     var videoComposition: AVMutableVideoComposition? = nil
+    var audioMix: AVMutableAudioMix? = nil
     
     /*
      A token obtained from calling `player`'s `addPeriodicTimeObserverForInterval(_:queue:usingBlock:)`
@@ -1074,7 +1126,7 @@ extension AVAssetTrack {
     
     func getTransform(renderSize: CGSize) -> CGAffineTransform {
         let offset = CGPoint.zero
-        let rotation = atan2(self.preferredTransform.b, self.preferredTransform.a)
+        var rotation = atan2(self.preferredTransform.b, self.preferredTransform.a)
         var rotationOffset = CGPoint.zero
         var renderScale: CGFloat = 1
         
@@ -1088,6 +1140,9 @@ extension AVAssetTrack {
             rotationOffset.x = self.naturalSize.width
             rotationOffset.y = self.naturalSize.height
             renderScale = renderSize.width / self.naturalSize.width
+        } else if self.preferredTransform.b == 1.0, self.preferredTransform.c == 1.0 {
+            renderScale = renderSize.width / self.naturalSize.height
+            return self.preferredTransform.scaledBy(x: renderScale, y: renderScale)
         } else {
             renderScale = renderSize.width / self.naturalSize.width
         }
