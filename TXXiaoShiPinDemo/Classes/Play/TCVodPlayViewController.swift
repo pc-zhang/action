@@ -39,6 +39,8 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         present(picker, animated: true)
     }
     
+    var exportProgessReporter: ExportProgressReporter?
+    
     @IBAction func export(_ sender: Any) {
         // Create the export session with the composition and set the preset to the highest quality.
         let compatiblePresets = AVAssetExportSession.exportPresets(compatibleWith: composition!)
@@ -54,7 +56,21 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         exporter.timeRange = firstVideoTrack.timeRange
         // Asynchronously export the composition to a video file and save this file to the camera roll once export completes.
         
+        let timer = DispatchSource.makeTimerSource(flags: DispatchSource.TimerFlags(rawValue: 0),
+                                                   queue: DispatchQueue.global())
+        timer.scheduleRepeating(deadline: .now(), interval: .milliseconds(250))
+        timer.setEventHandler {
+            DispatchQueue.main.async {
+                if let cell = self.tableView.visibleCells.first as? TCPlayViewCell
+                {
+                    cell.downloadProcess = CGFloat(exporter.progress)
+                }
+            }
+        }
+        timer.resume()
+        
         exporter.exportAsynchronously {
+            timer.cancel()
             DispatchQueue.main.async {
                 if (exporter.status == .completed) {
                     if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(exporter.outputURL!.path)){
@@ -84,7 +100,6 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         
         _capturePipeline.changeFilter(_currentIdx)
-        self.dimensionsLabel.text = "\(_currentIdx):\(avaliableFilters[_currentIdx])"
         
     }
     
@@ -108,7 +123,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
             _recording = true
             
             tapPlayViewCell()
-            Timer.scheduledTimer(withTimeInterval: self.recordTimeRange.duration.seconds+0.25, repeats: false, block: { (timer) in
+            Timer.scheduledTimer(withTimeInterval: self.recordTimeRange.duration.seconds+0.3, repeats: false, block: { (timer) in
                 self._capturePipeline.stopRecording()
                 self.tapPlayViewCell()
             })
@@ -211,9 +226,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        _labelTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.updateLabels), userInfo: nil, repeats: true)
+        super.viewWillAppear(animated)        
     }
 
     
@@ -334,7 +347,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
             let leftSwipe = UISwipeGestureRecognizer(target: self, action: "swipeChangeFilter:")
             leftSwipe.direction = .left
             let rightSwipe = UISwipeGestureRecognizer(target: self, action: "swipeChangeFilter:")
-            leftSwipe.direction = .right
+            rightSwipe.direction = .right
             
             tableView.visibleCells.first?.addGestureRecognizer(leftSwipe)
             tableView.visibleCells.first?.addGestureRecognizer(rightSwipe)
@@ -973,13 +986,6 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         }
     }
     
-    @objc func updateLabels() {
-        let frameRateString = "\(Int(roundf(_capturePipeline.videoFrameRate))) FPS"
-        self.framerateLabel.text = frameRateString
-        
-        let dimensionsString = "\(_capturePipeline.videoDimensions.width) x \(_capturePipeline.videoDimensions.height)"
-        //        self.dimensionsLabel.text = dimensionsString
-    }
     
     private func showError(_ error: Error) {
         let message = (error as NSError).localizedFailureReason
@@ -1060,8 +1066,6 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     private var _capturePipeline: RosyWriterCapturePipeline!
     
     @IBOutlet weak var recordButton: UIButton!
-    @IBOutlet private var framerateLabel: UILabel!
-    @IBOutlet private var dimensionsLabel: UILabel!
     
     var histograms = [(time: CMTime, histogram: [[vImagePixelCount]])]()
     

@@ -20,15 +20,9 @@ protocol TCPlayViewCellDelegate: NSObjectProtocol {
 
 final class TCPlayViewCell: UITableViewCell {
     
-    @IBOutlet weak var playerView: PlayerView!
-    
-    var delegate: TCPlayViewCellDelegate?
-    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
-    var downloadProgressLayer: CAShapeLayer?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -39,18 +33,35 @@ final class TCPlayViewCell: UITableViewCell {
         self.layer.addSublayer(downloadProgressLayer!)
     }
     
+    override func layoutSubviews() {
+        if delegate?.funcIsRecording() ?? false {
+            playerView.frame = CGRect(x: 0, y: 0, width: bounds.width/3, height: bounds.height/3)
+            playerView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
+        } else {
+            playerView.frame = bounds
+            playerView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        }
+    }
     
-    @IBOutlet weak var chorus: UIButton!
-    
+    @IBAction func tapPlayViewCell(_ sender: Any) {
+        delegate?.tapPlayViewCell()
+    }
+
     @IBAction func clickChorus(_ button: UIButton) {
-        
         chorus.isHidden = true
-        
         delegate?.chorus(process: { (process) in
             self.downloadProcess = sqrt(process)/2
         })
     }
     
+    // MARK: Properties
+    static let reuseIdentifier = "TCPlayViewCell"
+    
+    @IBOutlet weak var playerView: PlayerView!
+    @IBOutlet weak var chorus: UIButton!
+    
+    var delegate: TCPlayViewCellDelegate?
+    var downloadProgressLayer: CAShapeLayer?
     var downloadProcess: CGFloat = 0 {
         didSet {
             if downloadProcess != 0 {
@@ -66,26 +77,5 @@ final class TCPlayViewCell: UITableViewCell {
             }
         }
     }
-    
-    // MARK: Properties
-    static let reuseIdentifier = "TCPlayViewCell"
-
-    /// The `UUID` for the data this cell is presenting.
-    var representedId: UUID?
-
-    @IBAction func tapPlayViewCell(_ sender: Any) {
-        delegate?.tapPlayViewCell()
-    }
-    
-    override func layoutSubviews() {
-        if delegate?.funcIsRecording() ?? false {
-            playerView.frame = CGRect(x: 0, y: 0, width: bounds.width/3, height: bounds.height/3)
-            playerView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
-        } else {
-            playerView.frame = bounds
-            playerView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-        }
-    }
-
 }
 

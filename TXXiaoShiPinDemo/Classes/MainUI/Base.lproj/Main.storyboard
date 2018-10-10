@@ -39,25 +39,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="- FPS" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3JX-PL-fIE">
-                                <rect key="frame" x="20" y="64" width="335" height="20"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="LKU-E1-NhX"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="- x -" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GTN-9l-2fm">
-                                <rect key="frame" x="20" y="89" width="335" height="20"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="nxs-aL-MFe"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="729" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="IVd-gr-2Um">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="729" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="IVd-gr-2Um">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="729"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -179,10 +161,10 @@
                                 </constraints>
                             </view>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kKx-Zh-do5">
-                                <rect key="frame" x="325" y="129" width="30" height="30"/>
+                                <rect key="frame" x="325" y="64" width="30" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="SpA-eC-qce"/>
-                                    <constraint firstAttribute="width" constant="30" id="WRC-v6-PRn"/>
+                                    <constraint firstAttribute="width" constant="30" id="CAO-hS-9zE"/>
+                                    <constraint firstAttribute="height" constant="30" id="zbm-MZ-bFG"/>
                                 </constraints>
                                 <state key="normal" title="Button" image="export"/>
                                 <connections>
@@ -192,8 +174,6 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="3JX-PL-fIE" firstAttribute="leading" secondItem="3aA-UL-O6D" secondAttribute="leading" constant="20" id="5HR-wS-Vsd"/>
-                            <constraint firstItem="GTN-9l-2fm" firstAttribute="top" secondItem="3JX-PL-fIE" secondAttribute="bottom" constant="5" id="Cae-WN-dgN"/>
                             <constraint firstItem="3aA-UL-O6D" firstAttribute="bottom" secondItem="fyc-V7-8D2" secondAttribute="bottom" constant="150" id="Fzc-or-3aU"/>
                             <constraint firstItem="IVd-gr-2Um" firstAttribute="top" secondItem="jgg-kK-13Z" secondAttribute="top" id="Ghr-Nl-iJr"/>
                             <constraint firstItem="fZG-Ba-K1q" firstAttribute="centerX" secondItem="3aA-UL-O6D" secondAttribute="centerX" id="Jbo-Yb-phu"/>
@@ -201,25 +181,19 @@
                             <constraint firstItem="IVd-gr-2Um" firstAttribute="trailing" secondItem="3aA-UL-O6D" secondAttribute="trailing" id="NFP-4g-kY3"/>
                             <constraint firstItem="hcm-sz-u8x" firstAttribute="height" secondItem="fyc-V7-8D2" secondAttribute="height" id="OPj-VH-0bg"/>
                             <constraint firstItem="3aA-UL-O6D" firstAttribute="bottom" secondItem="fZG-Ba-K1q" secondAttribute="bottom" constant="50" id="RMV-Id-LEM"/>
-                            <constraint firstItem="3aA-UL-O6D" firstAttribute="trailing" secondItem="kKx-Zh-do5" secondAttribute="trailing" constant="20" id="UR3-82-2hE"/>
-                            <constraint firstItem="GTN-9l-2fm" firstAttribute="leading" secondItem="3aA-UL-O6D" secondAttribute="leading" constant="20" id="VrW-gG-YKp"/>
-                            <constraint firstItem="3JX-PL-fIE" firstAttribute="top" secondItem="3aA-UL-O6D" secondAttribute="top" constant="20" id="X1L-eK-Yy6"/>
                             <constraint firstItem="3aA-UL-O6D" firstAttribute="bottom" secondItem="IVd-gr-2Um" secondAttribute="bottom" id="YAF-B7-6rb"/>
                             <constraint firstItem="IVd-gr-2Um" firstAttribute="leading" secondItem="3aA-UL-O6D" secondAttribute="leading" id="ZWU-1R-RKc"/>
+                            <constraint firstItem="3aA-UL-O6D" firstAttribute="trailing" secondItem="kKx-Zh-do5" secondAttribute="trailing" constant="20" id="fGZ-6f-Ig1"/>
                             <constraint firstItem="hcm-sz-u8x" firstAttribute="centerX" secondItem="fyc-V7-8D2" secondAttribute="centerX" id="gRo-HT-UXT"/>
-                            <constraint firstItem="kKx-Zh-do5" firstAttribute="top" secondItem="GTN-9l-2fm" secondAttribute="bottom" constant="20" id="goN-Vn-aOA"/>
-                            <constraint firstItem="3aA-UL-O6D" firstAttribute="trailing" secondItem="GTN-9l-2fm" secondAttribute="trailing" constant="20" id="n0k-k0-NFq"/>
                             <constraint firstItem="fyc-V7-8D2" firstAttribute="centerX" secondItem="3aA-UL-O6D" secondAttribute="centerX" id="sEh-fD-b32"/>
-                            <constraint firstItem="3aA-UL-O6D" firstAttribute="trailing" secondItem="3JX-PL-fIE" secondAttribute="trailing" constant="20" id="xil-rt-dYh"/>
+                            <constraint firstItem="kKx-Zh-do5" firstAttribute="top" secondItem="3aA-UL-O6D" secondAttribute="top" constant="20" id="uqv-9S-LGe"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="3aA-UL-O6D"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="首页" image="main_item" id="8Gt-32-Qc1"/>
                     <connections>
                         <outlet property="backgroundTimelineView" destination="fyc-V7-8D2" id="7xc-OS-dwo"/>
-                        <outlet property="dimensionsLabel" destination="GTN-9l-2fm" id="lOC-31-q4U"/>
                         <outlet property="exportButton" destination="kKx-Zh-do5" id="SZr-el-VGs"/>
-                        <outlet property="framerateLabel" destination="3JX-PL-fIE" id="jvK-bq-XlT"/>
                         <outlet property="middleLine" destination="hcm-sz-u8x" id="wBv-Xl-WZW"/>
                         <outlet property="recordButton" destination="fZG-Ba-K1q" id="VIe-eN-TFq"/>
                         <outlet property="tableView" destination="IVd-gr-2Um" id="sfS-Ue-sgW"/>
