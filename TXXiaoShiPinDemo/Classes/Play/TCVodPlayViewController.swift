@@ -10,7 +10,7 @@ import UIKit
 
 let kTCLivePlayError: String = "kTCLivePlayError"
 
-class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITableViewDataSourcePrefetching, RosyWriterCapturePipelineDelegate, UITextFieldDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, TCPlayViewCellDelegate {
+class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITableViewDataSourcePrefetching, RosyWriterCapturePipelineDelegate, UITextFieldDelegate, UIAlertViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, TCPlayViewCellDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     // MARK: - UI Controls
     
@@ -30,6 +30,14 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     
     //MARK: - UI Actions
     
+    @IBAction func localMovie(_ sender: Any) {
+        let picker = UIImagePickerController()
+        picker.sourceType = .savedPhotosAlbum
+        picker.mediaTypes = [kUTTypeMovie as String]
+        picker.delegate = self
+        picker.allowsEditing = false
+        present(picker, animated: true)
+    }
     
     @IBAction func export(_ sender: Any) {
         // Create the export session with the composition and set the preset to the highest quality.
@@ -100,7 +108,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
             _recording = true
             
             tapPlayViewCell()
-            Timer.scheduledTimer(withTimeInterval: self.recordTimeRange.duration.seconds+0.5, repeats: false, block: { (timer) in
+            Timer.scheduledTimer(withTimeInterval: self.recordTimeRange.duration.seconds+0.25, repeats: false, block: { (timer) in
                 self._capturePipeline.stopRecording()
                 self.tapPlayViewCell()
             })
@@ -414,7 +422,6 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func chorus(process processHandler: ((CGFloat) -> Void)!) {
-        self.tableView.isScrollEnabled = false
         TCUtil.report(xiaoshipin_videochorus, userName: nil, code: 0, msg: "合唱事件")
         if let index = tableView.indexPathsForVisibleRows?.first?.row {
             TCUtil.downloadVideo(self.lives[index].playurl, process: processHandler) { (videoPath) in
@@ -565,6 +572,19 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         self.showError(error)
     }
     
+    // MARK: UIImagePickerControllerDelegate, UINavigationControllerDelegate
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.presentingViewController?.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let videoURL = info[UIImagePickerController.InfoKey.mediaURL] as? URL {
+            addClip(videoURL)
+        }
+        picker.presentingViewController?.dismiss(animated: true, completion: nil)
+    }
+    
     // MARK: Net fetch
     /**
      * 拉取直播列表。TCLiveListMgr在启动是，会将所有数据下载下来。在未全部下载完前，通过loadLives借口，
@@ -670,6 +690,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
 
     
     func addClip(_ movieURL: URL) {
+        self.tableView.isScrollEnabled = false
         let newAsset = AVURLAsset(url: movieURL, options: nil)
         
         /*
@@ -715,6 +736,14 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
                  We can play this asset. Create a new `AVPlayerItem` and make
                  it our player's current item.
                  */
+                
+                self.composition = AVMutableComposition()
+                // Add two video tracks and two audio tracks.
+                _ = self.composition!.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)
+                
+                _ = self.composition!.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)
+                
+                _ = self.composition!.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)
                 
                 let videoAssetTrack = newAsset.tracks(withMediaType: .video).first!
                 
@@ -870,7 +899,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
             
             if let segment2 = secondVideoTrack.segment(forTrackTime: segment.timeMapping.target.start),!segment2.isEmpty, segment2.timeMapping.target ==  segment.timeMapping.target {
                 let transformer2 = AVMutableVideoCompositionLayerInstruction(assetTrack: secondVideoTrack)
-                transformer2.setTransform(secondVideoTrack.getTransform(renderSize: self.videoComposition!.renderSize), at: instruction.timeRange.start)
+                transformer2.setTransform(secondVideoTrack.preferredTransform, at: instruction.timeRange.start)
                 instruction.layerInstructions = [transformer2]
             } else {
                 let transformer1 = AVMutableVideoCompositionLayerInstruction(assetTrack: firstVideoTrack)
