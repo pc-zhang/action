@@ -68,9 +68,12 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         timer.resume()
         
         exporter.exportAsynchronously {
-            cell.downloadProcess = CGFloat(exporter.progress)
             timer.cancel()
             DispatchQueue.main.async {
+                if let cell = self.tableView.visibleCells.first as? TCPlayViewCell
+                {
+                    cell.downloadProcess = CGFloat(exporter.progress)
+                }
                 if (exporter.status == .completed) {
                     if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(exporter.outputURL!.path)){
                         UISaveVideoAtPathToSavedPhotosAlbum(exporter.outputURL!.path, self, #selector(self.video), nil)
