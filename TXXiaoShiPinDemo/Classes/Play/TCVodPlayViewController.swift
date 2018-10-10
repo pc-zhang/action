@@ -39,8 +39,6 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         present(picker, animated: true)
     }
     
-    var exportProgessReporter: ExportProgressReporter?
-    
     @IBAction func export(_ sender: Any) {
         // Create the export session with the composition and set the preset to the highest quality.
         let compatiblePresets = AVAssetExportSession.exportPresets(compatibleWith: composition!)
@@ -70,6 +68,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         timer.resume()
         
         exporter.exportAsynchronously {
+            cell.downloadProcess = CGFloat(exporter.progress)
             timer.cancel()
             DispatchQueue.main.async {
                 if (exporter.status == .completed) {
@@ -752,24 +751,22 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
                 
                 self.composition = AVMutableComposition()
                 // Add two video tracks and two audio tracks.
-                _ = self.composition!.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)
+                let compositionVideoTrack = self.composition!.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)
                 
                 _ = self.composition!.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)
                 
-                _ = self.composition!.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)
+                let compositionAudioTrack = self.composition!.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)
                 
                 let videoAssetTrack = newAsset.tracks(withMediaType: .video).first!
                 
-                let compositionVideoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first!
+                compositionVideoTrack?.preferredTransform = videoAssetTrack.preferredTransform
                 
-                compositionVideoTrack.preferredTransform = videoAssetTrack.preferredTransform
+                try! compositionVideoTrack?.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: newAsset.duration), of: videoAssetTrack, at: CMTime.zero)
                 
-                try! compositionVideoTrack.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: newAsset.duration), of: videoAssetTrack, at: CMTime.zero)
-                
-                if let audioAssetTrack = newAsset.tracks(withMediaType: .audio).first, let compositionAudioTrack = self.composition!.tracks(withMediaType: .audio).first {
-                    try! compositionAudioTrack.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: newAsset.duration), of: audioAssetTrack, at: CMTime.zero)
+                if let audioAssetTrack = newAsset.tracks(withMediaType: .audio).first {
+                    try! compositionAudioTrack?.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: newAsset.duration), of: audioAssetTrack, at: CMTime.zero)
                     
-                    assert(compositionAudioTrack.timeRange == compositionVideoTrack.timeRange)
+                    assert(compositionAudioTrack?.timeRange == compositionVideoTrack?.timeRange)
                     
                 }
                 
@@ -785,14 +782,14 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
                 DispatchQueue.global(qos: .background).async {
                     var videoTrackOutput : AVAssetReaderTrackOutput?
                     var avAssetReader = try?AVAssetReader(asset: self.composition!)
-                    
+
                     if let videoTrack = self.composition!.tracks(withMediaType: AVMediaType.video).first {
                         videoTrackOutput = AVAssetReaderTrackOutput.init(track: videoTrack, outputSettings: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange])
                         avAssetReader?.add(videoTrackOutput!)
                     }
-                    
+
                     avAssetReader?.startReading()
-                    
+
                     while avAssetReader?.status == .reading {
                         //视频
                         if let sampleBuffer = videoTrackOutput?.copyNextSampleBuffer() {
@@ -803,18 +800,18 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
                                     cell.downloadProcess = 0.5 + CGFloat(sampleBufferTime.seconds / self.composition!.duration.seconds)/2
                                 }
                             }
-                            
+
                             if let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
                             {
-                                
+
                                 var buffer = vImage_Buffer()
                                 buffer.data = CVPixelBufferGetBaseAddress(pixelBuffer)
                                 buffer.rowBytes = CVPixelBufferGetBytesPerRow(pixelBuffer)
                                 buffer.width = vImagePixelCount(CVPixelBufferGetWidth(pixelBuffer))
                                 buffer.height = vImagePixelCount(CVPixelBufferGetHeight(pixelBuffer))
-                                
+
                                 let bitmapInfo = CGBitmapInfo(rawValue: CGImageByteOrderInfo.orderMask.rawValue | CGImageAlphaInfo.last.rawValue)
-                                
+
                                 var cgFormat = vImage_CGImageFormat(bitsPerComponent: 8,
                                                                     bitsPerPixel: 32,
                                                                     colorSpace: nil,
@@ -822,14 +819,14 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
                                                                     version: 0,
                                                                     decode: nil,
                                                                     renderingIntent: .defaultIntent)
-                                
-                                
+
+
                                 var error = vImageBuffer_InitWithCVPixelBuffer(&buffer, &cgFormat, pixelBuffer, nil, nil, vImage_Flags(kvImageNoFlags))
                                 assert(kvImageNoError == error)
                                 defer {
                                     free(buffer.data)
                                 }
-                                
+
                                 let histogramBins = (0...3).map { _ in
                                     return [vImagePixelCount](repeating: 0, count: 256)
                                 }
@@ -840,31 +837,31 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
                                                                             &mutableHistogram,
                                                                             vImage_Flags(kvImageNoFlags))
                                 assert(kvImageNoError == error)
-                                
-                                
+
+
                                 if let last_split_time = self.histograms.last?.time, let last_histogramBins = self.histograms.last?.histogram {
-                                    
+
                                     if self.costheta(histogramBins, last_histogramBins) < 0.9995, CMTimeSubtract(sampleBufferTime, last_split_time).seconds > 1 {
-                                        
+
                                         self.histograms.append((time: sampleBufferTime, histogram: histogramBins))
-                                        
+
                                         DispatchQueue.main.async {
                                             let firstVideoTrack = self.composition!.tracks(withMediaType: .video).first!
-                                            
+
                                             if let segment = firstVideoTrack.segment(forTrackTime: sampleBufferTime), segment.timeMapping.target.containsTime(sampleBufferTime) {
                                                 try! firstVideoTrack.insertTimeRange(segment.timeMapping.target, of: firstVideoTrack, at: segment.timeMapping.target.end)
                                                 firstVideoTrack.removeTimeRange(CMTimeRange(start:sampleBufferTime, duration:segment.timeMapping.target.duration + CMTime(value: 1, timescale: 600)))
-                                                
+
                                                 if let audioTrack = self.composition!.tracks(withMediaType: .audio).first {
                                                     try! audioTrack.insertTimeRange(segment.timeMapping.target, of: audioTrack, at: segment.timeMapping.target.end)
                                                     audioTrack.removeTimeRange(CMTimeRange(start:sampleBufferTime, duration:segment.timeMapping.target.duration + CMTime(value: 1, timescale: 600)))
                                                 }
                                             }
-                                            
+
                                             self.backgroundTimelineView.reloadData()
-                                            
+
                                         }
-                                        
+
                                     }
                                 } else {
                                     self.histograms.append((time: sampleBufferTime, histogram: histogramBins))
@@ -903,7 +900,8 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         let secondVideoTrack = self.composition!.tracks(withMediaType: .video)[1]
         
         self.videoComposition = AVMutableVideoComposition()
-        self.videoComposition!.renderSize = firstVideoTrack.naturalSize
+        let renderSize = firstVideoTrack.naturalSize.applying(firstVideoTrack.preferredTransform)
+        self.videoComposition!.renderSize = CGSize(width: abs(renderSize.width), height: abs(renderSize.height))
         self.videoComposition!.frameDuration = CMTimeMake(value: 1, timescale: 30)
         
         for segment in firstVideoTrack.segments {
@@ -912,11 +910,14 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
             
             if let segment2 = secondVideoTrack.segment(forTrackTime: segment.timeMapping.target.start),!segment2.isEmpty, segment2.timeMapping.target ==  segment.timeMapping.target {
                 let transformer2 = AVMutableVideoCompositionLayerInstruction(assetTrack: secondVideoTrack)
-                transformer2.setTransform(secondVideoTrack.preferredTransform, at: instruction.timeRange.start)
+                
+                let renderSize2 = secondVideoTrack.naturalSize.applying(secondVideoTrack.preferredTransform)
+                let renderScale = self.videoComposition!.renderSize.height / renderSize2.height
+                transformer2.setTransform(secondVideoTrack.preferredTransform.scaledBy(x: renderScale, y: renderScale), at: instruction.timeRange.start)
                 instruction.layerInstructions = [transformer2]
             } else {
                 let transformer1 = AVMutableVideoCompositionLayerInstruction(assetTrack: firstVideoTrack)
-                transformer1.setTransform(firstVideoTrack.getTransform(renderSize: self.videoComposition!.renderSize), at: instruction.timeRange.start)
+                transformer1.setTransform(firstVideoTrack.preferredTransform, at: instruction.timeRange.start)
                 instruction.layerInstructions = [transformer1]
             }
             
@@ -928,7 +929,6 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         
         if let lastInstruction = self.videoComposition!.instructions.last {
             assert(lastInstruction.timeRange.end == firstVideoTrack.timeRange.end)
-//            assert(lastInstruction.timeRange.end >= secondVideoTrack.timeRange.end)
         }
         
         if let audioTrack = self.composition!.tracks(withMediaType: .audio).first {
@@ -940,7 +940,6 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
             // Attach the input parameters to the audio mix.
             audioMix?.inputParameters = [mixParameters]
         }
-    
         
         let playerItem = AVPlayerItem(asset: self.composition!)
         playerItem.videoComposition = videoComposition
@@ -1129,62 +1128,5 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     /// An `AsyncFetcher` that is used to asynchronously fetch `DisplayData` objects.
     private let asyncFetcher = AsyncFetcher()
     
-}
-
-
-extension AVAssetTrack {
-    func getTransform(cropRect: CGRect) -> CGAffineTransform {
-        let renderSize = cropRect.size
-        let renderScale = renderSize.width / cropRect.width
-        let offset = CGPoint(x: -cropRect.origin.x, y: -cropRect.origin.y)
-        let rotation = atan2(self.preferredTransform.b, self.preferredTransform.a)
-        
-        var rotationOffset = CGPoint(x: 0, y: 0)
-        
-        if self.preferredTransform.b == -1.0 {
-            rotationOffset.y = self.naturalSize.width
-        } else if self.preferredTransform.c == -1.0 {
-            rotationOffset.x = self.naturalSize.height
-        } else if self.preferredTransform.a == -1.0 {
-            rotationOffset.x = self.naturalSize.width
-            rotationOffset.y = self.naturalSize.height
-        }
-        
-        var transform = CGAffineTransform.identity
-        transform = transform.scaledBy(x: renderScale, y: renderScale)
-        transform = transform.translatedBy(x: offset.x + rotationOffset.x, y: offset.y + rotationOffset.y)
-        transform = transform.rotated(by: rotation)
-        return transform
-    }
-    
-    func getTransform(renderSize: CGSize) -> CGAffineTransform {
-        let offset = CGPoint.zero
-        var rotation = atan2(self.preferredTransform.b, self.preferredTransform.a)
-        var rotationOffset = CGPoint.zero
-        var renderScale: CGFloat = 1
-        
-        if self.preferredTransform.b == -1.0 {
-            rotationOffset.y = self.naturalSize.width
-            renderScale = renderSize.width / self.naturalSize.height
-        } else if self.preferredTransform.c == -1.0 {
-            rotationOffset.x = self.naturalSize.height
-            renderScale = renderSize.width / self.naturalSize.height
-        } else if self.preferredTransform.a == -1.0 {
-            rotationOffset.x = self.naturalSize.width
-            rotationOffset.y = self.naturalSize.height
-            renderScale = renderSize.width / self.naturalSize.width
-        } else if self.preferredTransform.b == 1.0, self.preferredTransform.c == 1.0 {
-            renderScale = renderSize.width / self.naturalSize.height
-            return self.preferredTransform.scaledBy(x: renderScale, y: renderScale)
-        } else {
-            renderScale = renderSize.width / self.naturalSize.width
-        }
-        
-        var transform = CGAffineTransform.identity
-        transform = transform.scaledBy(x: renderScale, y: renderScale)
-        transform = transform.translatedBy(x: offset.x + rotationOffset.x, y: offset.y + rotationOffset.y)
-        transform = transform.rotated(by: rotation)
-        return transform
-    }
 }
 
