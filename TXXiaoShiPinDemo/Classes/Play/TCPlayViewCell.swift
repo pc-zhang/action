@@ -31,6 +31,7 @@ final class TCPlayViewCell: UITableViewCell {
         downloadProgressLayer!.frame = layer.bounds
         downloadProgressLayer!.position = CGPoint(x:bounds.width/2, y:bounds.height/2)
         self.layer.addSublayer(downloadProgressLayer!)
+        playerView.player = player
     }
     
     override func layoutSubviews() {
@@ -59,6 +60,8 @@ final class TCPlayViewCell: UITableViewCell {
     
     @IBOutlet weak var playerView: PlayerView!
     @IBOutlet weak var chorus: UIButton!
+    
+    var player = AVPlayer()
     
     var delegate: TCPlayViewCellDelegate?
     var downloadProgressLayer: CAShapeLayer?

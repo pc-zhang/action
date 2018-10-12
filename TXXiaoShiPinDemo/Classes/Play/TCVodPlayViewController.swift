@@ -153,10 +153,6 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.player.currentItem, queue: .main) { _ in
-            self.player.seek(to: CMTime.zero)
-            self.player.play()
-        }
         
         if composition==nil {
             composition = AVMutableComposition()
@@ -172,19 +168,23 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
             self.lives.removeAll()
         }
         
-        tableView.rowHeight = tableView.height
+        tableView.rowHeight = tableView.height - 2
         tableView.contentSize.width = tableView.width
+        tableView.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 1, right: 0)
+        tableView.contentOffset = CGPoint(x: 0, y: -1)
         
         tableView.mj_header = MJRefreshNormalHeader(refreshingBlock: {
             self.isLoading = true
             self.lives = []
             self.liveListMgr?.queryVideoList(.up)
         })
+        tableView.mj_header.isHidden = true
         
         tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: {
             self.isLoading = true
             self.liveListMgr?.queryVideoList(.down)
         })
+        tableView.mj_footer.isHidden = true
         
         // 先加载缓存的数据，然后再开始网络请求，以防用户打开是看到空数据
         //        liveListMgr.loadVodsFromArchive()
@@ -252,23 +252,34 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let playViewCell = cell as! TCPlayViewCell
-        playViewCell.playerView.isHidden = true
+        
+        if indexPath.row < lives.count {
+            let liveInfo = lives[indexPath.row]
+            let playerItem = AVPlayerItem(url: URL(string: liveInfo.playurl)!)
+            playViewCell.player.replaceCurrentItem(with: playerItem)
+            playViewCell.player.seek(to: .zero)
+        }
     }
 
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let playViewCell = cell as! TCPlayViewCell
         
-        self.player.pause()
-        
-        DispatchQueue.main.async {
-            guard let cell = tableView.visibleCells.first as? TCPlayViewCell else {
-                return
+        playViewCell.player.pause()
+        playViewCell.player.replaceCurrentItem(with: nil)
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if let tableView = scrollView as? UITableView {
+            let indexPath = IndexPath(row: Int((self.tableView.contentOffset.y + tableView.rowHeight/2) / tableView.rowHeight), section: 0)
+            tableView.setContentOffset(CGPoint(x: 0, y: CGFloat(indexPath.row) * tableView.rowHeight - 1), animated: true)
+            if let playViewCell = tableView.cellForRow(at: indexPath) as? TCPlayViewCell {
+                playViewCell.player.play()
             }
-            
-            if let visibleIndex = tableView.indexPath(for: cell), visibleIndex.row < self.lives.count {
-                let liveInfo = self.lives[visibleIndex.row]
-                self.player.replaceCurrentItem(with: AVPlayerItem(url: URL(string: liveInfo.playurl!)!))
-                self.player.play()
-                cell.playerView.isHidden = false
+            if let prevPlayViewCell = tableView.cellForRow(at: IndexPath(row: indexPath.row - 1, section: 0)) as? TCPlayViewCell {
+                prevPlayViewCell.player.pause()
+            }
+            if let nextPlayViewCell = tableView.cellForRow(at: IndexPath(row: indexPath.row + 1, section: 0)) as? TCPlayViewCell {
+                nextPlayViewCell.player.pause()
             }
         }
     }
@@ -282,7 +293,7 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return models.count
+        return lives.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -291,7 +302,6 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         
         cell.delegate = self
-        cell.playerView.playerLayer.player = player
         
         return cell
     }
@@ -301,34 +311,26 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     /// - Tag: Prefetching
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         // Begin asynchronously fetching data for the requested index paths.
-        for indexPath in indexPaths {
-            if let playViewCell = tableView.cellForRow(at: indexPath) as? TCPlayViewCell {
-//                playViewCell.setBackgroundImage(UIImage(ur))
-            }
-            let model = models[indexPath.row]
-            asyncFetcher.fetchAsync(model.id)
-        }
     }
     
     /// - Tag: CancelPrefetching
     func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
         // Cancel any in-flight requests for data for the specified index paths.
-        for indexPath in indexPaths {
-            let model = models[indexPath.row]
-            asyncFetcher.cancelFetch(model.id)
-        }
+        
     }
     
     // MARK: - UICollectionViewDelegate
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if player.rate == 0, let _timelineView = scrollView as? UICollectionView {
+        if let cell = self.tableView.visibleCells.first as? TCPlayViewCell, cell.player.rate == 0, let _timelineView = scrollView as? UICollectionView {
             currentTime = Double((_timelineView.contentOffset.x + _timelineView.frame.width/2) / (_timelineView.frame.width / visibleTimeRange))
         }
     }
     
     @IBAction func pan(_ recognizer: UIPanGestureRecognizer) {
-        player.pause()
+        if let cell = self.tableView.visibleCells.first as? TCPlayViewCell {
+            cell.player.pause()
+        }
         seekTimer?.invalidate()
         isRecording = false
         tableView.visibleCells.first?.setNeedsLayout()
@@ -446,29 +448,31 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tapPlayViewCell() {
-        if player.rate == 0 {
-            // Not playing forward, so play.
-            if currentTime == duration {
-                // At end, so got back to begining.
-                currentTime = 0.0
+        if let cell = self.tableView.visibleCells.first as? TCPlayViewCell {
+            if cell.player.rate == 0 {
+                // Not playing forward, so play.
+                if currentTime == duration {
+                    // At end, so got back to begining.
+                    currentTime = 0.0
+                }
+                
+                cell.player.play()
+                
+                //todo: animate
+                if #available(iOS 10.0, *) {
+                    seekTimer?.invalidate()
+                    seekTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { (timer) in
+                        self.backgroundTimelineView.contentOffset.x = CGFloat(self.currentTime/Double(self.visibleTimeRange)*Double(self.backgroundTimelineView.frame.width)) - self.backgroundTimelineView.frame.size.width/2
+                    })
+                } else {
+                    // Fallback on earlier versions
+                }
             }
-            
-            player.play()
-            
-            //todo: animate
-            if #available(iOS 10.0, *) {
+            else {
+                // Playing, so pause.
+                cell.player.pause()
                 seekTimer?.invalidate()
-                seekTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { (timer) in
-                    self.backgroundTimelineView.contentOffset.x = CGFloat(self.currentTime/Double(self.visibleTimeRange)*Double(self.backgroundTimelineView.frame.width)) - self.backgroundTimelineView.frame.size.width/2
-                })
-            } else {
-                // Fallback on earlier versions
             }
-        }
-        else {
-            // Playing, so pause.
-            player.pause()
-            seekTimer?.invalidate()
         }
     }
     
@@ -623,9 +627,9 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         tableView.mj_header.isHidden = true
         tableView.mj_footer.isHidden = true
-        tableView.reloadData()
         tableView.mj_header.endRefreshing()
         tableView.mj_footer.endRefreshing()
+        tableView.reloadData()
     }
     
     /**
@@ -778,9 +782,11 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
                 self.exportButton.isHidden = false
                 
                 // update timeline
-                let currentTime = self.player.currentTime()
-                self.updatePlayer()
-                self.currentTime = currentTime.seconds
+                if let cell = self.tableView.visibleCells.first as? TCPlayViewCell {
+                    let currentTime = cell.player.currentTime()
+                    self.updatePlayer()
+                    self.currentTime = currentTime.seconds
+                }
                 
                 DispatchQueue.global(qos: .background).async {
                     var videoTrackOutput : AVAssetReaderTrackOutput?
@@ -948,7 +954,9 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
         playerItem.videoComposition = videoComposition
         playerItem.audioMix = audioMix
         
-        self.player.replaceCurrentItem(with: playerItem)
+        if let cell = self.tableView.visibleCells.first as? TCPlayViewCell {
+            cell.player.replaceCurrentItem(with: playerItem)
+        }
         
         self.backgroundTimelineView.reloadData()
     }
@@ -1071,9 +1079,6 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     
     var histograms = [(time: CMTime, histogram: [[vImagePixelCount]])]()
     
-    let player = AVPlayer()
-    var playUrl: String?
-    
     var seekTimer: Timer? = nil
     var recordTimer: Timer? = nil
     var visibleTimeRange: CGFloat = 15
@@ -1089,19 +1094,27 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     ]
     var currentTime: Double {
         get {
-            return CMTimeGetSeconds(player.currentTime())
+            if let cell = self.tableView.visibleCells.first as? TCPlayViewCell {
+                return CMTimeGetSeconds(cell.player.currentTime())
+            } else {
+                return 0
+            }
         }
         set {
             let newTime = CMTimeMakeWithSeconds(newValue, preferredTimescale: 600)
             //todo: more tolerance
-            player.seek(to: newTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+            if let cell = self.tableView.visibleCells.first as? TCPlayViewCell {
+                cell.player.seek(to: newTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+            }
         }
     }
     
     var duration: Double {
-        guard let currentItem = player.currentItem else { return 0.0 }
+        if let cell = self.tableView.visibleCells.first as? TCPlayViewCell, let currentItem = cell.player.currentItem {
+            return CMTimeGetSeconds(currentItem.duration)
+        }
         
-        return CMTimeGetSeconds(currentItem.duration)
+        return 0.0
     }
     
     var composition: AVMutableComposition? = nil
@@ -1116,20 +1129,6 @@ class TCVodPlayViewController: UIViewController, UITableViewDelegate, UITableVie
     private var playerItem: AVPlayerItem? = nil
     
     var lives: [TCLiveInfo] = []
-    
-    struct Model {
-        var id = UUID()
         
-        // Add additional properties for your own model here.
-    }
-    
-    /// Example data identifiers.
-    private let models = (1...1000).map { _ in
-        return Model()
-    }
-    
-    /// An `AsyncFetcher` that is used to asynchronously fetch `DisplayData` objects.
-    private let asyncFetcher = AsyncFetcher()
-    
 }
 
