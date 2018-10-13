@@ -22,33 +22,33 @@ class FollowingViewController: UIViewController, FSPagerViewDataSource,FSPagerVi
         
         self.lives = []
         liveListMgr = TCLiveListMgr.shared()
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(newDataAvailable),
-            name: NSNotification.Name(rawValue: kTCLiveListNewDataAvailable),
-            object: nil)
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(listDataUpdated),
-            name: NSNotification.Name(rawValue: kTCLiveListUpdated),
-            object: nil)
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(svrError),
-            name: NSNotification.Name(rawValue: kTCLiveListSvrError),
-            object: nil)
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(playError),
-            name: NSNotification.Name(rawValue: kTCLivePlayError),
-            object: nil)
+//        NotificationCenter.default.addObserver(
+//            self,
+//            selector: #selector(newDataAvailable),
+//            name: NSNotification.Name(rawValue: kTCLiveListNewDataAvailable),
+//            object: nil)
+//        NotificationCenter.default.addObserver(
+//            self,
+//            selector: #selector(listDataUpdated),
+//            name: NSNotification.Name(rawValue: kTCLiveListUpdated),
+//            object: nil)
+//        NotificationCenter.default.addObserver(
+//            self,
+//            selector: #selector(svrError),
+//            name: NSNotification.Name(rawValue: kTCLiveListSvrError),
+//            object: nil)
+//        NotificationCenter.default.addObserver(
+//            self,
+//            selector: #selector(playError),
+//            name: NSNotification.Name(rawValue: kTCLivePlayError),
+//            object: nil)
     }
     
     // MARK: - ViewController Life Cycles
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        liveListMgr?.queryVideoList(.up)
+//        liveListMgr?.queryVideoList(.up)
     }
     
     
@@ -166,7 +166,7 @@ class FollowingViewController: UIViewController, FSPagerViewDataSource,FSPagerVi
                 self.pagerView.itemSize = CGSize(width: 180, height: 140)
                 self.pagerView.decelerationDistance = FSPagerView.automaticDistance
             case .coverFlow:
-                self.pagerView.itemSize = CGSize(width: 220, height: 170)
+                self.pagerView.itemSize = CGSize(width: pagerView.bounds.width / 2.3, height: pagerView.bounds.width / 2.3 * 16.0 / 9.0)
                 self.pagerView.decelerationDistance = FSPagerView.automaticDistance
             case .cubic:
                 let transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
